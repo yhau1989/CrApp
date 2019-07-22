@@ -1,10 +1,32 @@
 import * as React from 'react';
-import { View, StyleSheet, AppRegistry, ImageBackground, Text, TextInput, Button, TouchableOpacity } from 'react-native';
+import { Alert, View, StyleSheet, AppRegistry, ImageBackground, Text, TextInput, Button, TouchableOpacity } from 'react-native';
 
 
 const remote = 'https://s15.postimg.org/tw2qkvmcb/400px.png';
 
 export default class LoginForm extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = { email: '' , password:'' };
+
+        this._onPressButton = this._onPressButton.bind(this);
+    }
+
+    _onPressButton = () => {
+
+        let emailError = this.state.email
+        let passwordError = this.state.password
+
+        if (emailError.length <= 0 || passwordError.length <= 0){
+            Alert.alert('Ingrese usuario y contraseña')
+        }
+        else
+        { Alert.alert('Ingreso exitoso')}
+       
+    }
+
+
     render() {
 
 
@@ -15,10 +37,12 @@ export default class LoginForm extends React.Component {
         return (
             <ImageBackground source={require('../assets/fondo.jpg')} style={{ width: '100%', height: '100%', }}>
                 <View style={styles.containerForm}>
-                    <Text style={styles.welcome}>Procefibras App 2</Text>
-                    <TextInput style={styles.input} placeholder='Email' />
-                    <TextInput style={styles.input} placeholder='Contraseña' />
-                    <Button buttonStyle={styles.boton} title="Ingresar" accessibilityLabel="Ingrese los datos y presiones aquí para continuar"></Button>
+                    <Text style={styles.welcome}>Procefibras App</Text>
+                    <TextInput style={styles.input} placeholder='Email' onChangeText={(value) => this.setState({ email: value.trim() })} />
+                    <TextInput secureTextEntry={true} style={styles.input} placeholder='Contraseña' onChangeText={(value) => this.setState({ password: value.trim() })} />
+                    <Button buttonStyle={styles.boton} title="Ingresar" accessibilityLabel="Ingrese los datos y presiones aquí para continuar"
+                        onPress={this._onPressButton.bind(this)}
+                    ></Button>
 
                    {/* <TouchableOpacity>
                        <Text style={styles.boton}>Boton</Text>
@@ -41,7 +65,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     welcome: {
-        fontSize: 20,
+        fontSize: 22,
         textAlign: 'center',
         margin: 10,
         color: '#ffffff',
