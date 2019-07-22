@@ -15,14 +15,14 @@ export default class LoginForm extends React.Component {
         return (
             <ImageBackground source={require('../assets/fondo.jpg')} style={{ width: '100%', height: '100%', }}>
                 <View style={styles.containerForm}>
-                    <Text style={styles.welcome}> Welcome to React Native samuel 1989 </Text>
+                    <Text style={styles.welcome}>Procefibras App 2</Text>
                     <TextInput style={styles.input} placeholder='Email' />
                     <TextInput style={styles.input} placeholder='Contraseña' />
                     <Button buttonStyle={styles.boton} title="Ingresar" accessibilityLabel="Ingrese los datos y presiones aquí para continuar"></Button>
 
-                   <TouchableOpacity>
+                   {/* <TouchableOpacity>
                        <Text style={styles.boton}>Boton</Text>
-                   </TouchableOpacity>
+                   </TouchableOpacity> */}
 
 
                     <Text style={styles.instructions}>Si no tienes cuenta registrate aquí</Text>

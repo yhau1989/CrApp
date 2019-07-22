@@ -19,7 +19,7 @@ export default class BackgroundForm extends React.Component {
 
       
         
-      <ImageBackground source={require('../assets/fondo.jpg')} style={{ width: '100%', height: '100%',  }}>
+      <ImageBackground source={require('../assets/fondo_oscuro.png')} style={{ width: '100%', height: '100%',  }}>
         <View style={styles.containerForm}>
           <Text style={styles.welcome}> Welcome to React Native samuel 1989 </Text>
           <Text style={styles.instructions}> To get started, edit App.js </Text>
