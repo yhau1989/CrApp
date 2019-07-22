@@ -24,7 +24,7 @@ async function login(_user, _pass) {
             })
             .catch((error) => {
                 console.error(error);
-                //return error;
+                return error;
             });
     } catch (error) {
         console.error(error);
@@ -60,14 +60,42 @@ async function registro(name, lastName, _email, _pass) {
             })
             .catch((error) => {
                 console.error(error);
-                //return error;
+                return error;
             });
     } catch (error) {
         console.error(error);
     }
-
 }
 
+
+async function resetPassword(_email) {
+
+    let mensajeExito = 'Le hemos enviado un email para cambiar la contraseña';
+    let myurl = url_base + 'usrpwsreset.php'
+    let resetPass = {
+        reset: {
+            email: _email //campo obligatotio 
+        }
+    };
+
+    try {
+        return await fetch(myurl, {
+                method: 'POST', // or 'PUT'
+                body: JSON.stringify(resetPass), // data can be `string` or {object}!
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then((response) => response.json())
+            .then((responseJson) => {
+                return (responseJson.error == 0) ? mensajeExito : responseJson.mensaje;
+            })
+            .catch((error) => {
+                console.error(error);
+                return error;
+            });
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 
 
