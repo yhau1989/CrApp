@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { Alert, View, StyleSheet, AppRegistry, ImageBackground, Text, TextInput, Button} from 'react-native';
-//import { createStackNavigator, createAppContainer } from "react-navigation";
 import {login} from '../apis/usuarioapi';
-
+import NavigationService from "./NavigationService";
 
 export default class LoginForm extends React.Component {
 
@@ -12,21 +11,25 @@ export default class LoginForm extends React.Component {
         this._onPressButton = this._onPressButton.bind(this);
     }
 
-    _onPressButton = () => {
+    _onPressButton() {
         let emailError = this.state.email;
         let passwordError = this.state.password;
         if (emailError.length <= 0 || passwordError.length <= 0){
             Alert.alert('Ingrese usuario y contraseña');
         }
         else
-        { 
+        {
             login(emailError, passwordError).then((responseJson) => {
                 let g = (responseJson.error == 0) ? 'Login exitoso' : responseJson.mensaje;
                 Alert.alert(g);
             }).catch((error) => {
                 Alert.alert('exiten problemas de conexión');
-            });            
+            });
         }
+    }
+
+    registerPress () {
+      NavigationService.navigate('Register');
     }
 
 
@@ -46,7 +49,9 @@ export default class LoginForm extends React.Component {
                     ></Button>
 
 
-                    <Text style={styles.instructions}>Si no tienes cuenta registrate aquí</Text>
+                    <Text style={styles.instructions}>
+                      Si no tienes cuenta <Text style={styles.link} onPress={ this.registerPress.bind(this) }>registrate aquí</Text>
+                    </Text>
                     <Text style={styles.instructions}>Recuperar contraseña</Text>
                 </View>
             </ImageBackground>
@@ -75,9 +80,9 @@ const styles = StyleSheet.create({
         fontWeight: '700',
     },
     input:{
-        borderColor: 'grey', 
+        borderColor: 'grey',
         //color: 'grey',
-        borderWidth: 1, 
+        borderWidth: 1,
         backgroundColor: 'white',
         margin: 6,
         padding: 10,
@@ -95,6 +100,9 @@ const styles = StyleSheet.create({
         width: '80%',
         borderRadius: 5,
     },
+    link: {
+      textDecorationLine: 'underline'
+    }
 });
 
 

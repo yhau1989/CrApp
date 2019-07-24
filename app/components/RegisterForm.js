@@ -13,7 +13,7 @@ export default class RegisterForm extends React.Component {
         this._onPressButton = this._onPressButton.bind(this);
     }
 
-    _onPressButton = () => {
+    _onPressButton() {
         let emailError = this.state.email;
         let passwordError = this.state.password;
         let nombre = this.state.nombre;
@@ -25,21 +25,21 @@ export default class RegisterForm extends React.Component {
             registro(nombre, apellido, emailError, passwordError).then((responseJson) => {
                 Alert.alert(responseJson.mensaje);
             }).catch((error) => {
-                Alert.alert('exiten problemas de conexión');
+                Alert.alert('existen problemas de conexión');
             });
         }
     }
 
-    render() {        
+    render() {
         return (
             <ImageBackground source={require('../assets/fondo_oscuro.png')} style={{ width: '100%', height: '100%', }}>
-                <MenuUp title='Registro'></MenuUp>
                 <View style={styles.containerForm}>
                     <TextInput style={styles.input} placeholder='Nombres' onChangeText={(value) => this.setState({ nombre: value.trim() })} />
                     <TextInput style={styles.input} placeholder='Apellidos' onChangeText={(value) => this.setState({ apellido: value.trim() })} />
                     <TextInput style={styles.input} placeholder='Email' onChangeText={(value) => this.setState({ email: value.trim() })} />
                     <TextInput secureTextEntry={true} style={styles.input} placeholder='Contraseña' onChangeText={(value) => this.setState({ password: value.trim() })}/>
-                    <Button buttonStyle={styles.boton} title="Registrarse" accessibilityLabel="Registrarse" 
+
+                    <Button buttonStyle={styles.boton} title="Registrarse" accessibilityLabel="Registrarse"
                     onPress={this._onPressButton.bind(this)}>
                     </Button>
                 </View>
@@ -56,9 +56,9 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     input:{
-        borderColor: 'grey', 
+        borderColor: 'grey',
         //color: 'grey',
-        borderWidth: 1, 
+        borderWidth: 1,
         backgroundColor: 'white',
         margin: 6,
         padding: 10,
