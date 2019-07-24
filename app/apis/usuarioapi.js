@@ -1,8 +1,9 @@
-const url_base = 'http://localhost/CrServices/api/usr/';
+//const url_base = 'http://localhost/CrServices/api/usr/';
+const url_base = 'http://35.222.84.162/CrServices/api/usr/';
 
 
 
-async function login(_user, _pass) {
+export async function login(_user, _pass) {
 
     let myurl = url_base + 'usrlogin.php';
     let log_in = {
@@ -20,14 +21,17 @@ async function login(_user, _pass) {
             })
             .then((response) => response.json())
             .then((responseJson) => {
-                return (responseJson.error == 0) ? responseJson.data : responseJson.mensaje;
+                return responseJson;
+
             })
             .catch((error) => {
-                console.error(error);
-                return error;
+                //console.error(error);
+                return 'error';
             });
     } catch (error) {
-        console.error(error);
+       // console.error(error);
+        return 'error';
+
     }
 
 }
@@ -35,7 +39,7 @@ async function login(_user, _pass) {
 
 
 
-async function registro(name, lastName, _email, _pass) {
+export async function registro(name, lastName, _email, _pass) {
 
     let myurl = url_base + 'usradd.php'
     let newUser = {
@@ -56,7 +60,7 @@ async function registro(name, lastName, _email, _pass) {
             })
             .then((response) => response.json())
             .then((responseJson) => {
-                return (responseJson.error == 0) ? responseJson.data : responseJson.mensaje;
+                return responseJson;
             })
             .catch((error) => {
                 console.error(error);
@@ -106,13 +110,16 @@ async function resetPassword(_email) {
 
 
 //ejemplo
-/*function getMoviesFromApiAsync() {
+/* 
+
+export function getMoviesFromApiAsync() {
     return fetch('https://facebook.github.io/react-native/movies.json')
         .then((response) => response.json())
         .then((responseJson) => {
-            return responseJson.movies[0];
+            return responseJson.movies;
         })
         .catch((error) => {
             console.error(error);
         });
-}*/
+}
+*/

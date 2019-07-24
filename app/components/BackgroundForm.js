@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, AppRegistry, Image, ImageBackground, Text  } from 'react-native';
+import { View, StyleSheet, AppRegistry, ImageBackground, Text  } from 'react-native';
 
 
 const remote = 'https://s15.postimg.org/tw2qkvmcb/400px.png';

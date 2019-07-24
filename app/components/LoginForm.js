@@ -1,41 +1,42 @@
 import * as React from 'react';
-import { Alert, View, StyleSheet, AppRegistry, ImageBackground, Text, TextInput, Button, TouchableOpacity } from 'react-native';
+import { Alert, View, StyleSheet, AppRegistry, ImageBackground, Text, TextInput, Button} from 'react-native';
+//import { createStackNavigator, createAppContainer } from "react-navigation";
+import {login} from '../apis/usuarioapi';
 
-
-const remote = 'https://s15.postimg.org/tw2qkvmcb/400px.png';
 
 export default class LoginForm extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { email: '' , password:'' };
-
+        this.state = { email: '' , password:'' }
         this._onPressButton = this._onPressButton.bind(this);
     }
 
     _onPressButton = () => {
-
-        let emailError = this.state.email
-        let passwordError = this.state.password
-
+        let emailError = this.state.email;
+        let passwordError = this.state.password;
         if (emailError.length <= 0 || passwordError.length <= 0){
-            Alert.alert('Ingrese usuario y contraseña')
+            Alert.alert('Ingrese usuario y contraseña');
         }
         else
-        { Alert.alert('Ingreso exitoso')}
-       
+        { 
+            login(emailError, passwordError).then((responseJson) => {
+                let g = (responseJson.error == 0) ? 'Login exitoso' : responseJson.mensaje;
+                Alert.alert(g);
+            }).catch((error) => {
+                Alert.alert('exiten problemas de conexión');
+            });            
+        }
     }
 
 
     render() {
-
-
         const resizeMode = 'center';
         const text = 'This is some text inlaid in an <Image />';
 
 
         return (
-            <ImageBackground source={require('../assets/fondo.jpg')} style={{ width: '100%', height: '100%', }}>
+            <ImageBackground source={require('../assets/fondo_oscuro.png')} style={{ width: '100%', height: '100%', }}>
                 <View style={styles.containerForm}>
                     <Text style={styles.welcome}>Procefibras App</Text>
                     <TextInput style={styles.input} placeholder='Email' onChangeText={(value) => this.setState({ email: value.trim() })} />
@@ -43,10 +44,6 @@ export default class LoginForm extends React.Component {
                     <Button buttonStyle={styles.boton} title="Ingresar" accessibilityLabel="Ingrese los datos y presiones aquí para continuar"
                         onPress={this._onPressButton.bind(this)}
                     ></Button>
-
-                   {/* <TouchableOpacity>
-                       <Text style={styles.boton}>Boton</Text>
-                   </TouchableOpacity> */}
 
 
                     <Text style={styles.instructions}>Si no tienes cuenta registrate aquí</Text>
@@ -99,5 +96,6 @@ const styles = StyleSheet.create({
         borderRadius: 5,
     },
 });
+
 
 AppRegistry.registerComponent('LoginForm', () => LoginForm);

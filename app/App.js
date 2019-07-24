@@ -8,10 +8,10 @@
 
 import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
-
-import BackgroundForm from './components/BackgroundForm';
 import LoginForm from './components/LoginForm';
+import RegisterForm from './components/RegisterForm';
 
+//import { createStackNavigator, createAppContainer } from "react-navigation";
 
 const instructions = Platform.select({
     ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -25,39 +25,13 @@ export default class App extends Component<Props> {
         return (
                     
                 
-                   /* <View style={styles.container}>
+                   /*<View style={styles.container}>
                         <Text style={styles.welcome}> Welcome to React Native samuel 1989 </Text>   
                         <Text style={styles.instructions}> To get started, edit App.js </Text>   
                         <Text style={styles.instructions}> {instructions} </Text> 
                     </View>*/
                
-      
-
-            
-                <LoginForm>
-                   
-                </LoginForm>
-            
-           
+            <RegisterForm></RegisterForm>
                  );
                 }
-            }
-            
-const styles = StyleSheet.create({
-                        container: {
-                        flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                   backgroundColor: '#F5FCFF',
-                },
-    welcome: {
-                        fontSize: 20,
-                    textAlign: 'center',
-                    margin: 10,
-                },
-    instructions: {
-                    textAlign: 'center',
-                    color: '#333333',
-                    marginBottom: 5,
-                },
-});
+}
