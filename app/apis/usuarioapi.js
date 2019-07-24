@@ -63,11 +63,12 @@ export async function registro(name, lastName, _email, _pass) {
                 return responseJson;
             })
             .catch((error) => {
-                console.error(error);
+               // console.error(error);
                 return error;
             });
     } catch (error) {
-        console.error(error);
+       // console.error(error);
+        return error;
     }
 }
 

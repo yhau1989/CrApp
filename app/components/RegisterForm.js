@@ -25,7 +25,7 @@ export default class RegisterForm extends React.Component {
             registro(nombre, apellido, emailError, passwordError).then((responseJson) => {
                 Alert.alert(responseJson.mensaje);
             }).catch((error) => {
-                Alert.alert('exiten problemas de conexión');
+                Alert.alert('Exiten problemas de conexión');
             });
         }
     }
