@@ -4,6 +4,9 @@
     "slug": "CrApp2",
     "privacy": "public",
     "sdkVersion": "33.0.0",
+    "android": {
+      "package": "com.procefibras.crapp2"
+    },
     "platforms": [
       "ios",
       "android",
@@ -25,6 +28,7 @@
     ],
     "ios": {
       "supportsTablet": true
-    }
+    },
+    "description": ""
   }
 }

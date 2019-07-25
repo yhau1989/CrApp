@@ -20,19 +20,9 @@ export async function login(_user, _pass) {
                 headers: { 'Content-Type': 'application/json' }
             })
             .then((response) => response.json())
-            .then((responseJson) => {
-                return responseJson;
-
-            })
-            .catch((error) => {
-                //console.error(error);
-                return 'error';
-            });
-    } catch (error) {
-       // console.error(error);
-        return 'error';
-
-    }
+            .then((responseJson) => {return responseJson;})
+            .catch((error) => {return 'error';});
+    } catch (error) {return 'error';}
 
 }
 
@@ -59,20 +49,13 @@ export async function registro(name, lastName, _email, _pass) {
                 headers: { 'Content-Type': 'application/json' }
             })
             .then((response) => response.json())
-            .then((responseJson) => {
-                return responseJson;
-            })
-            .catch((error) => {
-                console.error(error);
-                return error;
-            });
-    } catch (error) {
-        console.error(error);
-    }
+            .then((responseJson) => {return responseJson;})
+            .catch((error) => { return error;});
+    } catch (error) { return error;}
 }
 
 
-async function resetPassword(_email) {
+export async function resetpassword(_email) {
 
     let mensajeExito = 'Le hemos enviado un email para cambiar la contraseña';
     let myurl = url_base + 'usrpwsreset.php'
@@ -89,16 +72,9 @@ async function resetPassword(_email) {
                 headers: { 'Content-Type': 'application/json' }
             })
             .then((response) => response.json())
-            .then((responseJson) => {
-                return (responseJson.error == 0) ? mensajeExito : responseJson.mensaje;
-            })
-            .catch((error) => {
-                console.error(error);
-                return error;
-            });
-    } catch (error) {
-        console.error(error);
-    }
+            .then((responseJson) => {return (responseJson.error == 0) ? mensajeExito : responseJson.mensaje;})
+            .catch((error) => {return error;});
+    } catch (error) {return error;}
 }
 
 

@@ -23,14 +23,14 @@ export default class LoginForm extends React.Component {
                 let g = (responseJson.error == 0) ? 'Login exitoso' : responseJson.mensaje;
                 Alert.alert(g);
             }).catch((error) => {
-                Alert.alert('exiten problemas de conexión');
+                Alert.alert('Exiten problemas de conexión');
             });
         }
     }
 
-    registerPress () {
-      NavigationService.navigate('Register');
-    }
+    registerPress () {NavigationService.navigate('Register');}
+
+    resetPasswordPress() { NavigationService.navigate('ResetPassword');}
 
 
     render() {
@@ -48,11 +48,10 @@ export default class LoginForm extends React.Component {
                         onPress={this._onPressButton.bind(this)}
                     ></Button>
 
-
                     <Text style={styles.instructions}>
                       Si no tienes cuenta <Text style={styles.link} onPress={ this.registerPress.bind(this) }>registrate aquí</Text>
                     </Text>
-                    <Text style={styles.instructions}>Recuperar contraseña</Text>
+                    <Text style={styles.link} onPress={this.resetPasswordPress.bind(this) }>Recuperar contraseña</Text>
                 </View>
             </ImageBackground>
 
