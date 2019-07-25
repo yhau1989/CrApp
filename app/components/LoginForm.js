@@ -7,7 +7,7 @@ export default class LoginForm extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { email: '' , password:'' }
+        this.state = { email: '', password: ''}
         this._onPressButton = this._onPressButton.bind(this);
     }
 
@@ -20,6 +20,7 @@ export default class LoginForm extends React.Component {
         else
         {
             login(emailError, passwordError).then((responseJson) => {
+                this.setState({ password: '' })
                 let g = (responseJson.error == 0) ? 'Login exitoso' : responseJson.mensaje;
                 Alert.alert(g);
             }).catch((error) => {
@@ -43,7 +44,7 @@ export default class LoginForm extends React.Component {
                 <View style={styles.containerForm}>
                     <Text style={styles.welcome}>Procefibras App</Text>
                     <TextInput style={styles.input} placeholder='Email' onChangeText={(value) => this.setState({ email: value.trim() })} />
-                    <TextInput secureTextEntry={true} style={styles.input} placeholder='Contraseña' onChangeText={(value) => this.setState({ password: value.trim() })} />
+                    <TextInput secureTextEntry={true} style={styles.input} value={this.state.password} placeholder='Contraseña' onChangeText={(value) => this.setState({ password: value.trim() })} />
                     <Button buttonStyle={styles.boton} title="Ingresar" accessibilityLabel="Ingrese los datos y presiones aquí para continuar"
                         onPress={this._onPressButton.bind(this)}
                     ></Button>
@@ -51,7 +52,10 @@ export default class LoginForm extends React.Component {
                     <Text style={styles.instructions}>
                       Si no tienes cuenta <Text style={styles.link} onPress={ this.registerPress.bind(this) }>registrate aquí</Text>
                     </Text>
-                    <Text style={styles.link} onPress={this.resetPasswordPress.bind(this) }>Recuperar contraseña</Text>
+                    <Text style={styles.instructions}>
+                        <Text style={styles.link} onPress={this.resetPasswordPress.bind(this)}>Recuperar contraseña</Text>
+                    </Text>
+                    
                 </View>
             </ImageBackground>
 
