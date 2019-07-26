@@ -1,11 +1,11 @@
 //const url_base = 'http://localhost/CrServices/api/usr/';
-const url_base = 'http://35.222.84.162/CrServices/api/mtr/';
+const url_base = 'http://35.222.84.162/CrServices/api/cli/';
 
 
 
-export async function listmaterial() {
+export async function listcliente() {
 
-    let myurl = url_base + 'mtrlist.php';
+    let myurl = url_base + 'clientlist.php';
     try {
         return await fetch(myurl, {
                 method: 'POST', // or 'PUT'
@@ -21,20 +21,24 @@ export async function listmaterial() {
 
 
 
-export async function editmaterial(id, tipo) {
+export async function editcliente(id,ruc, nombres,apellidos,direccion,telefono) {
 
-    let myurl = url_base + 'mtredit.php'
-    let editmat = {
-        mtr: {
+    let myurl = url_base + 'clientedit.php'
+    let editcli = {
+        cliente: {
             id: id,
-            tipo: tipo
+            ruc: ruc,
+            nombres: nombres,
+            apellidos: apellidos,
+            direccion: direccion,
+            telefono: telefono
         }
     };
 
     try {
         return await fetch(myurl, {
                 method: 'POST', // or 'PUT'
-                body: JSON.stringify(editmat), // data can be `string` or {object}!
+                body: JSON.stringify(editcli), // data can be `string` or {object}!
                 headers: { 'Content-Type': 'application/json' }
             })
             .then((response) => response.json())
@@ -44,24 +48,27 @@ export async function editmaterial(id, tipo) {
 }
 
 
-export async function addmaterial(tipo) {
-    
-    let myurl = url_base + 'mtradd.php'
-    let mtr = {
-        mtr: {
-            id: id,
-            tipo: tipo
+export async function addcliente(ruc, nombres, apellidos, direccion, telefono) {
+
+    let myurl = url_base + 'clientadd.php'
+    let clint = {
+        cliente: {
+            ruc: ruc,
+            nombres: nombres,
+            apellidos: apellidos,
+            direccion: direccion,
+            telefono: telefono
         }
     };
 
     try {
         return await fetch(myurl, {
                 method: 'POST', // or 'PUT'
-                body: JSON.stringify(mtr), // data can be `string` or {object}!
+                body: JSON.stringify(clint), // data can be `string` or {object}!
                 headers: { 'Content-Type': 'application/json' }
             })
             .then((response) => response.json())
-            .then((responseJson) => {return responseJson.mensaje;})
+            .then((responseJson) => { return responseJson.mensaje;})
             .catch((error) => {return error;});
     } catch (error) {return error;}
 }

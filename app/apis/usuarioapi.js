@@ -21,8 +21,8 @@ export async function login(_user, _pass) {
             })
             .then((response) => response.json())
             .then((responseJson) => {return responseJson;})
-            .catch((error) => {return 'error';});
-    } catch (error) {return 'error';}
+            .catch((error) => {return error;});
+    } catch (error) {return error;}
 
 }
 
