@@ -7,24 +7,31 @@ export default class LoginForm extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { email: '', password: ''}
+        this.state = { email: '', password: ''};
         this._onPressButton = this._onPressButton.bind(this);
     }
 
-    _onPressButton() {
+    _onPressButton() 
+    {
         let emailError = this.state.email;
         let passwordError = this.state.password;
-        if (emailError.length <= 0 || passwordError.length <= 0){
-            Alert.alert('Ingrese usuario y contraseña');
+        if (emailError.length <= 0)
+        {
+           Alert.alert('Ingrese usuario y contraseña')
         }
         else
         {
             login(emailError, passwordError).then((responseJson) => {
-                this.setState({ password: '' })
-                let g = (responseJson.error == 0) ? 'Login exitoso' : responseJson.mensaje;
-                Alert.alert(g);
+                if (responseJson.error == 0)
+                {
+                    NavigationService.navigate('Dashboard');
+                }
+                else
+                {
+                    Alert.alert(responseJson.mensaje);   
+                }
             }).catch((error) => {
-                Alert.alert('Exiten problemas de conexión');
+                Alert.alert('Exiten problemas de conexión' + error);
             });
         }
     }
@@ -44,7 +51,7 @@ export default class LoginForm extends React.Component {
                 <View style={styles.containerForm}>
                     <Text style={styles.welcome}>Procefibras App</Text>
                     <TextInput style={styles.input} placeholder='Email' onChangeText={(value) => this.setState({ email: value.trim() })} />
-                    <TextInput secureTextEntry={true} style={styles.input} value={this.state.password} placeholder='Contraseña' onChangeText={(value) => this.setState({ password: value.trim() })} />
+                    <TextInput secureTextEntry={true} style={styles.input} placeholder='Contraseña' onChangeText={(value) => this.setState({ password: value.trim() })} />
                     <Button buttonStyle={styles.boton} title="Ingresar" accessibilityLabel="Ingrese los datos y presiones aquí para continuar"
                         onPress={this._onPressButton.bind(this)}
                     ></Button>

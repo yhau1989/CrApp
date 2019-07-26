@@ -3,6 +3,7 @@ import { createSwitchNavigator, createStackNavigator, createAppContainer } from 
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 import ResetPasswordForm from './ResetPasswordForm';
+import Dashboard from './Dashboard';
 
 const AuthStack = createStackNavigator({
   Login: {
@@ -28,6 +29,10 @@ const AuthStack = createStackNavigator({
       headerTintColor: '#fff',
       headerTitleStyle: {fontWeight: 'bold',}
     }
+  }, 
+  Dashboard: {
+    screen: Dashboard,
+    navigationOptions: { header: null }
   }
 },
 {
