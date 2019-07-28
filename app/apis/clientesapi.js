@@ -68,7 +68,7 @@ export async function addcliente(ruc, nombres, apellidos, direccion, telefono) {
                 headers: { 'Content-Type': 'application/json' }
             })
             .then((response) => response.json())
-            .then((responseJson) => { return responseJson.mensaje;})
+            .then((responseJson) => { return responseJson})
             .catch((error) => {return error;});
     } catch (error) {return error;}
 }

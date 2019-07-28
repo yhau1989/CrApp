@@ -42,10 +42,6 @@ export default class LoginForm extends React.Component {
 
 
     render() {
-        const resizeMode = 'center';
-        const text = 'This is some text inlaid in an <Image />';
-
-
         return (
             <ImageBackground source={require('../assets/fondo_oscuro.png')} style={{ width: '100%', height: '100%', }}>
                 <View style={styles.containerForm}>

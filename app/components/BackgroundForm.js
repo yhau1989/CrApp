@@ -2,23 +2,11 @@ import * as React from 'react';
 import { View, StyleSheet, AppRegistry, ImageBackground, Text  } from 'react-native';
 
 
-const remote = 'https://s15.postimg.org/tw2qkvmcb/400px.png';
-
 export default class BackgroundForm extends React.Component {
   render() {
 
-
-    const resizeMode = 'center';
-    const text = 'This is some text inlaid in an <Image />';
-
-
     return (     
-      /*<Image  source={require('../assets/fondo.jpg')} style={styles.containerForm}>
-      
-      </Image>*/
-
-      
-        
+             
       <ImageBackground source={require('../assets/fondo_oscuro.png')} style={{ width: '100%', height: '100%',  }}>
         <View style={styles.containerForm}>
           <Text style={styles.welcome}> Welcome to React Native samuel 1989 </Text>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, AppRegistry, Text, Image, Alert, TouchableOpacity} from 'react-native';
+import { View, StyleSheet, AppRegistry, Text, Image, TouchableOpacity} from 'react-native';
 
 
 

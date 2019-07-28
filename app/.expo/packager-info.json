@@ -1,10 +1,10 @@
 {
-  "devToolsPort": 19002,
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 13040,
+  "packagerPid": 30096,
   "expoServerNgrokUrl": "https://n2-niw.yhau1989.app.exp.direct",
   "packagerNgrokUrl": "https://packager.n2-niw.yhau1989.app.exp.direct",
-  "ngrokPid": 16432,
-  "webpackServerPort": null
+  "ngrokPid": 24412,
+  "webpackServerPort": null,
+  "devToolsPort": 19002
 }

@@ -4,6 +4,14 @@ import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 import ResetPasswordForm from './ResetPasswordForm';
 import Dashboard from './Dashboard';
+import DashboardMantenimientos from './DashboardMantenimientos';
+import ComprasForm from './ComprasForm';
+import VentasForm from './VentasForm';
+import ProcesosForm from './ProcesosForm';
+import MantMaterialesForm from './MantMaterialesForm';
+import MantClientesForm from './MantClientesForm';
+import MantProveedoresForm from './MantProveedoresForm';
+
 
 const AuthStack = createStackNavigator({
   Login: {
@@ -33,10 +41,82 @@ const AuthStack = createStackNavigator({
   Dashboard: {
     screen: Dashboard,
     navigationOptions: { header: null }
-  }
+  },
+  Mantenimientos: {
+    screen: DashboardMantenimientos,
+    navigationOptions: {
+      title: 'Mantenimientos',
+      headerMode: 'screen',
+      headerStyle: { backgroundColor: '#000000', },
+      headerTintColor: '#fff',
+      headerTitleStyle: { fontWeight: 'bold', }
+    }
+  },
+  Compras: {
+    screen: ComprasForm,
+    navigationOptions: {
+      title: 'Comprar',
+      headerMode: 'screen',
+      headerStyle: { backgroundColor: '#000000', },
+      headerTintColor: '#fff',
+      headerTitleStyle: { fontWeight: 'bold', }
+    }
+  },  
+  Ventas: {
+    screen: VentasForm,
+    navigationOptions: {
+      title: 'Vender',
+      headerMode: 'screen',
+      headerStyle: { backgroundColor: '#000000', },
+      headerTintColor: '#fff',
+      headerTitleStyle: { fontWeight: 'bold', }
+    }
+  },  
+  Procesos: {
+    screen: ProcesosForm,
+    navigationOptions: {
+      title: 'Procesar',
+      headerMode: 'screen',
+      headerStyle: { backgroundColor: '#000000', },
+      headerTintColor: '#fff',
+      headerTitleStyle: { fontWeight: 'bold', }
+    }
+  },  
+  Materiales: {
+    screen: MantMaterialesForm,
+    navigationOptions: {
+      title: 'Materiales',
+      headerMode: 'screen',
+      headerStyle: { backgroundColor: '#000000', },
+      headerTintColor: '#fff',
+      headerTitleStyle: { fontWeight: 'bold', }
+    }
+  },
+  Clientes: {
+    screen: MantClientesForm,
+    navigationOptions: {
+      title: 'Clientes',
+      headerMode: 'screen',
+      headerStyle: { backgroundColor: '#000000', },
+      headerTintColor: '#fff',
+      headerTitleStyle: { fontWeight: 'bold', }
+    }
+  },
+  Proveedores: {
+    screen: MantProveedoresForm,
+    navigationOptions: {
+      title: 'Proveedores',
+      headerMode: 'screen',
+      headerStyle: { backgroundColor: '#000000', },
+      headerTintColor: '#fff',
+      headerTitleStyle: { fontWeight: 'bold', }
+    }
+  },
+
 },
 {
-  initialRouteName: 'Login',
+  //initialRouteName: 'Login',
+  initialRouteName: 'Clientes',
   defaultNavigationOptions: {headerMode: 'screen'},
 });
 
