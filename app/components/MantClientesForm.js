@@ -9,7 +9,8 @@ export default class MantClientesForm extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { ruc: '', nombre: '', apellido: '', direccion: '', email: '', telefono: '', value: 'Clientes', dataSource: '', isLoading: true,}
+        this.state = { ruc: '', nombre: '', apellido: '', direccion: '', email: '', telefono: '', value: 'Clientes', dataSource: '', isLoading: true, 
+        existeError: false}
         this._onPressButton = this._onPressButton.bind(this);
 
     }
@@ -21,6 +22,9 @@ export default class MantClientesForm extends React.Component {
     }
 
     _onPressButton() {
+
+        //this.setState({ isLoading: true, });
+
         let email = this.state.email;
         let ruc = this.state.ruc;
         let nombre = this.state.nombre;
@@ -34,8 +38,9 @@ export default class MantClientesForm extends React.Component {
         }
         else {
             addcliente(ruc, nombre, apellido, direccion, telefono).then((responseJson) => {
+                 let error = (responseJson.error == 0) ? false: true;
+                this.setState({ existeError: error, });
                 Alert.alert(responseJson.mensaje);
-                //getlisClientes();
             }).catch((error) => {
                 Alert.alert('existen problemas de conexión');
             });
@@ -44,15 +49,14 @@ export default class MantClientesForm extends React.Component {
 
     getlisClientes()
     {
-
         listcliente().then((responseJson) => {
-           // Alert.alert('Conexion con exito');
+            // Alert.alert('Conexion con exito');
             this.setState({
                 isLoading: false,
                 dataSource: responseJson
-            });  
-            
-        }).catch ((error) => {
+            });
+
+        }).catch((error) => {
             Alert.alert('Problemas para lisar los clientes');
         });
     }
@@ -60,7 +64,7 @@ export default class MantClientesForm extends React.Component {
     render() {
 
         this.getlisClientes();
-        if (this.state.isLoading) {
+        if (this.state.isLoading && this.state.existeError === false) {
             return (
                 <View style={{ flex: 1, paddingTop: 20 }}>
                     <Text>Cargando...</Text>
@@ -80,8 +84,8 @@ export default class MantClientesForm extends React.Component {
                          defaultText={this.state.value}
                          style={{ margin: 60, padding: 10, width: '80%', }}
                          textStyle={{}}
-                         backdropStyle={{ backgroundColor: "#F6F8FA" }}
-                         optionListStyle={{ backgroundColor: "#ffffff", width: '80%', }}>
+                         backdropStyle={{ backgroundColor: "#F6F8FA",  }}
+                         optionListStyle={{ backgroundColor: "#ffffff", width: '80%', height: '60%',}}>
 
                          {
                              this.state.dataSource.data.map((client) => (

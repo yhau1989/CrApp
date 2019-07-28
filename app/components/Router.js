@@ -115,8 +115,8 @@ const AuthStack = createStackNavigator({
 
 },
 {
-  //initialRouteName: 'Login',
-  initialRouteName: 'Clientes',
+  initialRouteName: 'Login',
+  //initialRouteName: 'Clientes',
   defaultNavigationOptions: {headerMode: 'screen'},
 });
 
