@@ -11,6 +11,8 @@ import ProcesosForm from './ProcesosForm';
 import MantMaterialesForm from './MantMaterialesForm';
 import MantClientesForm from './MantClientesForm';
 import MantProveedoresForm from './MantProveedoresForm';
+import DashboardProcesos from './DashboardProcesos';
+import DashboardReportes from './DashboardReportes';
 
 
 const AuthStack = createStackNavigator({
@@ -113,10 +115,32 @@ const AuthStack = createStackNavigator({
     }
   },
 
+  DashboardProcesos: {
+    screen: DashboardProcesos,
+    navigationOptions: {
+      title: 'Operaciones',
+      headerMode: 'screen',
+      headerStyle: { backgroundColor: '#000000', },
+      headerTintColor: '#fff',
+      headerTitleStyle: { fontWeight: 'bold', }
+    }
+  },
+
+  DashboardReportes: {
+    screen: DashboardReportes,
+    navigationOptions: {
+      title: 'Reportes',
+      headerMode: 'screen',
+      headerStyle: { backgroundColor: '#000000', },
+      headerTintColor: '#fff',
+      headerTitleStyle: { fontWeight: 'bold', }
+    }
+  },
 },
 {
-  initialRouteName: 'Login',
-  //initialRouteName: 'Clientes',
+  //initialRouteName: 'Login',
+  initialRouteName: 'Mantenimientos',
+  //initialRouteName: 'Proveedores',
   defaultNavigationOptions: {headerMode: 'screen'},
 });
 

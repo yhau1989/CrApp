@@ -13,33 +13,29 @@ export default class DashboardMantenimientos extends React.Component {
     render() {
         return (
                 <View style={styles.containerForm}>
-                    <Text style={styles.welcome}>Seleccionar Mantenimiento</Text>
-                    <Text style={styles.instructions} onPress={this.registerPressMateriales.bind(this)}>
-                        <Ionicons name="ios-arrow-dropright-circle" size={15} color="grey" /> Materiales
-                    </Text>
-                    <Text style={styles.instructions} onPress={this.registerPressClientes.bind(this)}>
-                        <Ionicons name="ios-arrow-dropright-circle" size={15} color="grey" /> Clientes
-                    </Text>
-                    <Text style={styles.instructions} onPress={this.registerPressProveedores.bind(this)}>
-                        <Ionicons name="ios-arrow-dropright-circle" size={15} color="grey" /> Proveedores
-                    </Text>
+                    <Text style={styles.welcome}>Mantenimiento</Text>
+                    <View>
+
+                        <Text style={styles.instructions} onPress={this.registerPressMateriales.bind(this)}>
+                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="grey" /> Materiales
+                        </Text>
+                        <Text style={styles.instructions} onPress={this.registerPressClientes.bind(this)}>
+                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="grey" /> Clientes
+                        </Text>
+                        <Text style={styles.instructions} onPress={this.registerPressProveedores.bind(this)}>
+                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="grey" /> Proveedores
+                        </Text>
+                    </View>
                     
                 </View>
         );
     }
 }
-
 const styles = StyleSheet.create({
     containerForm: {
         justifyContent: 'center',
         alignItems: 'center',
         flex: 1,
-    },
-    instructions: {
-        textAlign: 'center',
-        color: 'grey',
-        marginBottom: 5,
-        fontWeight: '700',
     },
     welcome: {
         fontSize: 22,
@@ -47,6 +43,12 @@ const styles = StyleSheet.create({
         marginBottom: 90,
         color: 'grey',
         fontWeight: '900',
+    },
+    instructions: {
+        //textAlign: 'left',
+        color: 'grey',
+        marginBottom: 5,
+        fontWeight: '500',
     },
 });
 

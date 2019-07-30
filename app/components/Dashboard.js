@@ -7,9 +7,8 @@ import NavigationService from "./NavigationService";
 export default class Dashboard extends React.Component {
     
     registerPressMantenimientos() { NavigationService.navigate('Mantenimientos'); }
-    registerPressCompras() { NavigationService.navigate('Compras'); }
-    registerPressVentas() { NavigationService.navigate('Ventas'); }
-    registerPressOperaciones() { NavigationService.navigate('Procesos'); }
+    registerPressOperacioneDashs() { NavigationService.navigate('DashboardProcesos'); }
+    registerReportes() { NavigationService.navigate('DashboardReportes'); }
     registerPressSalir() { NavigationService.navigate('Login'); }
 
     render() {
@@ -20,15 +19,13 @@ export default class Dashboard extends React.Component {
                         <Text style={styles.instructions} onPress={this.registerPressMantenimientos.bind(this)}>
                             <Ionicons name="ios-arrow-dropright-circle" size={15} color="grey" /> Mantenimientos
                         </Text>
-                            <Text style={styles.instructions} onPress={this.registerPressCompras.bind(this)}>
-                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="grey" /> Compras
-                        </Text>
-                        <Text style={styles.instructions} onPress={this.registerPressVentas.bind(this)}>
-                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="grey" /> Ventas
-                        </Text>
-                        <Text style={styles.instructions} onPress={this.registerPressOperaciones.bind(this)}>
+                    <Text style={styles.instructions} onPress={this.registerPressOperacioneDashs.bind(this)}>
                             <Ionicons name="ios-arrow-dropright-circle" size={15} color="grey" /> Procesos
                         </Text>
+                        <Text style={styles.instructions} onPress={this.registerReportes.bind(this)}>
+                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="grey" /> Reportes
+                        </Text>
+
                         <Text style={styles.instructions} onPress={this.registerPressSalir.bind(this)}>
                             <Ionicons name="ios-arrow-round-back" size={15} color="grey" /> Salir
                         </Text>

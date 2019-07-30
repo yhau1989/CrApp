@@ -14,11 +14,6 @@ export default class BackgroundForm extends React.Component {
           <Text style={styles.instructions}> Software Monkey  </Text>
         </View> 
       </ImageBackground>
-
-     
-       
-     
-
     );
   }
 }

@@ -15,7 +15,7 @@ export default class LoginForm extends React.Component {
     {
         let emailError = this.state.email;
         let passwordError = this.state.password;
-        if (emailError.length <= 0)
+        if (emailError.length <= 0 || passwordError.length <= 0)
         {
            Alert.alert('Ingrese usuario y contraseña')
         }

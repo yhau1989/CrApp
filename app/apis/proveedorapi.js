@@ -1,5 +1,5 @@
 //const url_base = 'http://localhost/CrServices/api/usr/';
-const url_base = 'http://35.222.84.162/CrServices/cli/prov/';
+const url_base = 'http://35.222.84.162/CrServices/api/prov/';
 
 
 
@@ -66,7 +66,7 @@ export async function addproveedor(ruc, nombres, apellidos, direccion, telefono)
                 headers: { 'Content-Type': 'application/json' }
             })
             .then((response) => response.json())
-            .then((responseJson) => { return responseJson.mensaje;})
+            .then((responseJson) => { return responseJson;})
             .catch((error) => {return error;});
     } catch (error) {return error;}
 }

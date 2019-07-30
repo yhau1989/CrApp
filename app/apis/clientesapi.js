@@ -1,8 +1,6 @@
 //const url_base = 'http://localhost/CrServices/api/usr/';
 const url_base = 'http://35.222.84.162/CrServices/api/cli/';
 
-
-
 export async function listcliente() {
 
     let myurl = url_base + 'clientlist.php';

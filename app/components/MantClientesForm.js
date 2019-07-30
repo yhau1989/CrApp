@@ -1,72 +1,109 @@
 import * as React from 'react';
 import { Select, Option } from "react-native-chooser";
-import { Alert, View, StyleSheet, AppRegistry, TextInput, Button, Text} from 'react-native';
+import { Alert, StyleSheet, AppRegistry, TextInput, Button, Text, Picker, View,} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { addcliente, listcliente } from '../apis/clientesapi';
+import { addcliente, listcliente, editcliente } from '../apis/clientesapi';
+
 
 
 export default class MantClientesForm extends React.Component {
 
     constructor(props) {
-        super(props);
-        this.state = { ruc: '', nombre: '', apellido: '', direccion: '', email: '', telefono: '', value: 'Clientes', dataSource: '', isLoading: true, 
-        existeError: false}
-        this._onPressButton = this._onPressButton.bind(this);
-
+        super(props)
+        this.state = { colorAccionNew: 'grey', colorAccionEdit: 'grey', accion:'new', idClient: '', ruc: '', nombre: '', apellido: '', direccion: '', telefono: '', value: 'Lista de Clientes', dataSource: '', isLoading: true, existeError: false}
+        this._onPressButton = this._onPressButton.bind(this)
     }
 
-    onSelect(value, label) {
-        this.setState({ value: label });
-        Alert.alert(`A seleccionado el id: ${value}`);
-
+    onSelect(value, label) { 
+        this.setState({ value: label, idClient: value })
+        let client = this.state.dataSource.data.filter(client => client.id == value)
+        if (client.length > 0) {
+            this.setState({ colorAccionNew: 'grey', colorAccionEdit: 'grey', idClient: client[0].id, ruc: client[0].ruc, nombre: client[0].nombres, apellido: client[0].apellidos, direccion: client[0].direccion, email: client[0].email, telefono: client[0].telefono })
+        } 
     }
 
     _onPressButton() {
+        let ruc = this.state.ruc
+        let nombre = this.state.nombre
+        let apellido = this.state.apellido
+        let direccion = this.state.direccion
+        let telefono = this.state.telefono
 
-        //this.setState({ isLoading: true, });
-
-        let email = this.state.email;
-        let ruc = this.state.ruc;
-        let nombre = this.state.nombre;
-        let apellido = this.state.apellido;
-        let direccion = this.state.direccion;
-        let telefono = this.state.telefono;
-
-        if (email.length <= 0 || ruc.length <= 0 || nombre.length <= 0 || apellido.length <= 0 || direccion.length <= 0 || telefono.length <= 0) {
-            
-            Alert.alert('Ingrese los datos para continuar');
+        if (ruc.length <= 0 || nombre.length <= 0 || apellido.length <= 0 || direccion.length <= 0 || telefono.length <= 0) {
+            Alert.alert('Ingrese los datos para continuar')
         }
         else {
-            addcliente(ruc, nombre, apellido, direccion, telefono).then((responseJson) => {
-                 let error = (responseJson.error == 0) ? false: true;
-                this.setState({ existeError: error, });
-                Alert.alert(responseJson.mensaje);
-            }).catch((error) => {
-                Alert.alert('existen problemas de conexión');
-            });
+
+            if(this.state.accion == 'new')
+            {
+                addcliente(ruc, nombre, apellido, direccion, telefono).then((responseJson) => {
+                    let error = (responseJson.error == 0) ? false : true
+                    this.setState({ existeError: error})
+                    Alert.alert(responseJson.mensaje)
+                }).catch((error) => {
+                    Alert.alert('existen problemas de conexión')
+                })
+            }
+            else if (this.state.accion == 'edit')
+            {
+                if (ruc.length <= 0 || nombre.length <= 0 || apellido.length <= 0 || direccion.length <= 0 || telefono.length <= 0) {
+                    Alert.alert('Ingrese los datos para continuar')
+                }
+                else
+                {
+                    editcliente(this.state.idClient, ruc, nombre, apellido, direccion, telefono).then((responseJson) => {
+                        let error = (responseJson.error == 0) ? false : true
+                        this.setState({ existeError: error, })
+                        Alert.alert(responseJson.mensaje)
+                    }).catch((error) => {
+                        Alert.alert('existen problemas de conexión')
+                    })
+                }
+
+            }
         }
+    }
+
+    validateList = (obj) => {
+        let lista = {
+            error: 0,
+            mensaje: null,
+            data: null
+        }
+        return (obj.data && obj.data.length > 0) ? obj : lista
     }
 
     getlisClientes()
     {
         listcliente().then((responseJson) => {
-            // Alert.alert('Conexion con exito');
-            this.setState({
-                isLoading: false,
-                dataSource: responseJson
-            });
-
+            this.setState({ isLoading: false, dataSource: this.validateList(responseJson)})
         }).catch((error) => {
-            Alert.alert('Problemas para lisar los clientes');
-        });
+            Alert.alert('Problemas para listar los clientes')
+        })
     }
+
+    newPress() { this.setState({ value: 'Lista de Clientes', colorAccionNew: '#1194F6', colorAccionEdit: 'grey', accion: 'new', idClient:'', ruc: '', nombre: '', apellido: '', direccion: '', email: '', telefono: '' })}
+
+    editPress()
+    {
+        if (this.state.idClient.length > 0)
+        {
+            let client = this.state.dataSource.data.filter(client => client.id == this.state.idClient)
+            if (client.length > 0) {
+                this.setState({ colorAccionNew: 'grey', colorAccionEdit: '#1194F6', accion: 'edit', idClient: client[0].id, ruc: client[0].ruc, nombre: client[0].nombres, apellido: client[0].apellidos, direccion: client[0].direccion, email: client[0].email, telefono: client[0].telefono })
+            }
+        }
+    }
+
+    cancelPress() { this.setState({ colorAccionNew: 'grey', colorAccionEdit: 'grey', accion: 'new', idClient: '', ruc: '', nombre: '', apellido: '', direccion: '', email: '', telefono: '', value: 'Lista de Clientes'})}
+
 
     render() {
 
         this.getlisClientes();
         if (this.state.isLoading && this.state.existeError === false) {
             return (
-                <View style={{ flex: 1, paddingTop: 20 }}>
+                <View style={styles.containerForm}>
                     <Text>Cargando...</Text>
                 </View>
             );
@@ -75,62 +112,66 @@ export default class MantClientesForm extends React.Component {
 
 
              return (
-                 <View style={styles.containerForm}>
-
-
-
-                     <Select
-                         onSelect={this.onSelect.bind(this)}
-                         defaultText={this.state.value}
-                         style={{ margin: 60, padding: 10, width: '80%', }}
-                         textStyle={{}}
-                         backdropStyle={{ backgroundColor: "#F6F8FA",  }}
-                         optionListStyle={{ backgroundColor: "#ffffff", width: '80%', height: '60%',}}>
-
+                <View style={styles.containerForm}>
+                    <Select
+                        onSelect={this.onSelect.bind(this)}
+                        defaultText={this.state.value}
+                        style={{ margin: 10, padding: 10, width: '100%', }}
+                        textStyle={{}}
+                        backdropStyle={{ backgroundColor: "#F6F8FA", }}
+                        optionListStyle={{ backgroundColor: "#ffffff", width: '80%', height: '60%', }}>
                          {
-                             this.state.dataSource.data.map((client) => (
-                                 <Option key={client.id} value={client.id}>{`${client.nombres} ${client.apellidos}`}</Option>)
-                         )}
-                     </Select>
+                             this.state.dataSource.data ? (
+                                 this.state.dataSource.data.map((client) => (
+                                     <Option key={client.id} value={client.id}>{`${client.nombres} ${client.apellidos}`}</Option>
+                                 )
+                                 )
+                             )
+                                 : ('')
+                         }
+                    </Select>
 
-                     <TextInput style={styles.input} placeholder='Ruc' onChangeText={(value) => this.setState({ ruc: value.trim() })} />
-                     <TextInput style={styles.input} placeholder='Nombres' onChangeText={(value) => this.setState({ nombre: value.trim() })} />
-                     <TextInput style={styles.input} placeholder='Apellidos' onChangeText={(value) => this.setState({ apellido: value.trim() })} />
-                     <TextInput style={styles.input} placeholder='Dirección' onChangeText={(value) => this.setState({ direccion: value.trim() })} />
-                     <TextInput style={styles.input} placeholder='Email' onChangeText={(value) => this.setState({ email: value.trim() })} />
-                     <TextInput style={styles.input} placeholder='teléfono' onChangeText={(value) => this.setState({ telefono: value.trim() })} />
+                    <TextInput style={styles.input} placeholder='Ruc' value={this.state.ruc} onChangeText={(value) => this.setState({ ruc: value })} />
+                    <TextInput style={styles.input} placeholder='Nombres' value={this.state.nombre} onChangeText={(value) => this.setState({ nombre: value })} />
+                    <TextInput style={styles.input} placeholder='Apellidos' value={this.state.apellido} onChangeText={(value) => this.setState({ apellido: value })} />
+                    <TextInput style={styles.input} placeholder='Dirección' value={this.state.direccion} onChangeText={(value) => this.setState({ direccion: value })} />
+                    <TextInput style={styles.input} placeholder='Teléfono' value={this.state.telefono} onChangeText={(value) => this.setState({ telefono: value })} />
 
-                     <Button buttonStyle={styles.boton} title="Guardar" accessibilityLabel="Guardar"
-                         onPress={this._onPressButton.bind(this)}>
-                     </Button>
+                <View style={styles.input}>
+                        <Picker
+                            selectedValue={this.state.language}
+                            style={{ width: '100%' }}
+                            itemStyle={{ width: '100%' }}
+                            onValueChange={(itemValue, itemIndex) => this.setState({ language: itemValue }) }>
+                        <Picker.Item label="Activo" value="1"  />
+                        <Picker.Item label="Inactivo" value="2" />
+                        </Picker> 
+                    </View>
 
 
+                    <Button buttonStyle={styles.boton} title="Guardar" accessibilityLabel="Guardar"
+                        onPress={this._onPressButton.bind(this)}>
+                    </Button>
 
-                     <View style={styles.footer}>
-                         <View style={styles.boxlateral}>
-                             <Text style={styles.textLateral}>
-                                 <Ionicons name="ios-person-add" size={20} style={styles.textLateral} />    Nuevo
-                            </Text>
-                         </View>
-                         <View style={styles.boxlateral}>
-                             <Text style={styles.textLateral}>
-                                 <Ionicons name="md-create" size={20} style={styles.textLateral} />    Editar
-                            </Text>
-                         </View>
-                         <View style={styles.boxlateral}>
-                             <Text style={styles.textLateral}>
-                                 <Ionicons name="ios-cloud-done" size={20} style={styles.textLateral} />    Guardar
-                            </Text>
-                         </View>
-                     </View>
-
-                 </View>
-
-             );
-
-        
-
-        
+                    <View style={styles.footer}>
+                        <View style={styles.boxlateral}>
+                             <Text style={{ color: this.state.colorAccionNew}} onPress={this.newPress.bind(this)}>
+                                <Ionicons name="ios-person-add" size={20} color={this.state.colorAccionNew} />    Nuevo
+                        </Text>
+                        </View>
+                        <View style={styles.boxlateral} >
+                            <Text style={{color: this.state.colorAccionEdit}} onPress={this.editPress.bind(this)}>
+                                 <Ionicons name="md-create" size={20} color={this.state.colorAccionEdit} />    Editar
+                        </Text>
+                        </View>
+                        <View style={styles.boxlateral}>
+                            <Text style={styles.textLateral} onPress={this.cancelPress.bind(this)}>
+                                 <Ionicons name="md-close" size={20} color={this.state.colorAccion} />    Cancelar
+                        </Text>
+                        </View>
+                    </View>
+                </View>
+             );        
     }
 }
 
@@ -146,7 +187,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         backgroundColor: 'white',
         margin: 6,
-        padding: 10,
+        padding: 5,
         width: '80%',
         borderRadius: 5,
 
