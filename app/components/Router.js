@@ -138,9 +138,8 @@ const AuthStack = createStackNavigator({
   },
 },
 {
-  //initialRouteName: 'Login',
-  initialRouteName: 'Mantenimientos',
-  //initialRouteName: 'Proveedores',
+  initialRouteName: 'Login',
+  //initialRouteName: 'Materiales',
   defaultNavigationOptions: {headerMode: 'screen'},
 });
 

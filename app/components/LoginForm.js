@@ -24,6 +24,7 @@ export default class LoginForm extends React.Component {
             login(emailError, passwordError).then((responseJson) => {
                 if (responseJson.error == 0)
                 {
+                    this.setState({ email: '', password: '' });
                     NavigationService.navigate('Dashboard');
                 }
                 else
@@ -46,8 +47,8 @@ export default class LoginForm extends React.Component {
             <ImageBackground source={require('../assets/fondo_oscuro.png')} style={{ width: '100%', height: '100%', }}>
                 <View style={styles.containerForm}>
                     <Text style={styles.welcome}>Procefibras App</Text>
-                    <TextInput style={styles.input} placeholder='Email' onChangeText={(value) => this.setState({ email: value.trim() })} />
-                    <TextInput secureTextEntry={true} style={styles.input} placeholder='Contraseña' onChangeText={(value) => this.setState({ password: value.trim() })} />
+                    <TextInput style={styles.input} placeholder='Email' value={this.state.email} onChangeText={(value) => this.setState({ email: value.trim() })} />
+                    <TextInput secureTextEntry={true} style={styles.input} value={this.state.password} placeholder='Contraseña' onChangeText={(value) => this.setState({ password: value.trim() })} />
                     <Button buttonStyle={styles.boton} title="Ingresar" accessibilityLabel="Ingrese los datos y presiones aquí para continuar"
                         onPress={this._onPressButton.bind(this)}
                     ></Button>

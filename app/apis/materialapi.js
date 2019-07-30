@@ -49,7 +49,6 @@ export async function addmaterial(tipo) {
     let myurl = url_base + 'mtradd.php'
     let mtr = {
         mtr: {
-            id: id,
             tipo: tipo
         }
     };
@@ -61,7 +60,7 @@ export async function addmaterial(tipo) {
                 headers: { 'Content-Type': 'application/json' }
             })
             .then((response) => response.json())
-            .then((responseJson) => {return responseJson.mensaje;})
+            .then((responseJson) => {return responseJson;})
             .catch((error) => {return error;});
     } catch (error) {return error;}
 }

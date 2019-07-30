@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Recycling Plant App",
-    "slug": "CrApp2",
+    "slug": "CrApp",
     "privacy": "public",
     "sdkVersion": "33.0.0",
     "android": {

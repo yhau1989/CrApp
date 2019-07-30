@@ -1,78 +1,172 @@
 import * as React from 'react';
-import { Alert, View, StyleSheet, AppRegistry, TextInput, Button, Text} from 'react-native';
+import { Select, Option } from "react-native-chooser";
+import { Alert, StyleSheet, AppRegistry, TextInput, Button, Text, Picker, View, } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-//import { registro } from '../apis/usuarioapi';
+import { listmaterial, editmaterial, addmaterial} from '../apis/materialapi';
 
 
 export default class MantMaterialesForm extends React.Component {
-
     constructor(props) {
-        super(props);
-        this.state = { nombre: '', apellido:'', email: '', password: '' }
-        this._onPressButton = this._onPressButton.bind(this);
+        super(props)
+        this.state = { colorAccionNew: 'grey', colorAccionEdit: 'grey', accion: 'new', id: '', tipo: '',value: 'Tipos de materiales', dataSource: '', isLoading: true, existeError: false }
+        this._onPressButton = this._onPressButton.bind(this)
+    }
+
+    onSelect(value, label) {
+        this.setState({ value: label, id: value })
+        let materiales = this.state.dataSource.data.filter(mat => mat.id == value)
+        if (materiales.length > 0) {
+            Alert.alert('Si desea cambiar los datosm habilite el control editar')
+            this.setState({ colorAccionNew: 'grey', colorAccionEdit: 'grey', id: materiales[0].id, tipo: materiales[0].tipo, })
+        }
     }
 
     _onPressButton() {
-        let emailError = this.state.email;
-        let passwordError = this.state.password;
-        let nombre = this.state.nombre;
-        let apellido = this.state.apellido;
-        if (emailError.length <= 0 || passwordError.length <= 0 || nombre.length <= 0 || apellido.length <= 0) {
-            Alert.alert('Ingrese los datos para continuar');
+        let tipo = this.state.tipo
+
+        if (tipo.length <= 0 ) {
+            Alert.alert('Ingrese los datos para continuar')
         }
         else {
-            registro(nombre, apellido, emailError, passwordError).then((responseJson) => {
-                Alert.alert(responseJson.mensaje);
-            }).catch((error) => {
-                Alert.alert('existen problemas de conexión');
-            });
+
+           Alert.alert('Cargando...')
+
+            if (this.state.accion == 'new') {
+               
+                addmaterial(tipo).then((responseJson) => {
+                    let error = (responseJson.error == 0) ? false : true
+                    this.setState({ existeError: error })
+                    Alert.alert(responseJson.mensaje)
+                }).catch((error) => {
+                    //Alert.alert('existen problemas de conexión')
+                    Alert.alert(error)
+                })
+            }
+            else if (this.state.accion == 'edit') {
+                if (tipo.length <= 0) {
+                    Alert.alert('Ingrese los datos para continuar')
+                }
+                else {
+                       editmaterial(this.state.id, tipo).then((responseJson) => {
+                        let error = (responseJson.error == 0) ? false : true
+                        this.setState({ existeError: error, })
+                        Alert.alert(responseJson.mensaje)
+                    }).catch((error) => {
+                        //Alert.alert('existen problemas de conexión')
+                        Alert.alert(error)
+                    })
+                }
+            }
         }
     }
 
+
+    validateList = (obj) => {
+        let lista = {
+            error: 0,
+            mensaje: null,
+            data: null
+        }
+        return (obj.data && obj.data.length > 0) ? obj : lista
+    }
+
+    getlisMateriales() {
+        listmaterial().then((responseJson) => {
+            let error = (responseJson.error == 0) ? false : true
+            this.setState({ existeError: error, isLoading: false, dataSource: this.validateList(responseJson) })
+
+        }).catch((error) => {
+            Alert.alert('Problemas para listar los proveedores')
+        })
+    }
+
+    newPress() { this.setState({ value: 'Tipos de materiales', colorAccionNew: '#1194F6', colorAccionEdit: 'grey', accion: 'new', id: '', tipo:''}) }
+
+    editPress() {
+
+        if (this.state.id.length > 0) {
+            let materiales = this.state.dataSource.data.filter(mat => mat.id == this.state.id)
+            if (materiales.length > 0) {
+                this.setState({ colorAccionNew: 'grey', colorAccionEdit: '#1194F6', accion: 'edit', id: materiales[0].id, tipo: materiales[0].tipo,})
+            }
+        }
+    }
+
+    cancelPress() { this.setState({ colorAccionNew: 'grey', colorAccionEdit: 'grey', accion: 'new', id: '', tipo: '', value: 'Tipos de materiales' }) }
+
+
+
     render() {
-        return (
+
+        this.getlisMateriales();
+        if (this.state.isLoading && this.state.existeError === false) {
+            return (
                 <View style={styles.containerForm}>
-                    {/* <TextInput style={styles.input} placeholder='Nombres' onChangeText={(value) => this.setState({ nombre: value.trim() })} />
-                    <TextInput style={styles.input} placeholder='Apellidos' onChangeText={(value) => this.setState({ apellido: value.trim() })} />
-                    <TextInput style={styles.input} placeholder='Email' onChangeText={(value) => this.setState({ email: value.trim() })} />
-                    <TextInput secureTextEntry={true} style={styles.input} placeholder='Contraseña' onChangeText={(value) => this.setState({ password: value.trim() })}/> */}
+                    <Text>Cargando...</Text>
+                </View>
+            );
+        }
 
-                    <Button buttonStyle={styles.boton} title="Vender" accessibilityLabel="Vender"
+        return (
+            <View style={styles.containerForm}>
+                <Select
+                    onSelect={this.onSelect.bind(this)}
+                    defaultText={this.state.value}
+                    style={{ margin: 10, padding: 10, width: '100%', }}
+                    textStyle={{}}
+                    backdropStyle={{ backgroundColor: "#F6F8FA", }}
+                    optionListStyle={{ backgroundColor: "#ffffff", width: '80%', height: '60%', }}>
+                    {
+                        this.state.dataSource.data ? 
+                        (
+                            this.state.dataSource.data.map((material) => (
+                                <Option key={material.id} value={material.id}>{material.tipo}</Option>
+                            ))
+                        )
+                        : ('')
+                    }
+                </Select>
+
+                <TextInput style={styles.input} placeholder='Tipo' value={this.state.tipo} onChangeText={(value) => this.setState({ tipo: value })} />
+
+                <View style={styles.input}>
+                    <Picker
+                        selectedValue={this.state.language}
+                        style={{ width: '100%' }}
+                        itemStyle={{ width: '100%' }}
+                        onValueChange={(itemValue, itemIndex) => this.setState({ language: itemValue })}>
+                        <Picker.Item label="Activo" value="1" />
+                        <Picker.Item label="Inactivo" value="2" />
+                    </Picker>
+                </View>
+
+
+                <Button buttonStyle={styles.boton} title="Guardar" accessibilityLabel="Guardar"
                     onPress={this._onPressButton.bind(this)}>
-                    </Button>
-
+                </Button>
 
                 <View style={styles.footer}>
                     <View style={styles.boxlateral}>
-                        <Text style={styles.textLateral}>
-                            <Ionicons name="ios-person-add" size={20} style={styles.textLateral} />    Nuevo
-                            </Text>
+                        <Text style={{ color: this.state.colorAccionNew }} onPress={this.newPress.bind(this)}>
+                            <Ionicons name="ios-person-add" size={20} color={this.state.colorAccionNew} />    Nuevo
+                        </Text>
+                    </View>
+                    <View style={styles.boxlateral} >
+                        <Text style={{ color: this.state.colorAccionEdit }} onPress={this.editPress.bind(this)}>
+                            <Ionicons name="md-create" size={20} color={this.state.colorAccionEdit} />    Editar
+                        </Text>
                     </View>
                     <View style={styles.boxlateral}>
-                        <Text style={styles.textLateral}>
-                            <Ionicons name="md-create" size={20} style={styles.textLateral} />    Editar
-                            </Text>
-                    </View>
-                    <View style={styles.boxlateral}>
-                        <Text style={styles.textLateral}>
-                            <Ionicons name="ios-cloud-done" size={20} style={styles.textLateral} />    Guardar
-                            </Text>
+                        <Text style={styles.textLateral} onPress={this.cancelPress.bind(this)}>
+                            <Ionicons name="md-close" size={20} color={this.state.colorAccion} />    Cancelar
+                        </Text>
                     </View>
                 </View>
-
-
-
-
-
-
-
-
-
-                </View>
-
+            </View>
         );
     }
 }
+
 
 const styles = StyleSheet.create({
     containerForm: {
@@ -80,22 +174,21 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flex: 1,
     },
-    input:{
+    input: {
         borderColor: 'grey',
         //color: 'grey',
         borderWidth: 1,
         backgroundColor: 'white',
         margin: 6,
-        padding: 10,
+        padding: 5,
         width: '80%',
         borderRadius: 5,
 
     },
-    boton:{
+    boton: {
         backgroundColor: 'grey',
         color: 'blue',
         borderWidth: 1,
-
         margin: 6,
         padding: 10,
         width: '80%',
