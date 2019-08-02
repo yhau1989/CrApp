@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Alert, View, StyleSheet, AppRegistry, ImageBackground, Text, TextInput, Button} from 'react-native';
+import { Alert, View, StyleSheet, AppRegistry, TouchableOpacity, Text, TextInput, Button} from 'react-native';
 import {login} from '../apis/usuarioapi';
 import NavigationService from "./NavigationService";
 
@@ -44,14 +44,14 @@ export default class LoginForm extends React.Component {
 
     render() {
         return (
-            <ImageBackground source={require('../assets/fondo_oscuro.png')} style={{ width: '100%', height: '100%', }}>
                 <View style={styles.containerForm}>
                     <Text style={styles.welcome}>Procefibras App</Text>
-                    <TextInput style={styles.input} placeholder='Email' value={this.state.email} onChangeText={(value) => this.setState({ email: value.trim() })} />
-                    <TextInput secureTextEntry={true} style={styles.input} value={this.state.password} placeholder='Contraseña' onChangeText={(value) => this.setState({ password: value.trim() })} />
-                    <Button buttonStyle={styles.boton} title="Ingresar" accessibilityLabel="Ingrese los datos y presiones aquí para continuar"
-                        onPress={this._onPressButton.bind(this)}
-                    ></Button>
+                    <TextInput style={styles.input} placeholder='Email' placeholderTextColor='#323232' value={this.state.email} onChangeText={(value) => this.setState({ email: value.trim() })} />
+                    <TextInput placeholderTextColor='#323232' secureTextEntry={true} style={styles.input} value={this.state.password} placeholder='Contraseña' onChangeText={(value) => this.setState({ password: value.trim() })} />
+
+                    <TouchableOpacity onPress={this._onPressButton.bind(this)}>
+                        <Text style={styles.botonText}>Ingresar</Text>
+                    </TouchableOpacity>
 
                     <Text style={styles.instructions}>
                       Si no tienes cuenta <Text style={styles.link} onPress={ this.registerPress.bind(this) }>registrate aquí</Text>
@@ -59,10 +59,7 @@ export default class LoginForm extends React.Component {
                     <Text style={styles.instructions}>
                         <Text style={styles.link} onPress={this.resetPasswordPress.bind(this)}>Recuperar contraseña</Text>
                     </Text>
-                    
                 </View>
-            </ImageBackground>
-
         );
     }
 }
@@ -72,40 +69,40 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         flex: 1,
+        backgroundColor: '#2ecc71',
+        color: '#323232',
     },
     welcome: {
-        fontSize: 22,
+        fontSize: 25,
         textAlign: 'center',
         margin: 10,
-        color: '#ffffff',
+        color: 'black',
         fontWeight: '700',
     },
     instructions: {
         textAlign: 'center',
-        color: '#ffffff',
+        color: '#4c4c4c',
         marginBottom: 5,
         fontWeight: '700',
     },
     input:{
-        borderColor: 'grey',
-        //color: 'grey',
-        borderWidth: 1,
-        backgroundColor: 'white',
+        color: '#323232',
         margin: 6,
         padding: 10,
         width: '80%',
         borderRadius: 5,
-
+        backgroundColor: '#69dd9a',
     },
-    boton:{
-        backgroundColor: 'grey',
-        color: 'blue',
-        borderWidth: 1,
-
+    botonText:{
+        color: '#2ecc71',
+        textAlign: 'center',
+        backgroundColor: 'black',
         margin: 6,
         padding: 10,
-        width: '80%',
         borderRadius: 5,
+        fontWeight: '700',
+        width: 200,
+        fontSize: 16,
     },
     link: {
       textDecorationLine: 'underline'

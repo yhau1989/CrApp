@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Select, Option } from "react-native-chooser";
-import { Alert, StyleSheet, AppRegistry, TextInput, Button, Text, Picker, View, } from 'react-native';
+import { Alert, StyleSheet, AppRegistry, TextInput, Button, Text, Picker, View, TouchableOpacity, 
+         TouchableWithoutFeedback, StatusBar, SafeAreaView, Keyboard, KeyboardAvoidingView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { listmaterial, editmaterial, addmaterial} from '../apis/materialapi';
 
@@ -80,14 +81,14 @@ export default class MantMaterialesForm extends React.Component {
         })
     }
 
-    newPress() { this.setState({ value: 'Tipos de materiales', colorAccionNew: '#1194F6', colorAccionEdit: 'grey', accion: 'new', id: '', tipo:''}) }
+    newPress() { this.setState({ value: 'Tipos de materiales', colorAccionNew: '#2ecc71', colorAccionEdit: 'grey', accion: 'new', id: '', tipo:''}) }
 
     editPress() {
 
         if (this.state.id.length > 0) {
             let materiales = this.state.dataSource.data.filter(mat => mat.id == this.state.id)
             if (materiales.length > 0) {
-                this.setState({ colorAccionNew: 'grey', colorAccionEdit: '#1194F6', accion: 'edit', id: materiales[0].id, tipo: materiales[0].tipo,})
+                this.setState({ colorAccionNew: 'grey', colorAccionEdit: '#2ecc71', accion: 'edit', id: materiales[0].id, tipo: materiales[0].tipo,})
             }
         }
     }
@@ -108,61 +109,77 @@ export default class MantMaterialesForm extends React.Component {
         }
 
         return (
-            <View style={styles.containerForm}>
-                <Select
-                    onSelect={this.onSelect.bind(this)}
-                    defaultText={this.state.value}
-                    style={{ margin: 10, padding: 10, width: '100%', }}
-                    textStyle={{}}
-                    backdropStyle={{ backgroundColor: "#F6F8FA", }}
-                    optionListStyle={{ backgroundColor: "#ffffff", width: '80%', height: '60%', }}>
-                    {
-                        this.state.dataSource.data ? 
-                        (
-                            this.state.dataSource.data.map((material) => (
-                                <Option key={material.id} value={material.id}>{material.tipo}</Option>
-                            ))
-                        )
-                        : ('')
-                    }
-                </Select>
-
-                <TextInput style={styles.input} placeholder='Tipo' value={this.state.tipo} onChangeText={(value) => this.setState({ tipo: value })} />
-
-                <View style={styles.input}>
-                    <Picker
-                        selectedValue={this.state.language}
-                        style={{ width: '100%' }}
-                        itemStyle={{ width: '100%' }}
-                        onValueChange={(itemValue, itemIndex) => this.setState({ language: itemValue })}>
-                        <Picker.Item label="Activo" value="1" />
-                        <Picker.Item label="Inactivo" value="2" />
-                    </Picker>
-                </View>
 
 
-                <Button buttonStyle={styles.boton} title="Guardar" accessibilityLabel="Guardar"
-                    onPress={this._onPressButton.bind(this)}>
-                </Button>
+            <SafeAreaView style={styles.containerForm}>
+                <StatusBar barStyle="light-content" />
+                <KeyboardAvoidingView behavior="padding" style={styles.containerForm}>
+                    <TouchableWithoutFeedback>
 
-                <View style={styles.footer}>
-                    <View style={styles.boxlateral}>
-                        <Text style={{ color: this.state.colorAccionNew }} onPress={this.newPress.bind(this)}>
-                            <Ionicons name="ios-person-add" size={20} color={this.state.colorAccionNew} />    Nuevo
-                        </Text>
+                            <View style={{ width: '80%' }}>
+                                <Select
+                                    onSelect={this.onSelect.bind(this)}
+                                    defaultText={this.state.value}
+                                    style={{ margin: 7, width: '96%', borderRadius: 5, borderColor: 'grey', borderWidth: 1, }}
+                                    textStyle={{}}
+                                    backdropStyle={{ backgroundColor: "#F6F8FA", }}
+                                    optionListStyle={{ backgroundColor: "#ffffff", width: '80%', height: '60%', }}>
+                                    {
+                                        this.state.dataSource.data ?
+                                            (
+                                                this.state.dataSource.data.map((material) => (
+                                                    <Option key={material.id} value={material.id}>{material.tipo}</Option>
+                                                ))
+                                            )
+                                            : ('')
+                                    }
+                                </Select>
+
+                                <TextInput style={styles.input} placeholder='Tipo' value={this.state.tipo} onChangeText={(value) => this.setState({ tipo: value })} />
+
+                                <View style={styles.input}>
+                                    <Picker
+                                        selectedValue={this.state.language}
+                                        style={{ width: '100%' }}
+                                        itemStyle={{ width: '100%' }}
+                                        onValueChange={(itemValue, itemIndex) => this.setState({ language: itemValue })}>
+                                        <Picker.Item label="Activo" value="1" />
+                                        <Picker.Item label="Inactivo" value="2" />
+                                    </Picker>
+                                </View>
+
+                                <View style={styles.viewMaint}>
+                                    <TouchableOpacity onPress={this._onPressButton.bind(this)}>
+                                        <Text style={styles.botonText}>Guardar</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+
+                    </TouchableWithoutFeedback>
+                </KeyboardAvoidingView>
+                
+                    <View style={styles.footer}>
+                        <View style={styles.boxlateral}>
+                        <Text style={{ paddingBottom: 10, color: this.state.colorAccionNew }} onPress={this.newPress.bind(this)}>
+                                <Ionicons name="ios-person-add" size={20} color={this.state.colorAccionNew} />    Nuevo
+                            </Text>
+                        </View>
+                        <View style={styles.boxlateral} >
+                        <Text style={{ paddingBottom: 10, color: this.state.colorAccionEdit }} onPress={this.editPress.bind(this)}>
+                                <Ionicons name="md-create" size={20} color={this.state.colorAccionEdit} />    Editar
+                            </Text>
+                        </View>
+                        <View style={styles.boxlateral}>
+                            <Text style={styles.textLateral} onPress={this.cancelPress.bind(this)}>
+                                <Ionicons name="md-close" size={20} color={this.state.colorAccion} />    Cancelar
+                            </Text>
+                        </View>
                     </View>
-                    <View style={styles.boxlateral} >
-                        <Text style={{ color: this.state.colorAccionEdit }} onPress={this.editPress.bind(this)}>
-                            <Ionicons name="md-create" size={20} color={this.state.colorAccionEdit} />    Editar
-                        </Text>
-                    </View>
-                    <View style={styles.boxlateral}>
-                        <Text style={styles.textLateral} onPress={this.cancelPress.bind(this)}>
-                            <Ionicons name="md-close" size={20} color={this.state.colorAccion} />    Cancelar
-                        </Text>
-                    </View>
-                </View>
-            </View>
+                
+            </SafeAreaView>
+            
+
+
         );
     }
 }
@@ -173,26 +190,34 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         flex: 1,
+        color: '#323232',
+        width: '100%',
+        height: '100%'
+    },
+    viewMaint: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     input: {
         borderColor: 'grey',
-        //color: 'grey',
         borderWidth: 1,
         backgroundColor: 'white',
+        borderColor: 'grey',
         margin: 6,
         padding: 5,
-        width: '80%',
         borderRadius: 5,
-
     },
-    boton: {
-        backgroundColor: 'grey',
-        color: 'blue',
-        borderWidth: 1,
+    botonText: {
+        color: '#2ecc71',
+        textAlign: 'center',
+        backgroundColor: 'black',
         margin: 6,
         padding: 10,
-        width: '80%',
         borderRadius: 5,
+        fontWeight: '700',
+        width: 200,
+        fontSize: 16
     },
     footer: {
         position: 'absolute',
@@ -203,7 +228,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         height: 60,
         alignItems: 'center',
-        borderColor: 'grey',
+        backgroundColor:'black'
     },
     boxlateral: {
         flex: 1,
@@ -215,6 +240,7 @@ const styles = StyleSheet.create({
     },
     textLateral: {
         color: 'grey',
+        paddingBottom: 10,
     },
 });
 

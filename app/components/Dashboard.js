@@ -17,17 +17,17 @@ export default class Dashboard extends React.Component {
                     <Text style={styles.welcome}>Menú Principal</Text>
                     <View>
                         <Text style={styles.instructions} onPress={this.registerPressMantenimientos.bind(this)}>
-                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="grey" /> Mantenimientos
+                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Mantenimientos
                         </Text>
                     <Text style={styles.instructions} onPress={this.registerPressOperacioneDashs.bind(this)}>
-                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="grey" /> Procesos
+                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Procesos
                         </Text>
                         <Text style={styles.instructions} onPress={this.registerReportes.bind(this)}>
-                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="grey" /> Reportes
+                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Reportes
                         </Text>
 
                         <Text style={styles.instructions} onPress={this.registerPressSalir.bind(this)}>
-                            <Ionicons name="ios-arrow-round-back" size={15} color="grey" /> Salir
+                            <Ionicons name="ios-arrow-round-back" size={15} color="black" /> Salir
                         </Text>
                         
                         
@@ -42,17 +42,17 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         flex: 1,
+        backgroundColor: '#69dd9a',
     },
     welcome: {
-        fontSize: 22,
+        fontSize: 26,
         textAlign: 'center',
         marginBottom:90,
-        color: 'grey',
+        color: 'black',
         fontWeight: '900',
     },
     instructions: {
-        //textAlign: 'left',
-        color: 'grey',
+        color: 'black',
         marginBottom: 5,
         fontWeight: '500',
     },

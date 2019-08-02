@@ -16,20 +16,20 @@ export default class DashboardReportes extends React.Component {
     render() {
         return (
                 <View style={styles.containerForm}>
-                    <Text style={styles.welcome}>Selccionar Reporte</Text>
+                    <Text style={styles.welcome}>Seleccionar Reporte</Text>
                     <View>
                             <Text style={styles.instructions} >
-                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="grey" /> Ventas
+                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Ventas
                         </Text>
                         <Text style={styles.instructions} >
-                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="grey" /> Compras
+                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Compras
                         </Text>
                         <Text style={styles.instructions} >
-                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="grey" /> Materias Primas
+                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Materias Primas
                         </Text>
 
                         <Text style={styles.instructions} >
-                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="grey" /> Stock
+                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Stock
                         </Text>
                         
                         
@@ -44,16 +44,17 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         flex: 1,
+        backgroundColor: '#69dd9a',
     },
     welcome: {
-        fontSize: 22,
+        fontSize: 26,
         textAlign: 'center',
-        marginBottom:90,
-        color: 'grey',
+        marginBottom: 90,
+        color: 'black',
         fontWeight: '900',
     },
     instructions: {
-        color: 'grey',
+        color: 'black',
         marginBottom: 5,
         fontWeight: '500',
     },

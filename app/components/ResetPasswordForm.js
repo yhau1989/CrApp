@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Alert, View, StyleSheet, AppRegistry, ImageBackground, TextInput, Button} from 'react-native';
+import { Alert, View, StyleSheet, AppRegistry, TouchableOpacity, TextInput, Button, Text} from 'react-native';
 import { resetpassword } from '../apis/usuarioapi';
 
 
@@ -27,14 +27,14 @@ export default class ResetPasswordForm extends React.Component {
 
     render() {
         return (
-            <ImageBackground source={require('../assets/fondo_oscuro.png')} style={{ width: '100%', height: '100%', }}>
+            
                 <View style={styles.containerForm}>
-                    <TextInput style={styles.input} placeholder='Email' onChangeText={(value) => this.setState({ email: value.trim() })} />
-                    <Button buttonStyle={styles.boton} title="Recuperar contraseña" accessibilityLabel="RecuperarContrasena"
-                    onPress={this._onPressButton.bind(this)}>
-                    </Button>
+                <TextInput placeholderTextColor='#323232' style={styles.input} placeholder='Email' onChangeText={(value) => this.setState({ email: value.trim() })} />
+                <TouchableOpacity onPress={this._onPressButton.bind(this)}>
+                    <Text style={styles.botonText}>Recuperar contraseña</Text>
+                </TouchableOpacity>
                 </View>
-            </ImageBackground>
+            
         );
     }
 }
@@ -44,28 +44,44 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         flex: 1,
+        backgroundColor: '#2ecc71',
+        color: '#323232',
     },
-    input:{
-        borderColor: 'grey',
-        //color: 'grey',
-        borderWidth: 1,
-        backgroundColor: 'white',
+    welcome: {
+        fontSize: 25,
+        textAlign: 'center',
+        margin: 10,
+        color: 'black',
+        fontWeight: '700',
+    },
+    instructions: {
+        textAlign: 'center',
+        color: '#4c4c4c',
+        marginBottom: 5,
+        fontWeight: '700',
+    },
+    input: {
+        color: '#323232',
         margin: 6,
         padding: 10,
         width: '80%',
         borderRadius: 5,
-
+        backgroundColor: '#69dd9a',
     },
-    boton:{
-        backgroundColor: 'grey',
-        color: 'blue',
-        borderWidth: 1,
-
+    botonText: {
+        color: '#2ecc71',
+        textAlign: 'center',
+        backgroundColor: 'black',
         margin: 6,
         padding: 10,
-        width: '80%',
         borderRadius: 5,
+        fontWeight: '700',
+        width: 200,
+        fontSize: 16,
     },
+    link: {
+        textDecorationLine: 'underline'
+    }
 });
 
 

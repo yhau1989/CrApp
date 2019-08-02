@@ -16,16 +16,16 @@ export default class DashboardProcesos extends React.Component {
     render() {
         return (
                 <View style={styles.containerForm}>
-                    <Text style={styles.welcome}>Selccionar Proceso</Text>
+                    <Text style={styles.welcome}>Seleccionar Proceso</Text>
                     <View>
                             <Text style={styles.instructions} onPress={this.registerPressCompras.bind(this)}>
-                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="grey" /> Compras
+                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Compras
                         </Text>
                         <Text style={styles.instructions} onPress={this.registerPressVentas.bind(this)}>
-                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="grey" /> Ventas
+                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Ventas
                         </Text>
                         <Text style={styles.instructions} onPress={this.registerPressOperaciones.bind(this)}>
-                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="grey" /> Procesamiento de materias
+                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Procesamiento de materias
                         </Text>
                         
                         
@@ -40,16 +40,17 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         flex: 1,
+        backgroundColor: '#69dd9a',
     },
     welcome: {
-        fontSize: 22,
+        fontSize: 26,
         textAlign: 'center',
-        marginBottom:90,
-        color: 'grey',
+        marginBottom: 90,
+        color: 'black',
         fontWeight: '900',
     },
     instructions: {
-        color: 'grey',
+        color: 'black',
         marginBottom: 5,
         fontWeight: '500',
     },

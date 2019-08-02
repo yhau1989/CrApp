@@ -17,13 +17,13 @@ export default class DashboardMantenimientos extends React.Component {
                     <View>
 
                         <Text style={styles.instructions} onPress={this.registerPressMateriales.bind(this)}>
-                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="grey" /> Materiales
+                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Materiales
                         </Text>
                         <Text style={styles.instructions} onPress={this.registerPressClientes.bind(this)}>
-                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="grey" /> Clientes
+                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Clientes
                         </Text>
                         <Text style={styles.instructions} onPress={this.registerPressProveedores.bind(this)}>
-                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="grey" /> Proveedores
+                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Proveedores
                         </Text>
                     </View>
                     
@@ -36,17 +36,17 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         flex: 1,
+        backgroundColor: '#69dd9a',
     },
     welcome: {
-        fontSize: 22,
+        fontSize: 26,
         textAlign: 'center',
         marginBottom: 90,
-        color: 'grey',
+        color: 'black',
         fontWeight: '900',
     },
     instructions: {
-        //textAlign: 'left',
-        color: 'grey',
+        color: 'black',
         marginBottom: 5,
         fontWeight: '500',
     },

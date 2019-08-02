@@ -13,6 +13,7 @@ import MantClientesForm from './MantClientesForm';
 import MantProveedoresForm from './MantProveedoresForm';
 import DashboardProcesos from './DashboardProcesos';
 import DashboardReportes from './DashboardReportes';
+import Example from './Example';
 
 
 const AuthStack = createStackNavigator({
@@ -20,13 +21,17 @@ const AuthStack = createStackNavigator({
     screen: LoginForm,
     navigationOptions: {header: null}
   },
+  Example: {
+    screen: Example,
+    navigationOptions: { header: null }
+  },
   Register: {
     screen: RegisterForm,
     navigationOptions: {
       title: 'Registro',
       headerMode: 'screen',
-      headerStyle: {backgroundColor: '#000000',},
-      headerTintColor: '#fff',
+      headerStyle: {backgroundColor: '#2ecc71',},
+      headerTintColor: 'black',
       headerTitleStyle: {fontWeight: 'bold',}
     }
   },
@@ -35,8 +40,8 @@ const AuthStack = createStackNavigator({
     navigationOptions: {
       title: 'Recuperar contraseña',
       headerMode: 'screen',
-      headerStyle: {backgroundColor: '#000000',},
-      headerTintColor: '#fff',
+      headerStyle: {backgroundColor: '#2ecc71',},
+      headerTintColor: 'black',
       headerTitleStyle: {fontWeight: 'bold',}
     }
   }, 
@@ -49,8 +54,8 @@ const AuthStack = createStackNavigator({
     navigationOptions: {
       title: 'Mantenimientos',
       headerMode: 'screen',
-      headerStyle: { backgroundColor: '#000000', },
-      headerTintColor: '#fff',
+      headerStyle: { backgroundColor: '#69dd9a', },
+      headerTintColor: 'black',
       headerTitleStyle: { fontWeight: 'bold', }
     }
   },
@@ -59,8 +64,8 @@ const AuthStack = createStackNavigator({
     navigationOptions: {
       title: 'Comprar',
       headerMode: 'screen',
-      headerStyle: { backgroundColor: '#000000', },
-      headerTintColor: '#fff',
+      headerStyle: { backgroundColor: '#2ecc71', },
+      headerTintColor: 'black',
       headerTitleStyle: { fontWeight: 'bold', }
     }
   },  
@@ -69,8 +74,8 @@ const AuthStack = createStackNavigator({
     navigationOptions: {
       title: 'Vender',
       headerMode: 'screen',
-      headerStyle: { backgroundColor: '#000000', },
-      headerTintColor: '#fff',
+      headerStyle: { backgroundColor: '#2ecc71', },
+      headerTintColor: 'black',
       headerTitleStyle: { fontWeight: 'bold', }
     }
   },  
@@ -79,8 +84,8 @@ const AuthStack = createStackNavigator({
     navigationOptions: {
       title: 'Procesar',
       headerMode: 'screen',
-      headerStyle: { backgroundColor: '#000000', },
-      headerTintColor: '#fff',
+      headerStyle: { backgroundColor: '#2ecc71', },
+      headerTintColor: 'black',
       headerTitleStyle: { fontWeight: 'bold', }
     }
   },  
@@ -89,8 +94,8 @@ const AuthStack = createStackNavigator({
     navigationOptions: {
       title: 'Materiales',
       headerMode: 'screen',
-      headerStyle: { backgroundColor: '#000000', },
-      headerTintColor: '#fff',
+      headerStyle: { backgroundColor: '#2ecc71', },
+      headerTintColor: 'black',
       headerTitleStyle: { fontWeight: 'bold', }
     }
   },
@@ -99,8 +104,8 @@ const AuthStack = createStackNavigator({
     navigationOptions: {
       title: 'Clientes',
       headerMode: 'screen',
-      headerStyle: { backgroundColor: '#000000', },
-      headerTintColor: '#fff',
+      headerStyle: { backgroundColor: '#2ecc71', },
+      headerTintColor: 'black',
       headerTitleStyle: { fontWeight: 'bold', }
     }
   },
@@ -109,8 +114,8 @@ const AuthStack = createStackNavigator({
     navigationOptions: {
       title: 'Proveedores',
       headerMode: 'screen',
-      headerStyle: { backgroundColor: '#000000', },
-      headerTintColor: '#fff',
+      headerStyle: { backgroundColor: '#2ecc71', },
+      headerTintColor: 'black',
       headerTitleStyle: { fontWeight: 'bold', }
     }
   },
@@ -120,8 +125,8 @@ const AuthStack = createStackNavigator({
     navigationOptions: {
       title: 'Operaciones',
       headerMode: 'screen',
-      headerStyle: { backgroundColor: '#000000', },
-      headerTintColor: '#fff',
+      headerStyle: { backgroundColor: '#69dd9a', },
+      headerTintColor: 'black',
       headerTitleStyle: { fontWeight: 'bold', }
     }
   },
@@ -131,15 +136,15 @@ const AuthStack = createStackNavigator({
     navigationOptions: {
       title: 'Reportes',
       headerMode: 'screen',
-      headerStyle: { backgroundColor: '#000000', },
-      headerTintColor: '#fff',
+      headerStyle: { backgroundColor: '#69dd9a', },
+      headerTintColor: 'black',
       headerTitleStyle: { fontWeight: 'bold', }
     }
   },
 },
 {
   initialRouteName: 'Login',
-  //initialRouteName: 'Materiales',
+  //initialRouteName: 'Proveedores',
   defaultNavigationOptions: {headerMode: 'screen'},
 });
 
