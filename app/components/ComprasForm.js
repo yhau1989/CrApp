@@ -1,13 +1,20 @@
 import * as React from 'react';
-import { Alert, View, StyleSheet, AppRegistry, ImageBackground, TextInput, Button} from 'react-native';
-//import { registro } from '../apis/usuarioapi';
+import { Select, Option } from "react-native-chooser";
+import {
+    Alert, StyleSheet, AppRegistry, TextInput, Text, View, TouchableOpacity,
+    TouchableWithoutFeedback, StatusBar, SafeAreaView, KeyboardAvoidingView
+} from 'react-native';
+import { listmaterial } from '../apis/materialapi';
+import { listproveedor } from '../apis/proveedorapi';
 
 
 export default class ComprasForm extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { nombre: '', apellido:'', email: '', password: '' }
+        this.state = {
+            peso: '', usuarioVendedor: '', idMaterial: '', valueMateial: 'Seleccione Material', idProveedor: '', valueProveedor: 'Seleccione Proveedor', 
+                        dataSourceMaterial: '', dataSourceProveedor:'', isLoading: true, existeError: false }
         this._onPressButton = this._onPressButton.bind(this);
     }
 
@@ -28,20 +35,137 @@ export default class ComprasForm extends React.Component {
         }
     }
 
-    render() {
-        return (
-            <ImageBackground source={require('../assets/fondo_oscuro.png')} style={{ width: '100%', height: '100%', }}>
-                <View style={styles.containerForm}>
-                    {/* <TextInput style={styles.input} placeholder='Nombres' onChangeText={(value) => this.setState({ nombre: value.trim() })} />
-                    <TextInput style={styles.input} placeholder='Apellidos' onChangeText={(value) => this.setState({ apellido: value.trim() })} />
-                    <TextInput style={styles.input} placeholder='Email' onChangeText={(value) => this.setState({ email: value.trim() })} />
-                    <TextInput secureTextEntry={true} style={styles.input} placeholder='Contraseña' onChangeText={(value) => this.setState({ password: value.trim() })}/> */}
+    _onPressButtonCancel(){
 
-                    <Button buttonStyle={styles.boton} title="Comprar" accessibilityLabel="Comprar"
-                    onPress={this._onPressButton.bind(this)}>
-                    </Button>
+    }
+
+    onSelectMaterial(value, label) {
+        this.setState({ valueMateial: label, idMaterial: value })
+        let materiales = this.state.dataSourceMaterial.data.filter(mat => mat.id == value)
+        if (materiales.length > 0) {
+            this.setState({ colorAccionNew: 'grey', colorAccionEdit: 'grey', id: materiales[0].id, tipo: materiales[0].tipo, })
+        }
+    }
+
+    onSelectProveedor(value, label) {
+        this.setState({ valueProveedor: label, idProveedor: value })
+        let provee = this.state.dataSourceProveedor.data.filter(prov => prov.id == value)
+        if (provee.length > 0) {
+            this.setState({ colorAccionNew: 'grey', colorAccionEdit: 'grey', id: provee[0].id, ruc: provee[0].ruc, nombre: provee[0].nombres, apellido: provee[0].apellidos, direccion: provee[0].direccion, email: provee[0].email, telefono: provee[0].telefono })
+        }
+
+    }
+
+    validateList = (obj) => {
+        let lista = {
+            error: 0,
+            mensaje: null,
+            data: null
+        }
+        return (obj.data && obj.data.length > 0) ? obj : lista
+    }
+
+    getlisMateriales() {
+        listmaterial().then((responseJson) => {
+            let error = (responseJson.error == 0) ? false : true
+            this.setState({ existeError: error, isLoading: false, dataSourceMaterial: this.validateList(responseJson) })
+
+        }).catch((error) => {
+            Alert.alert('Problemas para listar los tipo de materiales')
+            //Alert.alert(error)
+        })
+    }
+
+    getlisProveedores() {
+        listproveedor().then((responseJson) => {
+            let error = (responseJson.error == 0) ? false : true
+            this.setState({ existeError: error, isLoading: false, dataSourceProveedor: this.validateList(responseJson) })
+
+        }).catch((error) => {
+            Alert.alert('Problemas para listar los proveedores')
+        })
+    }
+
+    cancelPress() { this.setState({ peso: '', usuarioVendedor: '', idMaterial: '', valueMateial: 'Seleccione Material', idProveedor: '', valueProveedor: 'Seleccione Proveedor',  }) }
+
+    render() {
+
+        this.getlisMateriales();
+        this.getlisProveedores();
+        if (this.state.isLoading && this.state.existeError === false) {
+            return (
+                <View style={styles.containerForm}>
+                    <Text>Cargando...</Text>
                 </View>
-            </ImageBackground>
+            );
+        }
+
+
+        return (
+           
+            <SafeAreaView style={styles.containerForm}>
+                <StatusBar barStyle="light-content" />
+                <KeyboardAvoidingView behavior="padding" style={styles.containerForm}>
+                    <TouchableWithoutFeedback>
+
+                        
+                        <View style={{ width: '80%' }}>
+                            <Text style={styles.labelItem}>Material</Text>
+                            <Select
+                                onSelect={this.onSelectMaterial.bind(this)}
+                                defaultText={this.state.valueMateial}
+                                style={{ margin: 7, width: '96%', borderRadius: 5, borderColor: 'grey', borderWidth: 1, }}
+                                textStyle={{}}
+                                backdropStyle={{ backgroundColor: "#F6F8FA", }}
+                                optionListStyle={{ backgroundColor: "#ffffff", width: '80%', height: '60%', }}>
+                                {
+                                    this.state.dataSourceMaterial.data ?
+                                        (
+                                            this.state.dataSourceMaterial.data.map((material) => (
+                                                <Option key={material.id} value={material.id}>{material.tipo}</Option>
+                                            ))
+                                        )
+                                        : ('')
+                                }
+                            </Select>
+                            
+                            <Text style={styles.labelItem}>Proveedor</Text>
+                            <Select
+                                onSelect={this.onSelectProveedor.bind(this)}
+                                defaultText={this.state.valueProveedor}
+                                style={{ margin: 7, width: '96%', borderRadius: 5, borderColor: 'grey', borderWidth: 1, }}
+                                textStyle={{}}
+                                backdropStyle={{ backgroundColor: "#F6F8FA", }}
+                                optionListStyle={{ backgroundColor: "#ffffff", width: '80%', height: '60%', }}>
+                                {
+                                    this.state.dataSourceProveedor.data ? (
+                                        this.state.dataSourceProveedor.data.map((client) => (
+                                            <Option key={client.id} value={client.id}>{`${client.nombres} ${client.apellidos}`}</Option>
+                                        )
+                                        )
+                                    )
+                                        : ('')
+                                }
+                            </Select>
+
+                            <Text style={styles.labelItem}>Peso Total</Text>
+                            <TextInput style={styles.input} placeholder='Peso' keyboardType="numeric" value={this.state.peso} onChangeText={(value) => this.setState({ peso: value })} />
+
+                           
+
+                            <View style={styles.viewMaint}>
+                                <TouchableOpacity onPress={this._onPressButton.bind(this)}>
+                                    <Text style={styles.botonText}>Registar Compra</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={this.cancelPress.bind(this)}>
+                                    <Text style={styles.botonText}>Cancelar</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+
+                    </TouchableWithoutFeedback>
+                </KeyboardAvoidingView>
+            </SafeAreaView>
 
         );
     }
@@ -52,27 +176,60 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         flex: 1,
+        color: '#323232',
+        width: '100%',
+        height: '100%'
     },
-    input:{
+    viewMaint: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    input: {
         borderColor: 'grey',
-        //color: 'grey',
         borderWidth: 1,
         backgroundColor: 'white',
+        borderColor: 'grey',
         margin: 6,
-        padding: 10,
-        width: '80%',
+        padding: 5,
         borderRadius: 5,
-
     },
-    boton:{
-        backgroundColor: 'grey',
-        color: 'blue',
-        borderWidth: 1,
-
+    botonText: {
+        color: '#2ecc71',
+        textAlign: 'center',
+        backgroundColor: 'black',
         margin: 6,
         padding: 10,
-        width: '80%',
         borderRadius: 5,
+        fontWeight: '700',
+        width: 200,
+        fontSize: 16
+    },
+    footer: {
+        position: 'absolute',
+        flex: 0.1,
+        left: 0,
+        right: 0,
+        bottom: -10,
+        flexDirection: 'row',
+        height: 60,
+        alignItems: 'center',
+        backgroundColor: 'black'
+    },
+    boxlateral: {
+        flex: 1,
+        justifyContent: 'center',
+        width: '33.3333%',
+        alignItems: 'center',
+        borderColor: 'grey',
+        height: 60,
+    },
+    textLateral: {
+        color: 'grey',
+        paddingBottom: 10,
+    },
+    labelItem: {
+        fontWeight: '700',
     },
 });
 

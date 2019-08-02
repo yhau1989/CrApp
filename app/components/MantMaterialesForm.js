@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Select, Option } from "react-native-chooser";
-import { Alert, StyleSheet, AppRegistry, TextInput, Button, Text, Picker, View, TouchableOpacity, 
-         TouchableWithoutFeedback, StatusBar, SafeAreaView, Keyboard, KeyboardAvoidingView } from 'react-native';
+import { Alert, StyleSheet, AppRegistry, TextInput, Text, Picker, View, TouchableOpacity, 
+         TouchableWithoutFeedback, StatusBar, SafeAreaView, KeyboardAvoidingView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { listmaterial, editmaterial, addmaterial} from '../apis/materialapi';
 
@@ -17,7 +17,7 @@ export default class MantMaterialesForm extends React.Component {
         this.setState({ value: label, id: value })
         let materiales = this.state.dataSource.data.filter(mat => mat.id == value)
         if (materiales.length > 0) {
-            Alert.alert('Si desea cambiar los datosm habilite el control editar')
+            Alert.alert('Si desea cambiar los datos habilite el control editar')
             this.setState({ colorAccionNew: 'grey', colorAccionEdit: 'grey', id: materiales[0].id, tipo: materiales[0].tipo, })
         }
     }
@@ -77,7 +77,7 @@ export default class MantMaterialesForm extends React.Component {
             this.setState({ existeError: error, isLoading: false, dataSource: this.validateList(responseJson) })
 
         }).catch((error) => {
-            Alert.alert('Problemas para listar los proveedores')
+            Alert.alert('Problemas para listar los tipos de materiales')
         })
     }
 

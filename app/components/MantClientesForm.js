@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Select, Option } from "react-native-chooser";
 import {
-    Alert, StyleSheet, AppRegistry, TextInput, Button, Text, Picker, View, TouchableOpacity,
-    TouchableWithoutFeedback, StatusBar, SafeAreaView, Keyboard, KeyboardAvoidingView } from 'react-native';
+    Alert, StyleSheet, AppRegistry, TextInput, Text, Picker, View, TouchableOpacity,
+    TouchableWithoutFeedback, StatusBar, SafeAreaView, KeyboardAvoidingView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { addcliente, listcliente, editcliente } from '../apis/clientesapi';
 
