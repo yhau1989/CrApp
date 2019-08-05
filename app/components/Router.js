@@ -166,7 +166,7 @@ const AuthStack = createStackNavigator({
   ProcesarLoteForm: {
     screen: ProcesarLoteForm,
     navigationOptions: {
-      title: '(Proceso Lote) Procesamiento',
+      title: '(Proceso Lote) Trituración',
       headerMode: 'screen',
       headerStyle: { backgroundColor: '#2ecc71', },
       headerTintColor: 'black',

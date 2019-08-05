@@ -17,19 +17,63 @@ export async function listlote() {
 }
 
 
+export async function listloteselection() {
+
+    let myurl = url_base + 'loteselectionlist.php';
+    try {
+        return await fetch(myurl, {
+            method: 'POST', // or 'PUT'
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then((response) => response.json())
+            .then((responseJson) => { return responseJson; })
+            .catch((error) => { return error; });
+    } catch (error) { return error; }
+
+}
+
+export async function listlotetrituracion() {
+
+    let myurl = url_base + 'lotetrituracionlist.php';
+    try {
+        return await fetch(myurl, {
+            method: 'POST', // or 'PUT'
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then((response) => response.json())
+            .then((responseJson) => { return responseJson; })
+            .catch((error) => { return error; });
+    } catch (error) { return error; }
+
+}
+
+export async function listlotealmacena() {
+
+    let myurl = url_base + 'lotealmacenalist.php';
+    try {
+        return await fetch(myurl, {
+            method: 'POST', // or 'PUT'
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then((response) => response.json())
+            .then((responseJson) => { return responseJson; })
+            .catch((error) => { return error; });
+    } catch (error) { return error; }
+
+}
 
 
-export async function editlote(id,ruc, nombres,apellidos,direccion,telefono) {
 
-    let myurl = url_base + 'loteedit.php'
+export async function editlote(tipoCambio,lote, user, fini, ffin) {
+
+    let myurl = url_base + 'editloteglobal.php'
     let editcli = {
-        cliente: {
-            id: id,
-            ruc: ruc,
-            nombres: nombres,
-            apellidos: apellidos,
-            direccion: direccion,
-            telefono: telefono
+        lote: {
+            tipocambio: tipoCambio,
+            id: lote,
+            usuario: user,
+            fini: fini,
+            ffin: ffin
         }
     };
 

@@ -42,7 +42,7 @@ export default class ProcesosForm extends React.Component {
                         <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Seleccionamiento
                         </Text>
                     <Text style={styles.instructions} onPress={this.ProcesarLoteForm.bind(this)}>
-                        <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Procesamiento
+                        <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Trituración
                         </Text>
                     <Text style={styles.instructions} onPress={this.ProcesoAlmacenajeLoteForm.bind(this)}>
                         <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Almacenamiento

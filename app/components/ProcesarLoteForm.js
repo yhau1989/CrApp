@@ -3,7 +3,7 @@ import { Select, Option } from "react-native-chooser";
 import { Alert, StyleSheet, AppRegistry, TextInput, Text, Picker, View, TouchableOpacity, 
          TouchableWithoutFeedback, StatusBar, SafeAreaView, KeyboardAvoidingView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { listlote } from '../apis/lotesapi';
+import { listlotetrituracion, editlote } from '../apis/lotesapi';
 import { materialById } from '../apis/materialapi';
 
 
@@ -62,7 +62,7 @@ export default class ProcesarLoteForm extends React.Component {
     }
 
     getlisLotes() {
-        listlote().then((responseJson) => {
+        listlotetrituracion().then((responseJson) => {
             let error = (responseJson.error == 0) ? false : true
            this.setState({ existeError: error, isLoading: false, dataSource: this.validateList(responseJson) })
            
@@ -133,10 +133,10 @@ export default class ProcesarLoteForm extends React.Component {
                                 <Text style={styles.labelItem}>Peso: <Text style={styles.textLateral}>{this.state.labelPeso}</Text></Text>
 
                                 <Text style={styles.labelItem}>Fecha inicio</Text>
-                                <TextInput style={styles.input} placeholder='Tipo' value={this.state.finicio} onChangeText={(value) => this.setState({ finicio: value })} />
+                                <TextInput style={styles.input} placeholder='yyyy-mm-dd hh:mm:ss' value={this.state.finicio} onChangeText={(value) => this.setState({ finicio: value })} />
 
                                 <Text style={styles.labelItem}>fecha fin</Text>
-                                <TextInput style={styles.input} placeholder='Tipo' value={this.state.ffin} onChangeText={(value) => this.setState({ ffin: value })} />
+                                <TextInput style={styles.input} placeholder='yyyy-mm-dd hh:mm:ss' value={this.state.ffin} onChangeText={(value) => this.setState({ ffin: value })} />
 
                                 <View style={styles.viewMaint}>
                                     <TouchableOpacity onPress={this._onPressButton.bind(this)}>
