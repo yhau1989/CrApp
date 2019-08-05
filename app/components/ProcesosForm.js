@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Alert, View, StyleSheet, AppRegistry, ImageBackground, TextInput, Button} from 'react-native';
-//import { registro } from '../apis/usuarioapi';
+import { Alert, View, StyleSheet, AppRegistry, Text} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import NavigationService from "./NavigationService";
 
 
 export default class ProcesosForm extends React.Component {
@@ -10,6 +11,10 @@ export default class ProcesosForm extends React.Component {
         this.state = { nombre: '', apellido:'', email: '', password: '' }
         this._onPressButton = this._onPressButton.bind(this);
     }
+
+    LoteSeleccionamiento() { NavigationService.navigate('LoteSeleccionamiento'); }
+    ProcesarLoteForm() { NavigationService.navigate('ProcesarLoteForm'); }
+    ProcesoAlmacenajeLoteForm() { NavigationService.navigate('ProcesoAlmacenajeLoteForm'); }
 
     _onPressButton() {
         let emailError = this.state.email;
@@ -30,18 +35,20 @@ export default class ProcesosForm extends React.Component {
 
     render() {
         return (
-            <ImageBackground source={require('../assets/fondo_oscuro.png')} style={{ width: '100%', height: '100%', }}>
-                <View style={styles.containerForm}>
-                    {/* <TextInput style={styles.input} placeholder='Nombres' onChangeText={(value) => this.setState({ nombre: value.trim() })} />
-                    <TextInput style={styles.input} placeholder='Apellidos' onChangeText={(value) => this.setState({ apellido: value.trim() })} />
-                    <TextInput style={styles.input} placeholder='Email' onChangeText={(value) => this.setState({ email: value.trim() })} />
-                    <TextInput secureTextEntry={true} style={styles.input} placeholder='Contraseña' onChangeText={(value) => this.setState({ password: value.trim() })}/> */}
-
-                    <Button buttonStyle={styles.boton} title="Procesar" accessibilityLabel="Procesar"
-                    onPress={this._onPressButton.bind(this)}>
-                    </Button>
+            <View style={styles.containerForm}>
+                <Text style={styles.welcome}>Procesamiento de Materia Prima</Text>
+                <View>
+                    <Text style={styles.instructions} onPress={this.LoteSeleccionamiento.bind(this)}>
+                        <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Seleccionamiento
+                        </Text>
+                    <Text style={styles.instructions} onPress={this.ProcesarLoteForm.bind(this)}>
+                        <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Procesamiento
+                        </Text>
+                    <Text style={styles.instructions} onPress={this.ProcesoAlmacenajeLoteForm.bind(this)}>
+                        <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Almacenamiento
+                        </Text>
                 </View>
-            </ImageBackground>
+            </View>
 
         );
     }
@@ -52,27 +59,19 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         flex: 1,
+        backgroundColor: '#69dd9a',
     },
-    input:{
-        borderColor: 'grey',
-        //color: 'grey',
-        borderWidth: 1,
-        backgroundColor: 'white',
-        margin: 6,
-        padding: 10,
-        width: '80%',
-        borderRadius: 5,
-
+    welcome: {
+        fontSize: 26,
+        textAlign: 'center',
+        marginBottom: 90,
+        color: 'black',
+        fontWeight: '900',
     },
-    boton:{
-        backgroundColor: 'grey',
-        color: 'blue',
-        borderWidth: 1,
-
-        margin: 6,
-        padding: 10,
-        width: '80%',
-        borderRadius: 5,
+    instructions: {
+        color: 'black',
+        marginBottom: 5,
+        fontWeight: '500',
     },
 });
 

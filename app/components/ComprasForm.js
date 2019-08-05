@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 import { listmaterial } from '../apis/materialapi';
 import { listproveedor } from '../apis/proveedorapi';
+import { addcompra } from '../apis/comprasapi';
 
 
 export default class ComprasForm extends React.Component {
@@ -13,30 +14,34 @@ export default class ComprasForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            peso: '', usuarioVendedor: '', idMaterial: '', valueMateial: 'Seleccione Material', idProveedor: '', valueProveedor: 'Seleccione Proveedor', 
+            usuarioComprador: '11', valorCompra: '', peso: '', usuarioVendedor: '', idMaterial: '', valueMateial: 'Seleccione Material', idProveedor: '', valueProveedor: 'Seleccione Proveedor', 
                         dataSourceMaterial: '', dataSourceProveedor:'', isLoading: true, existeError: false }
         this._onPressButton = this._onPressButton.bind(this);
     }
 
     _onPressButton() {
-        let emailError = this.state.email;
-        let passwordError = this.state.password;
-        let nombre = this.state.nombre;
-        let apellido = this.state.apellido;
-        if (emailError.length <= 0 || passwordError.length <= 0 || nombre.length <= 0 || apellido.length <= 0) {
-            Alert.alert('Ingrese los datos para continuar');
+
+        let proveedor = this.state.tipo
+        let material = this.state.idMaterial
+        let comprador = this.state.usuarioComprador
+        let valor = this.state.valorCompra
+
+        if (proveedor.length <= 0 || material.length<=0 || comprador.length<=0 || valor.length<= 0) {
+            Alert.alert('Ingrese los datos para continuar')
         }
-        else {
-            registro(nombre, apellido, emailError, passwordError).then((responseJson) => {
-                Alert.alert(responseJson.mensaje);
+        else
+        {
+            Alert.alert('Cargando...')
+            addcompra(this.state.idProveedor, this.state.idMaterial, this.state.peso, this.state.usuarioComprador, this.state.valorCompra).then((responseJson) => {
+                if (responseJson.error == 0){
+                    this.cancelPress()
+                }
+                Alert.alert(responseJson.mensaje)
             }).catch((error) => {
-                Alert.alert('existen problemas de conexión');
-            });
+                Alert.alert('Problemas para registrar su compra, intentelo nuevamente')
+                //Alert.alert(error)
+            })
         }
-    }
-
-    _onPressButtonCancel(){
-
     }
 
     onSelectMaterial(value, label) {
@@ -151,7 +156,9 @@ export default class ComprasForm extends React.Component {
                             <Text style={styles.labelItem}>Peso Total</Text>
                             <TextInput style={styles.input} placeholder='Peso' keyboardType="numeric" value={this.state.peso} onChangeText={(value) => this.setState({ peso: value })} />
 
-                           
+                            <Text style={styles.labelItem}>Valor Total</Text>
+                            <TextInput style={styles.input} placeholder='Valor total de la compra' keyboardType="numeric" value={this.state.valorCompra} onChangeText={(value) => this.setState({ valorCompra: value })} />
+
 
                             <View style={styles.viewMaint}>
                                 <TouchableOpacity onPress={this._onPressButton.bind(this)}>

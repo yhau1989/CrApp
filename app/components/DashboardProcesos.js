@@ -25,7 +25,7 @@ export default class DashboardProcesos extends React.Component {
                             <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Ventas
                         </Text>
                         <Text style={styles.instructions} onPress={this.registerPressOperaciones.bind(this)}>
-                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Procesamiento de materias
+                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Operaciones de matria prima
                         </Text>
                         
                         

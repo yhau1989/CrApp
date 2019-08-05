@@ -14,6 +14,10 @@ import MantProveedoresForm from './MantProveedoresForm';
 import DashboardProcesos from './DashboardProcesos';
 import DashboardReportes from './DashboardReportes';
 import Example from './Example';
+import ProcesoLoteForm from "./ProcesoSelectionLoteForm";
+import ProcesoSelectionLoteForm from './ProcesoSelectionLoteForm';
+import ProcesarLoteForm from './ProcesarLoteForm';
+import ProcesoAlmacenajeLoteForm from './ProcesoAlmacenajeLoteForm';
 
 
 const AuthStack = createStackNavigator({
@@ -82,9 +86,9 @@ const AuthStack = createStackNavigator({
   Procesos: {
     screen: ProcesosForm,
     navigationOptions: {
-      title: 'Procesar',
+      title: 'Procesamiento de Materia Prima',
       headerMode: 'screen',
-      headerStyle: { backgroundColor: '#2ecc71', },
+      headerStyle: { backgroundColor: '#69dd9a', },
       headerTintColor: 'black',
       headerTitleStyle: { fontWeight: 'bold', }
     }
@@ -119,7 +123,6 @@ const AuthStack = createStackNavigator({
       headerTitleStyle: { fontWeight: 'bold', }
     }
   },
-
   DashboardProcesos: {
     screen: DashboardProcesos,
     navigationOptions: {
@@ -130,7 +133,6 @@ const AuthStack = createStackNavigator({
       headerTitleStyle: { fontWeight: 'bold', }
     }
   },
-
   DashboardReportes: {
     screen: DashboardReportes,
     navigationOptions: {
@@ -141,10 +143,54 @@ const AuthStack = createStackNavigator({
       headerTitleStyle: { fontWeight: 'bold', }
     }
   },
+  Lotes: {
+    screen: ProcesoLoteForm,
+    navigationOptions: {
+      title: 'Lotes',
+      headerMode: 'screen',
+      headerStyle: { backgroundColor: '#2ecc71', },
+      headerTintColor: 'black',
+      headerTitleStyle: { fontWeight: 'bold', }
+    }
+  },
+  LoteSeleccionamiento: {
+    screen: ProcesoSelectionLoteForm,
+    navigationOptions: {
+      title: '(Proceso Lote) Seleccionamiento',
+      headerMode: 'screen',
+      headerStyle: { backgroundColor: '#2ecc71', },
+      headerTintColor: 'black',
+      headerTitleStyle: { fontWeight: 'bold', }
+    }
+  },
+  ProcesarLoteForm: {
+    screen: ProcesarLoteForm,
+    navigationOptions: {
+      title: '(Proceso Lote) Procesamiento',
+      headerMode: 'screen',
+      headerStyle: { backgroundColor: '#2ecc71', },
+      headerTintColor: 'black',
+      headerTitleStyle: { fontWeight: 'bold', }
+    }
+  },
+  ProcesoAlmacenajeLoteForm: {
+    screen: ProcesoAlmacenajeLoteForm,
+    navigationOptions: {
+      title: '(Proceso Lote) Almacenaje',
+      headerMode: 'screen',
+      headerStyle: { backgroundColor: '#2ecc71', },
+      headerTintColor: 'black',
+      headerTitleStyle: { fontWeight: 'bold', }
+    }
+  },
+
+  
+
+  
 },
 {
   initialRouteName: 'Login',
-  //initialRouteName: 'Compras',
+  //initialRouteName: 'Procesos',
   defaultNavigationOptions: {headerMode: 'screen'},
 });
 

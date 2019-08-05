@@ -3,14 +3,24 @@ import { Select, Option } from "react-native-chooser";
 import { Alert, StyleSheet, AppRegistry, TextInput, Text, Picker, View, TouchableOpacity, 
          TouchableWithoutFeedback, StatusBar, SafeAreaView, KeyboardAvoidingView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { listmaterial, editmaterial, addmaterial} from '../apis/materialapi';
+import { listlote } from '../apis/lotesapi';
+import { materialById } from '../apis/materialapi';
 
 
-export default class MantMaterialesForm extends React.Component {
+export default class ProcesarLoteForm extends React.Component {
     constructor(props) {
         super(props)
-        this.state = { colorAccionNew: 'grey', colorAccionEdit: 'grey', accion: 'new', id: '', tipo: '',value: 'Tipos de materiales', dataSource: '', isLoading: true, existeError: false }
+        this.state = { id: '', tipo: '', value: 'Seleccione un lote', dataSource: '', isLoading: true, existeError: false, finicio: '', ffin: '', labelLote: '', labelMaterial: '', labelPeso: '' }
         this._onPressButton = this._onPressButton.bind(this)
+    }
+
+    onSelect(value, label) {
+        this.setState({ value: label, id: value })
+        let materiales = this.state.dataSource.data.filter(mat => mat.id == value)
+        if (materiales.length > 0) {
+            Alert.alert('Si desea cambiar los datos habilite el control editar')
+            this.setState({ colorAccionNew: 'grey', colorAccionEdit: 'grey', id: materiales[0].id, tipo: materiales[0].tipo, })
+        }
     }
 
     onSelect(value, label) {
@@ -35,14 +45,11 @@ export default class MantMaterialesForm extends React.Component {
         }).catch((error) => {
             Alert.alert('Problemas para mostrar información del lote, intente nuevamente')
         })
-
-
-
     }
 
     _onPressButton() {
-      
     }
+
 
 
     validateList = (obj) => {
@@ -54,11 +61,11 @@ export default class MantMaterialesForm extends React.Component {
         return (obj.data && obj.data.length > 0) ? obj : lista
     }
 
-    getlisMateriales() {
-        listmaterial().then((responseJson) => {
+    getlisLotes() {
+        listlote().then((responseJson) => {
             let error = (responseJson.error == 0) ? false : true
-            this.setState({ existeError: error, isLoading: false, dataSource: this.validateList(responseJson) })
-
+           this.setState({ existeError: error, isLoading: false, dataSource: this.validateList(responseJson) })
+           
         }).catch((error) => {
             Alert.alert('Problemas para listar los tipos de materiales')
         })
@@ -82,7 +89,7 @@ export default class MantMaterialesForm extends React.Component {
 
     render() {
 
-        this.getlisMateriales();
+        this.getlisLotes();
         if (this.state.isLoading && this.state.existeError === false) {
             return (
                 <View style={styles.containerForm}>
@@ -90,16 +97,19 @@ export default class MantMaterialesForm extends React.Component {
                 </View>
             );
         }
+        else
+        {
 
-        return (
+            return (
 
 
-            <SafeAreaView style={styles.containerForm}>
-                <StatusBar barStyle="light-content" />
-                <KeyboardAvoidingView behavior="padding" style={styles.containerForm}>
-                    <TouchableWithoutFeedback>
+                <SafeAreaView style={styles.containerForm}>
+                    <StatusBar barStyle="light-content" />
+                    <KeyboardAvoidingView behavior="padding" style={styles.containerForm}>
+                        <TouchableWithoutFeedback>
 
                             <View style={{ width: '80%' }}>
+                                <Text style={styles.labelItem}>Lotes</Text>
                                 <Select
                                     onSelect={this.onSelect.bind(this)}
                                     defaultText={this.state.value}
@@ -107,63 +117,50 @@ export default class MantMaterialesForm extends React.Component {
                                     textStyle={{}}
                                     backdropStyle={{ backgroundColor: "#F6F8FA", }}
                                     optionListStyle={{ backgroundColor: "#ffffff", width: '80%', height: '60%', }}>
-                                    {
+                                     {
                                         this.state.dataSource.data ?
                                             (
-                                                this.state.dataSource.data.map((material) => (
-                                                    <Option key={material.id} value={material.id}>{material.tipo}</Option>
+                                                this.state.dataSource.data.map((lotes) => (
+                                                    <Option key={lotes.lote} value={lotes.lote}>{`Lote: ${lotes.lote}`}</Option>
                                                 ))
                                             )
                                             : ('')
-                                    }
+                                    } 
                                 </Select>
 
-                                <TextInput style={styles.input} placeholder='Tipo' value={this.state.tipo} onChangeText={(value) => this.setState({ tipo: value })} />
+                                <Text style={styles.labelItem}>Lote: <Text style={styles.textLateral}>{this.state.labelLote}</Text></Text>
+                                <Text style={styles.labelItem}>Material: <Text style={styles.textLateral}>{this.state.labelMaterial}</Text></Text>
+                                <Text style={styles.labelItem}>Peso: <Text style={styles.textLateral}>{this.state.labelPeso}</Text></Text>
 
-                                <View style={styles.input}>
-                                    <Picker
-                                        selectedValue={this.state.language}
-                                        style={{ width: '100%' }}
-                                        itemStyle={{ width: '100%' }}
-                                        onValueChange={(itemValue, itemIndex) => this.setState({ language: itemValue })}>
-                                        <Picker.Item label="Activo" value="1" />
-                                        <Picker.Item label="Inactivo" value="2" />
-                                    </Picker>
-                                </View>
+                                <Text style={styles.labelItem}>Fecha inicio</Text>
+                                <TextInput style={styles.input} placeholder='Tipo' value={this.state.finicio} onChangeText={(value) => this.setState({ finicio: value })} />
+
+                                <Text style={styles.labelItem}>fecha fin</Text>
+                                <TextInput style={styles.input} placeholder='Tipo' value={this.state.ffin} onChangeText={(value) => this.setState({ ffin: value })} />
 
                                 <View style={styles.viewMaint}>
                                     <TouchableOpacity onPress={this._onPressButton.bind(this)}>
-                                        <Text style={styles.botonText}>Guardar</Text>
+                                        <Text style={styles.botonText}>Guardar Proceso</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={this.cancelPress.bind(this)}>
+                                        <Text style={styles.botonText}>Cancelar</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>
 
-                    </TouchableWithoutFeedback>
-                </KeyboardAvoidingView>
-                
-                    <View style={styles.footer}>
-                        <View style={styles.boxlateral}>
-                        <Text style={{ paddingBottom: 10, color: this.state.colorAccionNew }} onPress={this.newPress.bind(this)}>
-                                <Ionicons name="ios-person-add" size={20} color={this.state.colorAccionNew} />    Nuevo
-                            </Text>
-                        </View>
-                        <View style={styles.boxlateral} >
-                        <Text style={{ paddingBottom: 10, color: this.state.colorAccionEdit }} onPress={this.editPress.bind(this)}>
-                                <Ionicons name="md-create" size={20} color={this.state.colorAccionEdit} />    Editar
-                            </Text>
-                        </View>
-                        <View style={styles.boxlateral}>
-                            <Text style={styles.textLateral} onPress={this.cancelPress.bind(this)}>
-                                <Ionicons name="md-close" size={20} color={this.state.colorAccion} />    Cancelar
-                            </Text>
-                        </View>
-                    </View>
-                
-            </SafeAreaView>
-            
+                        </TouchableWithoutFeedback>
+                    </KeyboardAvoidingView>
+
+                </SafeAreaView>
 
 
-        );
+
+            );
+
+
+        }
+
+        
     }
 }
 
@@ -202,30 +199,15 @@ const styles = StyleSheet.create({
         width: 200,
         fontSize: 16
     },
-    footer: {
-        position: 'absolute',
-        flex: 0.1,
-        left: 0,
-        right: 0,
-        bottom: -10,
-        flexDirection: 'row',
-        height: 60,
-        alignItems: 'center',
-        backgroundColor:'black'
-    },
-    boxlateral: {
-        flex: 1,
-        justifyContent: 'center',
-        width: '33.3333%',
-        alignItems: 'center',
-        borderColor: 'grey',
-        height: 60,
-    },
     textLateral: {
         color: 'grey',
-        paddingBottom: 10,
+        //paddingLeft: 20,
+        paddingRight: 20,
+    },
+    labelItem: {
+        fontWeight: '700',
     },
 });
 
 
-AppRegistry.registerComponent('MantMaterialesForm', () => MantMaterialesForm);
+AppRegistry.registerComponent('ProcesarLoteForm', () => ProcesarLoteForm);
