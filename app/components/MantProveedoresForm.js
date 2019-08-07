@@ -10,10 +10,16 @@ import { addproveedor, listproveedor, editproveedor } from '../apis/proveedorapi
 
 export default class MantProveedoresForm extends React.Component {
 
+    _isMounted = false;
+
     constructor(props) {
         super(props)
         this.state = { colorAccionNew: 'grey', colorAccionEdit: 'grey', accion: 'new', id: '', ruc: '', nombre: '', apellido: '', direccion: '', email: '', telefono: '', value: 'Lista de Proveedores', dataSource: '', isLoading: true, existeError: false }
         this._onPressButton = this._onPressButton.bind(this)
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false
     }
 
     onSelect(value, label) { 
@@ -78,9 +84,12 @@ export default class MantProveedoresForm extends React.Component {
     }
 
     getlisProveedores() {
+        this._isMounted = true
         listproveedor().then((responseJson) => {
             let error = (responseJson.error == 0) ? false : true
-            this.setState({ existeError: error, isLoading: false, dataSource: this.validateList(responseJson) })
+            if (this._isMounted) {
+                this.setState({ existeError: error, isLoading: false, dataSource: this.validateList(responseJson) })
+            }
 
         }).catch((error) => {
             Alert.alert('Problemas para listar los proveedores' )

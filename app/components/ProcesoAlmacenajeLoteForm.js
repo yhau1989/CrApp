@@ -1,27 +1,26 @@
 import * as React from 'react';
 import { Select, Option } from "react-native-chooser";
-import { Alert, StyleSheet, AppRegistry, TextInput, Text, Picker, View, TouchableOpacity, 
+import { Alert, StyleSheet, AppRegistry, Text, View, TouchableOpacity, 
          TouchableWithoutFeedback, StatusBar, SafeAreaView, KeyboardAvoidingView } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import DatePicker from 'react-native-datepicker'
 import { listlotealmacena, editlote } from '../apis/lotesapi';
 import { materialById } from '../apis/materialapi';
 
 
 export default class ProcesoAlmacenajeLoteForm extends React.Component {
+
+    _isMounted = false;
+
     constructor(props) {
         super(props)
         this.state = { id: '', tipo: '', value: 'Seleccione un lote', dataSource: '', isLoading: true, existeError: false, finicio: '', ffin: '', labelLote: '', labelMaterial: '', labelPeso: '' }
         this._onPressButton = this._onPressButton.bind(this)
     }
 
-    onSelect(value, label) {
-        this.setState({ value: label, id: value })
-        let materiales = this.state.dataSource.data.filter(mat => mat.id == value)
-        if (materiales.length > 0) {
-            Alert.alert('Si desea cambiar los datos habilite el control editar')
-            this.setState({ colorAccionNew: 'grey', colorAccionEdit: 'grey', id: materiales[0].id, tipo: materiales[0].tipo, })
-        }
+    componentWillUnmount() {
+        this._isMounted = false;
     }
+
 
     onSelect(value, label) {
         this.setState({ value: label, id: value })
@@ -48,6 +47,21 @@ export default class ProcesoAlmacenajeLoteForm extends React.Component {
     }
 
     _onPressButton() {
+        let idLote = this.state.id
+        let fini = this.state.finicio
+        let ffin = this.state.ffin
+
+        if (idLote.length <= 0 || fini.length <= 0 || ffin.length <= 0) {
+            Alert.alert('Ingrese los datos para continuar')
+        }
+        else {
+            editlote('a', idLote, 11, fini, ffin).then((responseJson) => {
+                Alert.alert(responseJson.mensaje)
+                this.cancelPress()
+            }).catch((error) => {
+                Alert.alert('Problemas para listar los Seleccione un lote')
+            })
+        }
     }
 
 
@@ -61,9 +75,12 @@ export default class ProcesoAlmacenajeLoteForm extends React.Component {
     }
 
     getlisLotes() {
+        this._isMounted = true
         listlotealmacena().then((responseJson) => {
             let error = (responseJson.error == 0) ? false : true
-           this.setState({ existeError: error, isLoading: false, dataSource: this.validateList(responseJson) })
+            if (this._isMounted) {
+                this.setState({ existeError: error, isLoading: false, dataSource: this.validateList(responseJson) })
+            }
            
         }).catch((error) => {
             Alert.alert('Problemas para listar los Seleccione un lote')
@@ -82,8 +99,7 @@ export default class ProcesoAlmacenajeLoteForm extends React.Component {
         }
     }
 
-    cancelPress() { this.setState({ colorAccionNew: 'grey', colorAccionEdit: 'grey', accion: 'new', id: '', tipo: '', value: 'Seleccione un lote' }) }
-
+    cancelPress() { this.setState({ finicio: '', ffin: '', id: '', tipo: '', value: 'Seleccione un lote', labelLote: '', labelMaterial: '', labelPeso: '' }) }
 
 
     render() {
@@ -132,10 +148,77 @@ export default class ProcesoAlmacenajeLoteForm extends React.Component {
                                 <Text style={styles.labelItem}>Peso: <Text style={styles.textLateral}>{this.state.labelPeso}</Text></Text>
 
                                 <Text style={styles.labelItem}>Fecha inicio</Text>
-                                <TextInput style={styles.input} placeholder='yyyy-mm-dd hh:mm:ss' value={this.state.finicio} onChangeText={(value) => this.setState({ finicio: value })} />
+                                <DatePicker
+                                    style={{ width: 200 }}
+                                    date={this.state.finicio}
+                                    mode="datetime"
+                                    placeholder="yyyy-mm-dd hh:mm:ss"
+                                    format="YYYY-MM-DD HH:mm:ss"
+                                    minDate="2019-01-01"
+                                    maxDate="2099-06-01"
+                                    confirmBtnText="Ok"
+                                    cancelBtnText="Cancelar"
+                                    customStyles={{
+                                        dateIcon: {
+                                            position: 'absolute',
+                                            left: 0,
+                                            top: 4,
+                                            marginLeft: 6
+                                        },
+                                        dateTouchBody: {
+                                            width: 330,
+                                            margin: 5,
+                                            padding: 3,
+                                        },
+                                        dateInput: {
+                                            borderColor: 'grey',
+                                            borderRadius: 5,
+                                            width: 330,
+                                        },
+                                        placeholderText: {
+                                            width: 330,
+                                            padding: 50,
+                                        },
+                                    }}
+                                    onDateChange={(date) => { this.setState({ finicio: date }) }}
+                                />
                                 
                                 <Text style={styles.labelItem}>fecha fin</Text>
-                                <TextInput style={styles.input} placeholder='yyyy-mm-dd hh:mm:ss' value={this.state.ffin} onChangeText={(value) => this.setState({ ffin: value })} />
+                                <DatePicker
+                                    style={{ width: 200 }}
+                                    date={this.state.ffin}
+                                    mode="datetime"
+                                    placeholder="yyyy-mm-dd hh:mm:ss"
+                                    format="YYYY-MM-DD HH:mm:ss"
+                                    minDate="2019-01-01"
+                                    maxDate="2099-06-01"
+                                    confirmBtnText="Ok"
+                                    cancelBtnText="Cancelar"
+                                    customStyles={{
+                                        dateIcon: {
+                                            position: 'absolute',
+                                            left: 0,
+                                            top: 4,
+                                            marginLeft: 6
+                                        },
+                                        dateTouchBody: {
+                                            width: 330,
+                                            margin: 5,
+                                            padding: 3,
+                                        },
+                                        dateInput: {
+                                            borderColor: 'grey',
+                                            borderRadius: 5,
+                                            width: 330,
+                                        },
+                                        placeholderText: {
+                                            width: 330,
+                                            padding: 50,
+                                        },
+                                    }}
+                                    onDateChange={(date) => { this.setState({ ffin: date }) }}
+                                />
+                                
 
                                
 

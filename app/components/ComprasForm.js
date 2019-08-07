@@ -11,6 +11,8 @@ import { addcompra } from '../apis/comprasapi';
 
 export default class ComprasForm extends React.Component {
 
+    _isMounted = false;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -18,6 +20,11 @@ export default class ComprasForm extends React.Component {
                         dataSourceMaterial: '', dataSourceProveedor:'', isLoading: true, existeError: false }
         this._onPressButton = this._onPressButton.bind(this);
     }
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
 
     _onPressButton() {
 
@@ -71,10 +78,13 @@ export default class ComprasForm extends React.Component {
     }
 
     getlisMateriales() {
+        this._isMounted = true;
+
         listmaterial().then((responseJson) => {
             let error = (responseJson.error == 0) ? false : true
-            this.setState({ existeError: error, isLoading: false, dataSourceMaterial: this.validateList(responseJson) })
-
+            if (this._isMounted) {
+                this.setState({ existeError: error, isLoading: false, dataSourceMaterial: this.validateList(responseJson) })
+            }
         }).catch((error) => {
             Alert.alert('Problemas para listar los tipo de materiales')
             //Alert.alert(error)
@@ -82,21 +92,28 @@ export default class ComprasForm extends React.Component {
     }
 
     getlisProveedores() {
+        this._isMounted = true;
+
         listproveedor().then((responseJson) => {
             let error = (responseJson.error == 0) ? false : true
-            this.setState({ existeError: error, isLoading: false, dataSourceProveedor: this.validateList(responseJson) })
-
+            if (this._isMounted) {
+                this.setState({ existeError: error, isLoading: false, dataSourceProveedor: this.validateList(responseJson) })
+            }
         }).catch((error) => {
             Alert.alert('Problemas para listar los proveedores')
         })
     }
 
-    cancelPress() { this.setState({ peso: '', usuarioVendedor: '', idMaterial: '', valueMateial: 'Seleccione Material', idProveedor: '', valueProveedor: 'Seleccione Proveedor',  }) }
+    loadCompo(){
+        this.getlisMateriales()
+        this.getlisProveedores()
+    }
+
+    cancelPress() { this.setState({ peso: '', usuarioVendedor: '', idMaterial: '', valueMateial: 'Seleccione Material', idProveedor: '', valueProveedor: 'Seleccione Proveedor', valorCompra:'' }) }
 
     render() {
 
-        this.getlisMateriales();
-        this.getlisProveedores();
+        this.loadCompo()
         if (this.state.isLoading && this.state.existeError === false) {
             return (
                 <View style={styles.containerForm}>

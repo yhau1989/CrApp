@@ -10,10 +10,16 @@ import { addcliente, listcliente, editcliente } from '../apis/clientesapi';
 
 export default class MantClientesForm extends React.Component {
 
+    _isMounted = false;
+
     constructor(props) {
         super(props)
         this.state = { colorAccionNew: 'grey', colorAccionEdit: 'grey', accion:'new', idClient: '', ruc: '', nombre: '', apellido: '', direccion: '', telefono: '', value: 'Lista de Clientes', dataSource: '', isLoading: true, existeError: false}
         this._onPressButton = this._onPressButton.bind(this)
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     onSelect(value, label) { 
@@ -78,8 +84,12 @@ export default class MantClientesForm extends React.Component {
 
     getlisClientes()
     {
+        this._isMounted = true
         listcliente().then((responseJson) => {
-            this.setState({ isLoading: false, dataSource: this.validateList(responseJson)})
+            if (this._isMounted) {
+                this.setState({ isLoading: false, dataSource: this.validateList(responseJson) })
+            }
+           
         }).catch((error) => {
             Alert.alert('Problemas para listar los clientes')
         })

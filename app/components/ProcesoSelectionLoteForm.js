@@ -1,17 +1,25 @@
 import * as React from 'react';
 import { Select, Option } from "react-native-chooser";
-import { Alert, StyleSheet, AppRegistry, TextInput, Text, Picker, View, TouchableOpacity, 
+import { Alert, StyleSheet, AppRegistry, Text, View, TouchableOpacity, 
          TouchableWithoutFeedback, StatusBar, SafeAreaView, KeyboardAvoidingView } from 'react-native';
+import DatePicker from 'react-native-datepicker'
 import { listloteselection, editlote  } from '../apis/lotesapi';
 import { materialById} from '../apis/materialapi';
 
 
 export default class ProcesoSelectionLoteForm extends React.Component {
+     _isMounted = false;
+
     constructor(props) {
         super(props)
         this.state = { id: '', tipo: '', value: 'Seleccione un lote', dataSource: '', isLoading: true, existeError: false, finicio: '', ffin: '', labelLote:'', labelMaterial:'', labelPeso:''  }
         this._onPressButton = this._onPressButton.bind(this)
     }
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
 
     onSelect(value, label) {
         this.setState({ value: label, id: value })
@@ -70,9 +78,13 @@ export default class ProcesoSelectionLoteForm extends React.Component {
     }
 
     getlisLotes() {
+        this._isMounted = true
+
         listloteselection().then((responseJson) => {
             let error = (responseJson.error == 0) ? false : true
-           this.setState({ existeError: error, isLoading: false, dataSource: this.validateList(responseJson) })
+            if (this._isMounted) {
+                this.setState({ existeError: error, isLoading: false, dataSource: this.validateList(responseJson) })
+            }
            
         }).catch((error) => {
             Alert.alert('Problemas para listar los Seleccione un lote')
@@ -141,10 +153,76 @@ export default class ProcesoSelectionLoteForm extends React.Component {
                                 <Text style={styles.labelItem}>Peso: <Text style={styles.textLateral}>{this.state.labelPeso}</Text></Text>
 
                                 <Text style={styles.labelItem}>Fecha inicio</Text>
-                                <TextInput style={styles.input} placeholder='yyyy-mm-dd hh:mm:ss' value={this.state.finicio} onChangeText={(value) => this.setState({ finicio: value })} />
+                                <DatePicker
+                                    style={{ width: 200 }}
+                                    date={this.state.finicio}
+                                    mode="datetime"
+                                    placeholder="yyyy-mm-dd hh:mm:ss"
+                                    format="YYYY-MM-DD HH:mm:ss"
+                                    minDate="2019-01-01"
+                                    maxDate="2099-06-01"
+                                    confirmBtnText="Ok"
+                                    cancelBtnText="Cancelar"
+                                    customStyles={{
+                                        dateIcon: {
+                                            position: 'absolute',
+                                            left: 0,
+                                            top: 4,
+                                            marginLeft: 6
+                                        },
+                                        dateTouchBody: {
+                                            width: 330,
+                                            margin: 5,
+                                            padding: 3,
+                                        },
+                                        dateInput: {
+                                            borderColor: 'grey',
+                                            borderRadius: 5,
+                                            width: 330,
+                                        },
+                                        placeholderText: {
+                                            width: 330,
+                                            padding: 50,
+                                        },
+                                    }}
+                                    onDateChange={(date) => { this.setState({ finicio: date }) }}
+                                />
 
                                 <Text style={styles.labelItem}>fecha fin</Text>
-                                <TextInput style={styles.input} placeholder='yyyy-mm-dd hh:mm:ss' value={this.state.ffin} onChangeText={(value) => this.setState({ ffin: value })} />
+                                <DatePicker
+                                    style={{ width: 200 }}
+                                    date={this.state.ffin}
+                                    mode="datetime"
+                                    placeholder="yyyy-mm-dd hh:mm:ss"
+                                    format="YYYY-MM-DD HH:mm:ss"
+                                    minDate="2019-01-01"
+                                    maxDate="2099-06-01"
+                                    confirmBtnText="Ok"
+                                    cancelBtnText="Cancelar"
+                                    customStyles={{
+                                        dateIcon: {
+                                            position: 'absolute',
+                                            left: 0,
+                                            top: 4,
+                                            marginLeft: 6
+                                        },
+                                        dateTouchBody:{
+                                            width:330,
+                                            margin: 5,
+                                            padding: 3,
+                                        },
+                                        dateInput: {
+                                            borderColor: 'grey',
+                                            borderRadius: 5,
+                                            width: 330,
+                                        },
+                                        placeholderText:{
+                                            width: 330,
+                                            padding: 50,
+                                        },
+                                    }}
+                                    onDateChange={(date) => { this.setState({ ffin: date }) }}
+                                />
 
                                 <View style={styles.viewMaint}>
                                     <TouchableOpacity onPress={this._onPressButton.bind(this)}>
@@ -191,7 +269,6 @@ const styles = StyleSheet.create({
         borderColor: 'grey',
         borderWidth: 1,
         backgroundColor: 'white',
-        borderColor: 'grey',
         margin: 6,
         padding: 5,
         borderRadius: 5,

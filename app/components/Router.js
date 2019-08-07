@@ -14,10 +14,10 @@ import MantProveedoresForm from './MantProveedoresForm';
 import DashboardProcesos from './DashboardProcesos';
 import DashboardReportes from './DashboardReportes';
 import Example from './Example';
-import ProcesoLoteForm from "./ProcesoSelectionLoteForm";
 import ProcesoSelectionLoteForm from './ProcesoSelectionLoteForm';
 import ProcesarLoteForm from './ProcesarLoteForm';
 import ProcesoAlmacenajeLoteForm from './ProcesoAlmacenajeLoteForm';
+import ReporteStock from './ReporteStock';
 
 
 const AuthStack = createStackNavigator({
@@ -143,16 +143,6 @@ const AuthStack = createStackNavigator({
       headerTitleStyle: { fontWeight: 'bold', }
     }
   },
-  Lotes: {
-    screen: ProcesoLoteForm,
-    navigationOptions: {
-      title: 'Lotes',
-      headerMode: 'screen',
-      headerStyle: { backgroundColor: '#2ecc71', },
-      headerTintColor: 'black',
-      headerTitleStyle: { fontWeight: 'bold', }
-    }
-  },
   LoteSeleccionamiento: {
     screen: ProcesoSelectionLoteForm,
     navigationOptions: {
@@ -183,14 +173,20 @@ const AuthStack = createStackNavigator({
       headerTitleStyle: { fontWeight: 'bold', }
     }
   },
-
-  
-
-  
+  ReporteStock: {
+    screen: ReporteStock,
+    navigationOptions: {
+      title: 'Reporte - Stocks',
+      headerMode: 'screen',
+      headerStyle: { backgroundColor: '#2ecc71', },
+      headerTintColor: 'black',
+      headerTitleStyle: { fontWeight: 'bold', }
+    }
+  },  
 },
 {
   initialRouteName: 'Login',
-  //initialRouteName: 'Procesos',
+  //initialRouteName: 'ReporteStock',
   defaultNavigationOptions: {headerMode: 'screen'},
 });
 

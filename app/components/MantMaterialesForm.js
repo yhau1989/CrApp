@@ -7,10 +7,17 @@ import { listmaterial, editmaterial, addmaterial} from '../apis/materialapi';
 
 
 export default class MantMaterialesForm extends React.Component {
+
+    _isMounted = false;
+
     constructor(props) {
         super(props)
         this.state = { colorAccionNew: 'grey', colorAccionEdit: 'grey', accion: 'new', id: '', tipo: '',value: 'Tipos de materiales', dataSource: '', isLoading: true, existeError: false }
         this._onPressButton = this._onPressButton.bind(this)
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     onSelect(value, label) {
@@ -41,6 +48,42 @@ export default class MantMaterialesForm extends React.Component {
     }
 
     _onPressButton() {
+        let tipo = this.state.tipo
+
+        if (tipo.length <= 0) {
+            Alert.alert('Ingrese los datos para continuar')
+        }
+        else {
+
+            Alert.alert('Cargando...')
+
+            if (this.state.accion == 'new') {
+
+                addmaterial(tipo).then((responseJson) => {
+                    let error = (responseJson.error == 0) ? false : true
+                    this.setState({ existeError: error })
+                    Alert.alert(responseJson.mensaje)
+                }).catch((error) => {
+                    //Alert.alert('existen problemas de conexión')
+                    Alert.alert(error)
+                })
+            }
+            else if (this.state.accion == 'edit') {
+                if (tipo.length <= 0) {
+                    Alert.alert('Ingrese los datos para continuar')
+                }
+                else {
+                    editmaterial(this.state.id, tipo).then((responseJson) => {
+                        let error = (responseJson.error == 0) ? false : true
+                        this.setState({ existeError: error, })
+                        Alert.alert(responseJson.mensaje)
+                    }).catch((error) => {
+                        //Alert.alert('existen problemas de conexión')
+                        Alert.alert(error)
+                    })
+                }
+            }
+        }
       
     }
 
@@ -55,9 +98,12 @@ export default class MantMaterialesForm extends React.Component {
     }
 
     getlisMateriales() {
+        this._isMounted = true
         listmaterial().then((responseJson) => {
             let error = (responseJson.error == 0) ? false : true
-            this.setState({ existeError: error, isLoading: false, dataSource: this.validateList(responseJson) })
+            if (this._isMounted) {
+                this.setState({ existeError: error, isLoading: false, dataSource: this.validateList(responseJson) })
+            }
 
         }).catch((error) => {
             Alert.alert('Problemas para listar los tipos de materiales')

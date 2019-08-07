@@ -9,9 +9,9 @@ export default class DashboardReportes extends React.Component {
     // registerPressMantenimientos() { NavigationService.navigate('Mantenimientos'); }
     // registerPressCompras() { NavigationService.navigate('Compras'); }
     // registerPressVentas() { NavigationService.navigate('Ventas'); }
-    // registerPressOperaciones() { NavigationService.navigate('Procesos'); }
+    registerStockReport() { NavigationService.navigate('ReporteStock'); }
 
-    registerPressSalir() { NavigationService.navigate('Login'); }
+   // registerPressSalir() { NavigationService.navigate('Login'); }
 
     render() {
         return (
@@ -28,8 +28,8 @@ export default class DashboardReportes extends React.Component {
                             <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Materias Primas
                         </Text>
 
-                        <Text style={styles.instructions} >
-                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Stock
+                    <Text style={styles.instructions} onPress={this.registerStockReport.bind(this)}>
+                        <Ionicons name="ios-arrow-dropright-circle"  size={15} color="black" /> Stock
                         </Text>
                         
                         
