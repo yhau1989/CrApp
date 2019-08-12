@@ -16,20 +16,22 @@ export default class DashboardReportes extends React.Component {
     render() {
         return (
                 <View style={styles.containerForm}>
-                    <Text style={styles.welcome}>Seleccionar Reporte</Text>
-                    <View>
+               
+                    <Text style={styles.welcome}>
+                    <Ionicons name="md-stats" size={36} color="#191919" /> Reportes</Text>
+                <View style={{ width: '100%' }}>
                             <Text style={styles.instructions} >
-                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Ventas
+                        <Ionicons name="ios-rocket" size={26} color="#191919"  />   Ventas
                         </Text>
                         <Text style={styles.instructions} >
-                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Compras
+                        <Ionicons name="ios-cart" size={26} color="#191919"  />   Compras
                         </Text>
                         <Text style={styles.instructions} >
-                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Materias Primas
+                        <Ionicons name="ios-switch" size={26} color="#191919" />   Materias Primas
                         </Text>
 
                     <Text style={styles.instructions} onPress={this.registerStockReport.bind(this)}>
-                        <Ionicons name="ios-arrow-dropright-circle"  size={15} color="black" /> Stock
+                        <Ionicons name="ios-pulse" size={26} color="#191919" />   Stock
                         </Text>
                         
                         
@@ -54,9 +56,15 @@ const styles = StyleSheet.create({
         fontWeight: '900',
     },
     instructions: {
+        fontSize: 20,
         color: 'black',
         marginBottom: 5,
         fontWeight: '500',
+        paddingTop: 15,
+        paddingBottom: 15,
+        borderBottomColor: '#323232',
+        borderBottomWidth: 0.5,
+        paddingLeft: 26,
     },
 });
 

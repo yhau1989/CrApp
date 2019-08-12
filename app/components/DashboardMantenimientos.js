@@ -13,17 +13,18 @@ export default class DashboardMantenimientos extends React.Component {
     render() {
         return (
                 <View style={styles.containerForm}>
-                    <Text style={styles.welcome}>Mantenimiento</Text>
-                    <View>
+                    <Text style={styles.welcome}>
+                    <Ionicons name="ios-albums" size={26} color="#191919" /> Mantenimiento</Text>
+                <View style={{ width: '100%' }}>
 
                         <Text style={styles.instructions} onPress={this.registerPressMateriales.bind(this)}>
-                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Materiales
+                        <Ionicons name="ios-analytics" size={26} color="#191919" />   Materiales
                         </Text>
                         <Text style={styles.instructions} onPress={this.registerPressClientes.bind(this)}>
-                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Clientes
+                        <Ionicons name="ios-happy" size={26} color="#191919" />   Clientes
                         </Text>
                         <Text style={styles.instructions} onPress={this.registerPressProveedores.bind(this)}>
-                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Proveedores
+                        <Ionicons name="ios-people" size={26} color="#191919" />   Proveedores
                         </Text>
                     </View>
                     
@@ -46,9 +47,15 @@ const styles = StyleSheet.create({
         fontWeight: '900',
     },
     instructions: {
+        fontSize: 20,
         color: 'black',
         marginBottom: 5,
         fontWeight: '500',
+        paddingTop: 15,
+        paddingBottom: 15,
+        borderBottomColor: '#323232',
+        borderBottomWidth: 0.5,
+        paddingLeft: 26,
     },
 });
 

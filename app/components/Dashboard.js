@@ -15,22 +15,20 @@ export default class Dashboard extends React.Component {
         return (
                 <View style={styles.containerForm}>
                     <Text style={styles.welcome}>Menú Principal</Text>
-                    <View>
+                    <View style={{width:'100%'}}>
                         <Text style={styles.instructions} onPress={this.registerPressMantenimientos.bind(this)}>
-                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Mantenimientos
+                            <Ionicons name="ios-albums" size={26} color="#191919" />   Mantenimientos
                         </Text>
                     <Text style={styles.instructions} onPress={this.registerPressOperacioneDashs.bind(this)}>
-                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Procesos
+                        <Ionicons name="ios-apps" size={26} color="#191919" />   Procesos
                         </Text>
                         <Text style={styles.instructions} onPress={this.registerReportes.bind(this)}>
-                            <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Reportes
+                        <Ionicons name="md-stats" size={26} color="#191919" />   Reportes
                         </Text>
 
                         <Text style={styles.instructions} onPress={this.registerPressSalir.bind(this)}>
-                            <Ionicons name="ios-arrow-round-back" size={15} color="black" /> Salir
+                        <Ionicons name="ios-arrow-round-back" size={26} color="#191919" />   Salir
                         </Text>
-                        
-                        
                     </View>
                 </View>
         );
@@ -43,6 +41,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flex: 1,
         backgroundColor: '#69dd9a',
+        width: '100%'
     },
     welcome: {
         fontSize: 26,
@@ -52,9 +51,15 @@ const styles = StyleSheet.create({
         fontWeight: '900',
     },
     instructions: {
+        fontSize: 20,
         color: 'black',
         marginBottom: 5,
         fontWeight: '500',
+        paddingTop: 15,
+        paddingBottom:15,
+        borderBottomColor: '#323232',
+        borderBottomWidth: 0.5,
+        paddingLeft: 26,
     },
 });
 

@@ -186,7 +186,7 @@ const AuthStack = createStackNavigator({
 },
 {
   initialRouteName: 'Login',
-  //initialRouteName: 'ReporteStock',
+  //initialRouteName: 'Ventas',
   defaultNavigationOptions: {headerMode: 'screen'},
 });
 

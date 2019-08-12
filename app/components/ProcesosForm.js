@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Alert, View, StyleSheet, AppRegistry, Text} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
 import NavigationService from "./NavigationService";
 
 
@@ -36,16 +36,17 @@ export default class ProcesosForm extends React.Component {
     render() {
         return (
             <View style={styles.containerForm}>
+                <Ionicons name="ios-git-network" size={36} color="#191919" />
                 <Text style={styles.welcome}>Procesamiento de Materia Prima</Text>
-                <View>
+                <View style={{ width: '100%' }}>
                     <Text style={styles.instructions} onPress={this.LoteSeleccionamiento.bind(this)}>
-                        <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Seleccionamiento
+                        <MaterialCommunityIcons name="selection" size={26} color="#191919" />   Seleccionamiento
                         </Text>
                     <Text style={styles.instructions} onPress={this.ProcesarLoteForm.bind(this)}>
-                        <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Trituración
+                        <Entypo name="stumbleupon" size={26} color="#191919" />   Trituración
                         </Text>
                     <Text style={styles.instructions} onPress={this.ProcesoAlmacenajeLoteForm.bind(this)}>
-                        <Ionicons name="ios-arrow-dropright-circle" size={15} color="black" /> Almacenamiento
+                        <MaterialCommunityIcons name="database-plus" size={26} color="#191919" />   Almacenamiento
                         </Text>
                 </View>
             </View>
@@ -69,9 +70,15 @@ const styles = StyleSheet.create({
         fontWeight: '900',
     },
     instructions: {
+        fontSize: 20,
         color: 'black',
         marginBottom: 5,
         fontWeight: '500',
+        paddingTop: 15,
+        paddingBottom: 15,
+        borderBottomColor: '#323232',
+        borderBottomWidth: 0.5,
+        paddingLeft: 26,
     },
 });
 

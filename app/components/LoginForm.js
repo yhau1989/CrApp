@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Alert, View, StyleSheet, AppRegistry, TouchableOpacity, Text, TextInput, Button} from 'react-native';
 import {login} from '../apis/usuarioapi';
+import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import NavigationService from "./NavigationService";
 
 export default class LoginForm extends React.Component {
@@ -45,12 +46,15 @@ export default class LoginForm extends React.Component {
     render() {
         return (
                 <View style={styles.containerForm}>
-                    <Text style={styles.welcome}>Procefibras App</Text>
+                <MaterialCommunityIcons name="recycle" size={76} color="#191919"/>
+                
+                                    <Text style={styles.welcome}>Procefibras App</Text>
                     <TextInput style={styles.input} placeholder='Email' placeholderTextColor='#323232' value={this.state.email} onChangeText={(value) => this.setState({ email: value.trim() })} />
                     <TextInput placeholderTextColor='#323232' secureTextEntry={true} style={styles.input} value={this.state.password} placeholder='Contraseña' onChangeText={(value) => this.setState({ password: value.trim() })} />
 
                     <TouchableOpacity onPress={this._onPressButton.bind(this)}>
-                        <Text style={styles.botonText}>Ingresar</Text>
+                        <Text style={styles.botonText}>Ingresar <Ionicons name="ios-arrow-forward" size={14} color="#2ecc71"/>
+                        </Text>
                     </TouchableOpacity>
 
                     <Text style={styles.instructions}>

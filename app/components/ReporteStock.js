@@ -13,7 +13,7 @@ const columns = [
     {
         title: 'Material',
         dataIndex: 'tipo',
-        width: 280,
+        width: 250,
     },
     {
         title: 'Stock (libras)',
@@ -74,7 +74,7 @@ export default class ReporteStock extends React.Component {
 
 
                         <View style={{ width: '90%', paddingTop: 10 }}>
-                            <Table height={320} columnWidth={60} columns={columns} dataSource={this.state.dataSource} />
+                            <Table height={500} columnWidth={40} columns={columns} dataSource={this.state.dataSource} />
                         </View> 
 
                     </TouchableWithoutFeedback>
