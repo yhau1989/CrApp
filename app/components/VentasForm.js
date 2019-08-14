@@ -2,25 +2,28 @@ import * as React from 'react';
 import { Select, Option } from "react-native-chooser";
 import {
     Alert, StyleSheet, AppRegistry, TextInput, Text, View, TouchableOpacity,
-    TouchableWithoutFeedback, StatusBar, SafeAreaView, KeyboardAvoidingView
+    TouchableWithoutFeedback, StatusBar, SafeAreaView, KeyboardAvoidingView, ScrollView, ActivityIndicator
 } from 'react-native';
 import { listmaterial } from '../apis/materialapi';
 import { listcliente } from '../apis/clientesapi';
 import { addcompra } from '../apis/comprasapi';
+import Itemfactura  from './Itemfactura';
 
 
 export default class VentasForm extends React.Component {
 
     _isMounted = false;
 
-
-
     constructor(props) {
         super(props);
          this.state = {
             usuarioComprador: '11', precio: '', color: '', usuarioVendedor: '', idMaterial: '', valueMateial: 'Seleccione Material', idProveedor: '', valueProveedor: 'Seleccione Cliente', 
-             dataSourceMaterial: '', dataSourceProveedor: '', isLoading: true, existeError: false, lista: [''], peso:'' }
+             dataSourceMaterial: '', dataSourceProveedor: '', isLoading: true, existeError: false, lista: [], lista2: [], peso:'' }
         this._onPressButton = this._onPressButton.bind(this)
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     _onPressButton() {
@@ -45,28 +48,41 @@ export default class VentasForm extends React.Component {
                 
         //     })
         // }
+       
 
         let listaU = this.state.lista
-        listaU.push(this.state.color)
+        let item = {
+            idmaterial: this.state.idMaterial,
+            descripcion: this.state.color,
+            precio: this.state.precio,
+            peso: this.state.peso
+        }
+        listaU.push(item)
 
-        this.setState({lista:listaU})
+        const items = []
+        for (const [index, value] of listaU.entries()) {
+            items.push(<View key={`viewItem${index}`} style={styles.containerItem}>
+                <Text key={`txtMaterial${index}`} style={styles.bold}>Id Material: <Text style={styles.welcomeItem}>{value.idmaterial}</Text></Text>
+                <Text key={`txtDescripcion${index}`} style={styles.bold}>Material: <Text style={styles.welcomeItem}>{value.descripcion}</Text></Text>
+                <Text key={`txtPeso${index}`} style={styles.bold}>Peso: <Text style={styles.welcomeItem}>{value.peso}</Text></Text>
+                <Text key={`txtValor${index}`} style={styles.bold}>Valor:<Text style={styles.welcomeItem}> $ {value.precio}</Text></Text>
+                <TouchableOpacity onPress={this.deleteItem.bind(this)}>
+                    <Text key={`txtEliminar${index}`} style={styles.botonTextItem}>Eliminar</Text>
+                </TouchableOpacity>
+            </View>)
+        }
+        
+        this.setState({lista:listaU, lista2:items})
+        
 
     }
 
     onSelectMaterial(value, label) {
-        this.setState({ valueMateial: label, idMaterial: value })
-        let materiales = this.state.dataSourceMaterial.data.filter(mat => mat.id == value)
-        if (materiales.length > 0) {
-            this.setState({ colorAccionNew: 'grey', colorAccionEdit: 'grey', id: materiales[0].id, color: materiales[0].tipo, })
-        }
+        this.setState({ color: label, valueMateial:label, idMaterial: value })
     }
 
     onSelectProveedor(value, label) {
-        this.setState({ valueProveedor: label, idProveedor: value })
-        let provee = this.state.dataSourceProveedor.data.filter(prov => prov.id == value)
-        if (provee.length > 0) {
-            this.setState({ colorAccionNew: 'grey', colorAccionEdit: 'grey', id: provee[0].id, ruc: provee[0].ruc, nombre: provee[0].nombres, apellido: provee[0].apellidos, direccion: provee[0].direccion, email: provee[0].email, telefono: provee[0].telefono })
-        }
+            this.setState({ valueProveedor: label, idProveedor: value })
 
     }
 
@@ -114,6 +130,29 @@ export default class VentasForm extends React.Component {
     cancelPress() { this.setState({ peso: '', usuarioVendedor: '', idMaterial: '', valueMateial: 'Seleccione Material', idProveedor: '', valueProveedor: 'Seleccione Proveedor', valorCompra: '' }) }
 
 
+    deleteItem()
+    {
+        
+        let listaU = this.state.lista
+       
+        listaU.splice(0,1)
+        const items = []
+        for (const [index, value] of listaU.entries()) {
+            items.push(<View key={`viewItem${index}`} style={styles.containerItem}>
+                <Text key={`txtMaterial${index}`} style={styles.bold}>Id Material: <Text style={styles.welcomeItem}>{value.idmaterial}</Text></Text>
+                <Text key={`txtDescripcion${index}`} style={styles.bold}>Material: <Text style={styles.welcomeItem}>{value.descripcion}</Text></Text>
+                <Text key={`txtPeso${index}`} style={styles.bold}>Peso: <Text style={styles.welcomeItem}>{value.peso}</Text></Text>
+                <Text key={`txtValor${index}`} style={styles.bold}>Valor:<Text style={styles.welcomeItem}> $ {value.precio}</Text></Text>
+                <TouchableOpacity onPress={this.deleteItem.bind(this)}>
+                    <Text key={`txtEliminar${index}`} style={styles.botonTextItem}>Eliminar</Text>
+                </TouchableOpacity>
+            </View>)
+        }
+        this.setState({ lista: listaU, lista2: items })
+        
+
+    }
+
     render() {
 
         this.loadCompo()
@@ -121,16 +160,14 @@ export default class VentasForm extends React.Component {
             return (
                 <View style={styles.containerForm}>
                     <Text>Cargando...</Text>
+                    <ActivityIndicator />
                 </View>
             );
         }
 
         return (
-            <SafeAreaView style={styles.containerForm}>
-                <StatusBar barStyle="light-content" />
-                <KeyboardAvoidingView behavior="padding" style={styles.containerForm}>
-                    <TouchableWithoutFeedback>
-                        <View style={{ width: '90%'  }}>
+         
+                        <View style={{ width: '90%', paddingLeft:20 }}>
                            
                             <Text style={styles.labelItem}>Cliente</Text>
                             <Select
@@ -164,6 +201,7 @@ export default class VentasForm extends React.Component {
                                         (
                                             this.state.dataSourceMaterial.data.map((material) => (
                                                 <Option key={material.id} value={material.id}>{material.tipo}</Option>
+                                                
                                             ))
                                         )
                                         : ('')
@@ -200,26 +238,20 @@ export default class VentasForm extends React.Component {
                                 <TouchableOpacity onPress={this.cancelPress.bind(this)}>
                                     <Text style={styles.botonText}>Cancelar</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity >
+                                <TouchableOpacity onPress={this.deleteItem.bind(this)}>
                                     <Text style={styles.botonText}>Vender</Text>
                                 </TouchableOpacity>
                             </View>
                            
 
-                            <Text style={styles.labelItem}>Items</Text>
-                            {
-                                this.state.lista.map((item) => (
-                                    <Text key={item}>{item}</Text>
-                                ))
-                            }
-
-
-
+                            <Text style={styles.labelItem}>Items {this.state.lista2.length}</Text>
+                             <ScrollView>
+                                {this.state.lista2}    
+                             </ScrollView>
+                            
                         </View>
 
-                    </TouchableWithoutFeedback>
-                </KeyboardAvoidingView>
-            </SafeAreaView>
+                   
 
         );
     }
@@ -285,6 +317,38 @@ const styles = StyleSheet.create({
     labelItem: {
         fontWeight: '700',
     },
+    containerItem: {
+        margin: 5,
+        padding: 5,
+        backgroundColor: '#ffffff',
+        borderRadius: 5,
+        borderColor: 'grey',
+        borderWidth: 0.23,
+
+
+    },
+    welcomeItem: {
+        fontSize: 14,
+        margin: 2,
+        color: 'grey',
+        fontWeight: '700',
+    },
+    bold: {
+        color: 'black',
+        fontWeight: '700',
+    },
+    botonTextItem: {
+        textAlign: 'center',
+        backgroundColor: 'black',
+        margin: 6,
+        padding: 10,
+        borderRadius: 5,
+        fontWeight: '700',
+        width: 120,
+        fontSize: 16,
+        color: 'red',
+    },
+
 });
 
 
