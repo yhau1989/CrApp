@@ -27,6 +27,19 @@ export default class VentasForm extends React.Component {
         this._isMounted = false;
     }
 
+    venderPress()
+    {
+        if(this.state.lista.size)
+        {
+            alert('Agregue productos para la venta')
+        }
+        else
+        {
+            
+        }
+
+    }
+
    
     _onPressButton() {
 
