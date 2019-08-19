@@ -6,8 +6,7 @@ import {
 } from 'react-native';
 import { listmaterial } from '../apis/materialapi';
 import { listcliente } from '../apis/clientesapi';
-import { addcompra } from '../apis/comprasapi';
-import Itemfactura  from './Itemfactura';
+
 
 
 export default class VentasForm extends React.Component {
@@ -18,63 +17,88 @@ export default class VentasForm extends React.Component {
         super(props);
          this.state = {
             usuarioComprador: '11', precio: '', color: '', usuarioVendedor: '', idMaterial: '', valueMateial: 'Seleccione Material', idProveedor: '', valueProveedor: 'Seleccione Cliente', 
-             dataSourceMaterial: '', dataSourceProveedor: '', isLoading: true, existeError: false, lista: [], lista2: [], peso:'' }
+             dataSourceMaterial: '', dataSourceProveedor: '', isLoading: true, existeError: false, lista: new Set(), lista2: new Set(), peso:'',
+             subtotal: 0, iva: 0, neto: 0, tiempos:0}
         this._onPressButton = this._onPressButton.bind(this)
+       
     }
 
     componentWillUnmount() {
         this._isMounted = false;
     }
 
+   
     _onPressButton() {
 
-        // let proveedor = this.state.tipo
-        // let material = this.state.idMaterial
-        // let comprador = this.state.usuarioComprador
-        // let valor = this.state.valorCompra
-
-        // if (proveedor.length <= 0 || material.length <= 0 || comprador.length <= 0 || valor.length <= 0) {
-        //     Alert.alert('Ingrese los datos para continuar')
-        // }
-        // else {
-        //     Alert.alert('Cargando...')
-        //     addcompra(this.state.idProveedor, this.state.idMaterial, this.state.peso, this.state.usuarioComprador, this.state.valorCompra).then((responseJson) => {
-        //         if (responseJson.error == 0) {
-        //             this.cancelPress()
-        //         }
-        //         Alert.alert(responseJson.mensaje)
-        //     }).catch((error) => {
-        //         Alert.alert('Problemas para registrar su compra, intentelo nuevamente')
-                
-        //     })
-        // }
-       
-
-        let listaU = this.state.lista
-        let item = {
-            idmaterial: this.state.idMaterial,
-            descripcion: this.state.color,
-            precio: this.state.precio,
-            peso: this.state.peso
+        if (this.state.idMaterial.length == 0 || this.state.precio.length == 0 || this.state.peso.length == 0 || this.state.color.trim().length == 0) {
+            Alert.alert('Ingese valores')
         }
-        listaU.push(item)
+        else
+        {
+            let listaU = this.state.lista
+            let subtotalg = this.state.subtotal
+            let iv = 0
+            let net = 0
+            
+            let item = {
+                idmaterial: this.state.idMaterial,
+                descripcion: this.state.color,
+                precio: this.state.precio,
+                peso: this.state.peso,
+                indice: listaU.size + 1
+            }
+            listaU.add(item)
+    
+            let items = new Set()
+            for (let [value] of listaU.entries()) {
+                let subtotalg2 = subtotalg + parseFloat(value.precio)
+                iv = subtotalg2 * 0.12
+                net = subtotalg2 + iv
 
-        const items = []
-        for (const [index, value] of listaU.entries()) {
-            items.push(<View key={`viewItem${index}`} style={styles.containerItem}>
-                <Text key={`txtMaterial${index}`} style={styles.bold}>Id Material: <Text style={styles.welcomeItem}>{value.idmaterial}</Text></Text>
-                <Text key={`txtDescripcion${index}`} style={styles.bold}>Material: <Text style={styles.welcomeItem}>{value.descripcion}</Text></Text>
-                <Text key={`txtPeso${index}`} style={styles.bold}>Peso: <Text style={styles.welcomeItem}>{value.peso}</Text></Text>
-                <Text key={`txtValor${index}`} style={styles.bold}>Valor:<Text style={styles.welcomeItem}> $ {value.precio}</Text></Text>
-                <TouchableOpacity onPress={this.deleteItem.bind(this)}>
-                    <Text key={`txtEliminar${index}`} style={styles.botonTextItem}>Eliminar</Text>
-                </TouchableOpacity>
-            </View>)
+               
+                /*subtotalg2 = subtotalg2.toFixed(2)*/
+                iv = iv.toFixed(2)
+                net = net.toFixed(2)
+
+                items.add(<View key={`viewItem${value.indice}`} style={styles.containerItem}>
+
+                    <View style={{
+                        flex: 1,
+                        alignItems: 'flex-start',
+                        flexDirection: 'row',
+                        width: '100%',
+                        height:'100%',
+                    }}>
+                        <View style={{
+                            width: '70%',
+                            height: '100%',
+                        }}>
+                            <Text key={`txtMaterial${value.indice}`} style={styles.bold}>Id Material: <Text style={styles.welcomeItem}>{value.idmaterial}</Text></Text>
+                            <Text key={`txtDescripcion${value.indice}`} style={styles.bold}>Material: <Text style={styles.welcomeItem}>{value.descripcion}</Text></Text>
+                            <Text key={`txtPeso${value.indice}`} style={styles.bold}>Peso: <Text style={styles.welcomeItem}>{value.peso}</Text></Text>
+                            <Text key={`txtValor${value.indice}`} style={styles.bold}>Valor:<Text style={styles.welcomeItem}> $ {value.precio}</Text></Text>
+                        </View>
+                        <View style={{
+                            flex:1,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            width: '30%',
+                            height: '100%',
+                        }}>
+                            <TouchableOpacity style={styles.buttonStyle} onPress={this.deleteItem.bind(this, value.indice)}>
+                                <Text  key={`txtEliminar${value.indice}`} style={styles.botonTextItem}>Eliminar</Text>
+                            </TouchableOpacity> 
+                        </View>
+                    </View>
+                </View>)
+
+                this.setState({ subtotal: subtotalg2 })
+
+
+            }
+            this.setState({ lista: listaU, lista2: items, iva: iv, neto: net })
+            this.cancelPress()
         }
-        
-        this.setState({lista:listaU, lista2:items})
-        
-
     }
 
     onSelectMaterial(value, label) {
@@ -127,30 +151,111 @@ export default class VentasForm extends React.Component {
         this.getlisClient()
     }
 
-    cancelPress() { this.setState({ peso: '', usuarioVendedor: '', idMaterial: '', valueMateial: 'Seleccione Material', idProveedor: '', valueProveedor: 'Seleccione Proveedor', valorCompra: '' }) }
+    cancelPress() { this.setState({ peso: '', precio:'', color:'', usuarioVendedor: '', idMaterial: '', valueMateial: 'Seleccione Material', idProveedor: '', valueProveedor: 'Seleccione Proveedor', valorCompra: '' }) }
 
 
-    deleteItem()
+    deleteItem(indic)
     {
-        
         let listaU = this.state.lista
-       
-        listaU.splice(0,1)
-        const items = []
-        for (const [index, value] of listaU.entries()) {
-            items.push(<View key={`viewItem${index}`} style={styles.containerItem}>
-                <Text key={`txtMaterial${index}`} style={styles.bold}>Id Material: <Text style={styles.welcomeItem}>{value.idmaterial}</Text></Text>
-                <Text key={`txtDescripcion${index}`} style={styles.bold}>Material: <Text style={styles.welcomeItem}>{value.descripcion}</Text></Text>
-                <Text key={`txtPeso${index}`} style={styles.bold}>Peso: <Text style={styles.welcomeItem}>{value.peso}</Text></Text>
-                <Text key={`txtValor${index}`} style={styles.bold}>Valor:<Text style={styles.welcomeItem}> $ {value.precio}</Text></Text>
-                <TouchableOpacity onPress={this.deleteItem.bind(this)}>
-                    <Text key={`txtEliminar${index}`} style={styles.botonTextItem}>Eliminar</Text>
-                </TouchableOpacity>
+        let elimin = 0
+        let iv = 0
+        let net = 0
+
+        for (let [value2] of listaU.entries()) {
+            if (value2.indice === indic) {
+                elimin = value2
+                break
+            }
+        }
+
+        listaU.delete(elimin)
+
+
+        let subtotalg2 = 0
+        let items = new Set()
+        for (let [value] of listaU.entries()) {
+            subtotalg2 = subtotalg2 + parseFloat(value.precio)
+            iv = subtotalg2 * 0.12
+            net = subtotalg2 + iv
+
+            //subtotalg2 = subtotalg2.toFixed(2)
+            iv = iv.toFixed(2)
+            net = net.toFixed(2)
+
+
+            items.add(<View key={`viewItem${value.indice}`} style={styles.containerItem}>
+
+                <View style={{
+                    flex: 1,
+                    alignItems: 'flex-start',
+                    flexDirection: 'row',
+                    width: '100%',
+                    height: '100%',
+                }}>
+                    <View style={{
+                        width: '70%',
+                        height: '100%',
+                    }}>
+                        <Text key={`txtMaterial${value.indice}`} style={styles.bold}>Id Material: <Text style={styles.welcomeItem}>{value.idmaterial}</Text></Text>
+                        <Text key={`txtDescripcion${value.indice}`} style={styles.bold}>Material: <Text style={styles.welcomeItem}>{value.descripcion}</Text></Text>
+                        <Text key={`txtPeso${value.indice}`} style={styles.bold}>Peso: <Text style={styles.welcomeItem}>{value.peso}</Text></Text>
+                        <Text key={`txtValor${value.indice}`} style={styles.bold}>Valor:<Text style={styles.welcomeItem}> $ {value.precio}</Text></Text>
+                    </View>
+                    <View style={{
+                        flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: '30%',
+                        height: '100%',
+                    }}>
+                        <TouchableOpacity style={styles.buttonStyle} onPress={this.deleteItem.bind(this, value.indice)}>
+                            <Text key={`txtEliminar${value.indice}`} style={styles.botonTextItem}>Eliminar</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
             </View>)
         }
-        this.setState({ lista: listaU, lista2: items })
-        
 
+        //alert('fin de for eliminacion')
+       
+        this.setState({ lista: listaU, lista2: items, subtotal: subtotalg2, items, iva: iv, neto: net })
+        
+    }
+
+    calTotales(precio, operacion, subtotalg)
+    {
+        let subt = parseFloat(subtotalg)
+        let iv = 0
+        let net = 0 
+
+        let totales = {
+            subtotal : 0,
+            iva0 : 0, 
+            totalNeto : 0
+        }
+
+        switch (operacion) {
+            case 'suma':
+                    subt = (subt + parseFloat(precio))
+                    iv = subt * 0.12
+                    net = subt + iv
+                    iv = iv.toFixed(2)
+                    net = net.toFixed(2)
+                    totales = {subtotal : subt, iva : iv, totalNeto : net}
+
+                break;
+        
+            case 'resta':
+                    subt = (subt - parseFloat(precio))
+                    iv = subt * 0.12
+                    net = subt + iv
+                    iv = iv.toFixed(2)
+                    net = net.toFixed(2)
+                    totales = { subtotal: subt, iva: iv, totalNeto: net }
+                break;
+        }
+        return totales
+        
     }
 
     render() {
@@ -166,7 +271,13 @@ export default class VentasForm extends React.Component {
         }
 
         return (
-         
+
+            <SafeAreaView style={styles.containerForm}>
+                <StatusBar barStyle="light-content" />
+                <KeyboardAvoidingView behavior="padding" style={styles.containerForm}>
+                    <TouchableWithoutFeedback>
+                        
+                    
                         <View style={{ width: '90%', paddingLeft:20 }}>
                            
                             <Text style={styles.labelItem}>Cliente</Text>
@@ -213,11 +324,11 @@ export default class VentasForm extends React.Component {
                             <View style={{
                                 display: 'flex',
                                 flexDirection: 'row', justifyContent: 'center',
-                                alignItems: 'center'}}>
+                                alignItems: 'center', }}>
 
                                 <View View={{ width: 300, }}>
                                     <Text style={styles.labelItem}>Precio</Text>
-                                    <TextInput style={styles.input} width={60} placeholder='$' value={this.state.precio} onChangeText={(value) => this.setState({ precio: value })} /> 
+                                    <TextInput style={styles.input} width={70} placeholder='$' value={this.state.precio} onChangeText={(value) => this.setState({ precio: value })} /> 
                                 </View>
                                 <View View={{ width: 300, }}>
                                     <Text style={styles.labelItem}>Peso</Text>
@@ -225,7 +336,7 @@ export default class VentasForm extends React.Component {
                                 </View>
                                 <View View={{ width: 300, }}>       
                                     <Text style={styles.labelItem}>Descripcion (color)</Text>
-                                    <TextInput style={styles.input} width={250}  value={this.state.color} onChangeText={(value) => this.setState({ color: value })} />
+                                    <TextInput style={styles.input} width={200}  value={this.state.color} onChangeText={(value) => this.setState({ color: value })} />
                                 </View>
 
                             </View>
@@ -238,20 +349,30 @@ export default class VentasForm extends React.Component {
                                 <TouchableOpacity onPress={this.cancelPress.bind(this)}>
                                     <Text style={styles.botonText}>Cancelar</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={this.deleteItem.bind(this)}>
+                                <TouchableOpacity onPress={this.venderPress.bind(this)}>
                                     <Text style={styles.botonText}>Vender</Text>
                                 </TouchableOpacity>
                             </View>
-                           
-
-                            <Text style={styles.labelItem}>Items {this.state.lista2.length}</Text>
-                             <ScrollView>
-                                {this.state.lista2}    
-                             </ScrollView>
+    
                             
                         </View>
+                    </TouchableWithoutFeedback>
+                </KeyboardAvoidingView>
 
-                   
+                <View style={{ width: '90%', paddingLeft: 20 }}>
+                    <Text><Text style={styles.labelItem}>Items: </Text>{this.state.lista2.size}</Text>
+                    <Text style={{ textAlign: 'left' }}>
+                        <Text><Text style={styles.labelItem}>Subtotal: </Text>$ {this.state.subtotal}</Text>
+                        <Text><Text style={styles.labelItem}> | Iva: </Text>$ {this.state.iva}</Text>
+                        <Text><Text style={styles.labelItem}> | Total neto: </Text>$ {this.state.neto}</Text>
+                    </Text>
+
+
+                    <ScrollView style={{ height: 300, marginTop: 10, borderTopWidth: 0.23, borderTopColor: 'grey' }}>
+                        {this.state.lista2}
+                    </ScrollView>
+                </View>
+            </SafeAreaView>
 
         );
     }
@@ -260,10 +381,8 @@ export default class VentasForm extends React.Component {
 const styles = StyleSheet.create({
     containerForm: {
        paddingTop: 5,
-        alignItems: 'center',
         color: '#323232',
         width: '100%',
-        height: '100%'
     },
     viewMaint: {
         display: 'flex',
@@ -288,7 +407,7 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5,
         fontWeight: '700',
-        width: 120,
+        width: 105,
         fontSize: 16
     },
     footer: {
@@ -316,6 +435,8 @@ const styles = StyleSheet.create({
     },
     labelItem: {
         fontWeight: '700',
+        paddingLeft: 5, 
+        paddingRight: 5
     },
     containerItem: {
         margin: 5,
@@ -324,7 +445,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         borderColor: 'grey',
         borderWidth: 0.23,
-
+        height: 100,
 
     },
     welcomeItem: {
@@ -340,14 +461,17 @@ const styles = StyleSheet.create({
     botonTextItem: {
         textAlign: 'center',
         backgroundColor: 'black',
-        margin: 6,
-        padding: 10,
+        margin: 3,
+        padding: 5,
         borderRadius: 5,
         fontWeight: '700',
-        width: 120,
-        fontSize: 16,
+        width: 80,
+        fontSize: 14,
         color: 'red',
     },
+    buttonStyle: {
+        padding: 3,
+    }
 
 });
 
