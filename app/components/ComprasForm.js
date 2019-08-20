@@ -11,7 +11,7 @@ import { addcompra } from '../apis/comprasapi';
 
 export default class ComprasForm extends React.Component {
 
-    _isMounted = false;
+    
 
     constructor(props) {
         super(props);
@@ -21,8 +21,8 @@ export default class ComprasForm extends React.Component {
         this._onPressButton = this._onPressButton.bind(this);
     }
 
-    componentWillUnmount() {
-        this._isMounted = false;
+    componentWillMount() {
+        this.loadCompo()
     }
 
 
@@ -78,13 +78,9 @@ export default class ComprasForm extends React.Component {
     }
 
     getlisMateriales() {
-        this._isMounted = true;
-
         listmaterial().then((responseJson) => {
             let error = (responseJson.error == 0) ? false : true
-            if (this._isMounted) {
-                this.setState({ existeError: error, isLoading: false, dataSourceMaterial: this.validateList(responseJson) })
-            }
+            this.setState({ existeError: error, isLoading: false, dataSourceMaterial: this.validateList(responseJson) })
         }).catch((error) => {
             Alert.alert('Problemas para listar los tipo de materiales')
             //Alert.alert(error)
@@ -92,13 +88,9 @@ export default class ComprasForm extends React.Component {
     }
 
     getlisProveedores() {
-        this._isMounted = true;
-
         listproveedor().then((responseJson) => {
             let error = (responseJson.error == 0) ? false : true
-            if (this._isMounted) {
-                this.setState({ existeError: error, isLoading: false, dataSourceProveedor: this.validateList(responseJson) })
-            }
+            this.setState({ existeError: error, isLoading: false, dataSourceProveedor: this.validateList(responseJson) })
         }).catch((error) => {
             Alert.alert('Problemas para listar los proveedores')
         })
@@ -113,7 +105,6 @@ export default class ComprasForm extends React.Component {
 
     render() {
 
-        this.loadCompo()
         if (this.state.isLoading && this.state.existeError === false) {
             return (
                 <View style={styles.containerForm}>
@@ -171,10 +162,10 @@ export default class ComprasForm extends React.Component {
                             </Select>
 
                             <Text style={styles.labelItem}>Peso Total</Text>
-                            <TextInput style={styles.input} placeholder='Peso' keyboardType="numeric" value={this.state.peso} onChangeText={(value) => this.setState({ peso: value })} />
+                            <TextInput style={styles.input} placeholder='Peso' keyboardType={'numeric'} value={this.state.peso} onChangeText={(value) => this.setState({ peso: value })} />
 
                             <Text style={styles.labelItem}>Valor Total</Text>
-                            <TextInput style={styles.input} placeholder='Valor total de la compra' keyboardType="numeric" value={this.state.valorCompra} onChangeText={(value) => this.setState({ valorCompra: value })} />
+                            <TextInput style={styles.input} placeholder='Valor total de la compra' keyboardType={'numeric'} value={this.state.valorCompra} onChangeText={(value) => this.setState({ valorCompra: value })} />
 
 
                             <View style={styles.viewMaint}>

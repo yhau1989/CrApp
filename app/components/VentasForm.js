@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Select, Option } from "react-native-chooser";
 import {
     Alert, StyleSheet, AppRegistry, TextInput, Text, View, TouchableOpacity,
-    TouchableWithoutFeedback, StatusBar, SafeAreaView, KeyboardAvoidingView, ScrollView, ActivityIndicator
+    TouchableWithoutFeedback, StatusBar, SafeAreaView, KeyboardAvoidingView, ScrollView, ActivityIndicator, 
 } from 'react-native';
 import { listmaterial } from '../apis/materialapi';
 import { listcliente } from '../apis/clientesapi';
@@ -11,21 +11,21 @@ import { listcliente } from '../apis/clientesapi';
 
 export default class VentasForm extends React.Component {
 
-    _isMounted = false;
-
     constructor(props) {
         super(props);
          this.state = {
-            usuarioComprador: '11', precio: '', color: '', usuarioVendedor: '', idMaterial: '', valueMateial: 'Seleccione Material', idProveedor: '', valueProveedor: 'Seleccione Cliente', 
-             dataSourceMaterial: '', dataSourceProveedor: '', isLoading: true, existeError: false, lista: new Set(), lista2: new Set(), peso:'',
-             subtotal: 0, iva: 0, neto: 0, tiempos:0}
+            usuarioComprador: '11', precio: '', color: '', usuarioVendedor: '', idMaterial: '', 
+            valueMateial: 'Seleccione Material', idProveedor: '', valueProveedor: 'Seleccione Cliente', 
+            dataSourceMaterial: '', dataSourceProveedor: '', isLoading: true, existeError: false, lista: new Set(), lista2: new Set(), peso:'',
+            subtotal: 0, iva: 0, neto: 0, tiempos:0, mensaje:''}
         this._onPressButton = this._onPressButton.bind(this)
-       
+        
     }
 
-    componentWillUnmount() {
-        this._isMounted = false;
+    componentWillMount() {
+        this.loadCompo()
     }
+
 
     venderPress()
     {
@@ -52,6 +52,7 @@ export default class VentasForm extends React.Component {
             let subtotalg = this.state.subtotal
             let iv = 0
             let net = 0
+            let subtotalg2 = 0
             
             let item = {
                 idmaterial: this.state.idMaterial,
@@ -64,53 +65,36 @@ export default class VentasForm extends React.Component {
     
             let items = new Set()
             for (let [value] of listaU.entries()) {
-                let subtotalg2 = subtotalg + parseFloat(value.precio)
+                subtotalg2 = subtotalg + parseFloat(value.precio)
                 iv = subtotalg2 * 0.12
                 net = subtotalg2 + iv
 
                
                 /*subtotalg2 = subtotalg2.toFixed(2)*/
-                iv = iv.toFixed(2)
-                net = net.toFixed(2)
+                
 
                 items.add(<View key={`viewItem${value.indice}`} style={styles.containerItem}>
 
-                    <View style={{
-                        flex: 1,
-                        alignItems: 'flex-start',
-                        flexDirection: 'row',
-                        width: '100%',
-                        height:'100%',
-                    }}>
-                        <View style={{
-                            width: '70%',
-                            height: '100%',
-                        }}>
+                    <View style={{flex: 1,alignItems: 'flex-start',flexDirection: 'row',width: '100%',height:'100%',}}>
+                        <View style={{width: '70%',height: '100%',}}>
                             <Text key={`txtMaterial${value.indice}`} style={styles.bold}>Id Material: <Text style={styles.welcomeItem}>{value.idmaterial}</Text></Text>
                             <Text key={`txtDescripcion${value.indice}`} style={styles.bold}>Material: <Text style={styles.welcomeItem}>{value.descripcion}</Text></Text>
                             <Text key={`txtPeso${value.indice}`} style={styles.bold}>Peso: <Text style={styles.welcomeItem}>{value.peso}</Text></Text>
                             <Text key={`txtValor${value.indice}`} style={styles.bold}>Valor:<Text style={styles.welcomeItem}> $ {value.precio}</Text></Text>
                         </View>
-                        <View style={{
-                            flex:1,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            width: '30%',
-                            height: '100%',
-                        }}>
-                            <TouchableOpacity style={styles.buttonStyle} onPress={this.deleteItem.bind(this, value.indice)}>
-                                <Text  key={`txtEliminar${value.indice}`} style={styles.botonTextItem}>Eliminar</Text>
-                            </TouchableOpacity> 
-                        </View>
+                        <TouchableOpacity style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: '30%', height: '100%', }} onPress={this.deleteItem.bind(this, value.indice)}>
+                            <Text key={`txtEliminar${value.indice}`} style={styles.botonTextItem}>Eliminar</Text>
+                        </TouchableOpacity> 
                     </View>
                 </View>)
 
                 this.setState({ subtotal: subtotalg2 })
-
-
             }
-            this.setState({ lista: listaU, lista2: items, iva: iv, neto: net })
-            this.cancelPress()
+            
+            iv = iv.toFixed(2)
+            net = net.toFixed(2)
+
+            this.setState({ lista: listaU, lista2: items, iva: iv, neto: net, peso: '', precio: '', color: '', idMaterial: '', valueMateial: 'Seleccione Material'})
         }
     }
 
@@ -133,27 +117,18 @@ export default class VentasForm extends React.Component {
     }
 
     getlisMateriales() {
-        this._isMounted = true;
-
         listmaterial().then((responseJson) => {
             let error = (responseJson.error == 0) ? false : true
-            if (this._isMounted) {
-                this.setState({ existeError: error, isLoading: false, dataSourceMaterial: this.validateList(responseJson) })
-            }
+            this.setState({ existeError: error, isLoading: false, dataSourceMaterial: this.validateList(responseJson) })
         }).catch((error) => {
             Alert.alert('Problemas para listar los tipo de materiales')
-            //Alert.alert(error)
         })
     }
 
     getlisClient() {
-        this._isMounted = true;
-
         listcliente().then((responseJson) => {
             let error = (responseJson.error == 0) ? false : true
-            if (this._isMounted) {
-                this.setState({ existeError: error, isLoading: false, dataSourceProveedor: this.validateList(responseJson) })
-            }
+            this.setState({ existeError: error, isLoading: false, dataSourceProveedor: this.validateList(responseJson) })
         }).catch((error) => {
             Alert.alert('Problemas para listar los proveedores')
         })
@@ -164,7 +139,10 @@ export default class VentasForm extends React.Component {
         this.getlisClient()
     }
 
-    cancelPress() { this.setState({ peso: '', precio:'', color:'', usuarioVendedor: '', idMaterial: '', valueMateial: 'Seleccione Material', idProveedor: '', valueProveedor: 'Seleccione Proveedor', valorCompra: '' }) }
+    cancelPress() { 
+        this.loadCompo()
+        this.setState({ peso: '', precio:'', color:'', usuarioVendedor: '', idMaterial: '', valueMateial: 'Seleccione Material', idProveedor: '', valueProveedor: 'Seleccione Proveedor', valorCompra: '' }) 
+    }
 
 
     deleteItem(indic)
@@ -192,88 +170,31 @@ export default class VentasForm extends React.Component {
             net = subtotalg2 + iv
 
             //subtotalg2 = subtotalg2.toFixed(2)
-            iv = iv.toFixed(2)
-            net = net.toFixed(2)
-
-
             items.add(<View key={`viewItem${value.indice}`} style={styles.containerItem}>
-
-                <View style={{
-                    flex: 1,
-                    alignItems: 'flex-start',
-                    flexDirection: 'row',
-                    width: '100%',
-                    height: '100%',
-                }}>
-                    <View style={{
-                        width: '70%',
-                        height: '100%',
-                    }}>
+                <View style={{flex: 1,alignItems: 'flex-start',flexDirection: 'row',width: '100%',height: '100%',}}>
+                    <View style={{width: '70%',height: '100%',}}>
                         <Text key={`txtMaterial${value.indice}`} style={styles.bold}>Id Material: <Text style={styles.welcomeItem}>{value.idmaterial}</Text></Text>
                         <Text key={`txtDescripcion${value.indice}`} style={styles.bold}>Material: <Text style={styles.welcomeItem}>{value.descripcion}</Text></Text>
                         <Text key={`txtPeso${value.indice}`} style={styles.bold}>Peso: <Text style={styles.welcomeItem}>{value.peso}</Text></Text>
                         <Text key={`txtValor${value.indice}`} style={styles.bold}>Valor:<Text style={styles.welcomeItem}> $ {value.precio}</Text></Text>
                     </View>
-                    <View style={{
-                        flex: 1,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        width: '30%',
-                        height: '100%',
-                    }}>
-                        <TouchableOpacity style={styles.buttonStyle} onPress={this.deleteItem.bind(this, value.indice)}>
-                            <Text key={`txtEliminar${value.indice}`} style={styles.botonTextItem}>Eliminar</Text>
-                        </TouchableOpacity>
-                    </View>
+                    <TouchableOpacity style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: '30%', height: '100%', }} 
+                        onPress={this.deleteItem.bind(this, value.indice)}>
+                        <Text key={`txtEliminar${value.indice}`} style={styles.botonTextItem}>Eliminar</Text>
+                    </TouchableOpacity> 
                 </View>
             </View>)
-        }
+        }       
+        
+        iv = iv.toFixed(2)
+        net = net.toFixed(2)
 
-        //alert('fin de for eliminacion')
-       
         this.setState({ lista: listaU, lista2: items, subtotal: subtotalg2, items, iva: iv, neto: net })
-        
-    }
-
-    calTotales(precio, operacion, subtotalg)
-    {
-        let subt = parseFloat(subtotalg)
-        let iv = 0
-        let net = 0 
-
-        let totales = {
-            subtotal : 0,
-            iva0 : 0, 
-            totalNeto : 0
-        }
-
-        switch (operacion) {
-            case 'suma':
-                    subt = (subt + parseFloat(precio))
-                    iv = subt * 0.12
-                    net = subt + iv
-                    iv = iv.toFixed(2)
-                    net = net.toFixed(2)
-                    totales = {subtotal : subt, iva : iv, totalNeto : net}
-
-                break;
-        
-            case 'resta':
-                    subt = (subt - parseFloat(precio))
-                    iv = subt * 0.12
-                    net = subt + iv
-                    iv = iv.toFixed(2)
-                    net = net.toFixed(2)
-                    totales = { subtotal: subt, iva: iv, totalNeto: net }
-                break;
-        }
-        return totales
         
     }
 
     render() {
 
-        this.loadCompo()
         if (this.state.isLoading && this.state.existeError === false) {
             return (
                 <View style={styles.containerForm}>
@@ -341,11 +262,11 @@ export default class VentasForm extends React.Component {
 
                                 <View View={{ width: 300, }}>
                                     <Text style={styles.labelItem}>Precio</Text>
-                                    <TextInput style={styles.input} width={70} placeholder='$' value={this.state.precio} onChangeText={(value) => this.setState({ precio: value })} /> 
+                                    <TextInput keyboardType={'numeric'} style={styles.input} width={70} placeholder='$' value={this.state.precio} onChangeText={(value) => this.setState({ precio: value })} /> 
                                 </View>
                                 <View View={{ width: 300, }}>
                                     <Text style={styles.labelItem}>Peso</Text>
-                                    <TextInput style={styles.input} width={60} value={this.state.peso} onChangeText={(value) => this.setState({ peso: value })} />
+                                    <TextInput keyboardType={'numeric'} style={styles.input} width={60} value={this.state.peso} onChangeText={(value) => this.setState({ peso: value })} />
                                 </View>
                                 <View View={{ width: 300, }}>       
                                     <Text style={styles.labelItem}>Descripcion (color)</Text>
@@ -366,25 +287,23 @@ export default class VentasForm extends React.Component {
                                     <Text style={styles.botonText}>Vender</Text>
                                 </TouchableOpacity>
                             </View>
-    
+
+                            <Text><Text style={styles.labelItem}>Items: </Text>{this.state.lista2.size}</Text>
+                            <Text style={{ textAlign: 'left' }}>
+                                <Text><Text style={styles.labelItem}>Subtotal: </Text>$ {this.state.subtotal}</Text>
+                                <Text><Text style={styles.labelItem}> | Iva: </Text>$ {this.state.iva}</Text>
+                                <Text><Text style={styles.labelItem}> | Total neto: </Text>$ {this.state.neto}</Text>
+                            </Text>
+
+                            <ScrollView style={{ height: 300, padding:3, marginTop: 10, borderTopWidth: 0.23, borderTopColor: 'grey' }}>
+                                {this.state.lista2}
+                            </ScrollView> 
                             
                         </View>
                     </TouchableWithoutFeedback>
                 </KeyboardAvoidingView>
 
-                <View style={{ width: '90%', paddingLeft: 20 }}>
-                    <Text><Text style={styles.labelItem}>Items: </Text>{this.state.lista2.size}</Text>
-                    <Text style={{ textAlign: 'left' }}>
-                        <Text><Text style={styles.labelItem}>Subtotal: </Text>$ {this.state.subtotal}</Text>
-                        <Text><Text style={styles.labelItem}> | Iva: </Text>$ {this.state.iva}</Text>
-                        <Text><Text style={styles.labelItem}> | Total neto: </Text>$ {this.state.neto}</Text>
-                    </Text>
-
-
-                    <ScrollView style={{ height: 300, marginTop: 10, borderTopWidth: 0.23, borderTopColor: 'grey' }}>
-                        {this.state.lista2}
-                    </ScrollView>
-                </View>
+                
             </SafeAreaView>
 
         );
@@ -474,8 +393,8 @@ const styles = StyleSheet.create({
     botonTextItem: {
         textAlign: 'center',
         backgroundColor: 'black',
-        margin: 3,
-        padding: 5,
+        margin: 6,
+        padding: 10,
         borderRadius: 5,
         fontWeight: '700',
         width: 80,
@@ -483,7 +402,7 @@ const styles = StyleSheet.create({
         color: 'red',
     },
     buttonStyle: {
-        padding: 3,
+        padding: 10,
     }
 
 });

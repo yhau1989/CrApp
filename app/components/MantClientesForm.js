@@ -10,7 +10,7 @@ import { addcliente, listcliente, editcliente } from '../apis/clientesapi';
 
 export default class MantClientesForm extends React.Component {
 
-    _isMounted = false;
+   
 
     constructor(props) {
         super(props)
@@ -18,8 +18,8 @@ export default class MantClientesForm extends React.Component {
         this._onPressButton = this._onPressButton.bind(this)
     }
 
-    componentWillUnmount() {
-        this._isMounted = false;
+    componentWillMount() {
+        this.getlisClientes()
     }
 
     onSelect(value, label) { 
@@ -48,6 +48,7 @@ export default class MantClientesForm extends React.Component {
                 addcliente(ruc, nombre, apellido, direccion, telefono).then((responseJson) => {
                     let error = (responseJson.error == 0) ? false : true
                     this.setState({ existeError: error})
+                    this.getlisClientes()
                     Alert.alert(responseJson.mensaje)
                 }).catch((error) => {
                     Alert.alert('existen problemas de conexión')
@@ -63,6 +64,7 @@ export default class MantClientesForm extends React.Component {
                     editcliente(this.state.idClient, ruc, nombre, apellido, direccion, telefono).then((responseJson) => {
                         let error = (responseJson.error == 0) ? false : true
                         this.setState({ existeError: error, })
+                        this.getlisClientes()
                         Alert.alert(responseJson.mensaje)
                     }).catch((error) => {
                         Alert.alert('existen problemas de conexión')
@@ -84,11 +86,8 @@ export default class MantClientesForm extends React.Component {
 
     getlisClientes()
     {
-        this._isMounted = true
         listcliente().then((responseJson) => {
-            if (this._isMounted) {
-                this.setState({ isLoading: false, dataSource: this.validateList(responseJson) })
-            }
+            this.setState({ isLoading: false, dataSource: this.validateList(responseJson) })
            
         }).catch((error) => {
             Alert.alert('Problemas para listar los clientes')
@@ -108,12 +107,14 @@ export default class MantClientesForm extends React.Component {
         }
     }
 
-    cancelPress() { this.setState({ colorAccionNew: 'grey', colorAccionEdit: 'grey', accion: 'new', idClient: '', ruc: '', nombre: '', apellido: '', direccion: '', email: '', telefono: '', value: 'Lista de Clientes'})}
+    cancelPress() { 
+        this.getlisClientes()
+        this.setState({ colorAccionNew: 'grey', colorAccionEdit: 'grey', accion: 'new', idClient: '', ruc: '', nombre: '', apellido: '', direccion: '', email: '', telefono: '', value: 'Lista de Clientes'})}
 
 
     render() {
 
-        this.getlisClientes();
+        //this.getlisClientes();
         if (this.state.isLoading && this.state.existeError === false) {
             return (
                 <View style={styles.containerForm}>
