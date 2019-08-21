@@ -408,4 +408,4 @@ const styles = StyleSheet.create({
 });
 
 
-AppRegistry.registerComponent('VentasForm', () => VentasForm);
+//AppRegistry.registerComponent('VentasForm', () => VentasForm);

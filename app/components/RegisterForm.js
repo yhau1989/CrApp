@@ -92,4 +92,4 @@ const styles = StyleSheet.create({
 });
 
 
-AppRegistry.registerComponent('RegisterForm', () => RegisterForm);
+//AppRegistry.registerComponent('RegisterForm', () => RegisterForm);

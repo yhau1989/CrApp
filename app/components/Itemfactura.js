@@ -53,4 +53,4 @@ const styles = StyleSheet.create({
 
 });
 
-AppRegistry.registerComponent('Itemfactura', () => Itemfactura);
+//AppRegistry.registerComponent('Itemfactura', () => Itemfactura);

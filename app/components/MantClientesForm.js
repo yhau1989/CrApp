@@ -272,4 +272,4 @@ const styles = StyleSheet.create({
 });
 
 
-AppRegistry.registerComponent('MantClientesForm', () => MantClientesForm);
+//AppRegistry.registerComponent('MantClientesForm', () => MantClientesForm);

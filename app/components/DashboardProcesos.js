@@ -64,4 +64,4 @@ const styles = StyleSheet.create({
 });
 
 
-AppRegistry.registerComponent('DashboardProcesos', () => DashboardProcesos);
+//AppRegistry.registerComponent('DashboardProcesos', () => DashboardProcesos);

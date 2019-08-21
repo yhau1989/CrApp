@@ -39,4 +39,4 @@ const styles = StyleSheet.create({
   },
 });
 
-AppRegistry.registerComponent('BackgroundForm', () => BackgroundForm);
+//AppRegistry.registerComponent('BackgroundForm', () => BackgroundForm);

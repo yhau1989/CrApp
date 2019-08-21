@@ -264,4 +264,4 @@ const styles = StyleSheet.create({
 
 
 
-AppRegistry.registerComponent('MantProveedoresForm', () => MantProveedoresForm);
+//AppRegistry.registerComponent('MantProveedoresForm', () => MantProveedoresForm);

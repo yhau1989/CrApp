@@ -114,4 +114,4 @@ const styles = StyleSheet.create({
 });
 
 
-AppRegistry.registerComponent('LoginForm', () => LoginForm);
+//AppRegistry.registerComponent('LoginForm', () => LoginForm);

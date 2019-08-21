@@ -294,4 +294,4 @@ const styles = StyleSheet.create({
 });
 
 
-AppRegistry.registerComponent('ProcesoAlmacenajeLoteForm', () => ProcesoAlmacenajeLoteForm);
+//AppRegistry.registerComponent('ProcesoAlmacenajeLoteForm', () => ProcesoAlmacenajeLoteForm);

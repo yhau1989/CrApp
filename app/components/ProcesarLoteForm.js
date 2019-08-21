@@ -292,4 +292,4 @@ const styles = StyleSheet.create({
 });
 
 
-AppRegistry.registerComponent('ProcesarLoteForm', () => ProcesarLoteForm);
+//AppRegistry.registerComponent('ProcesarLoteForm', () => ProcesarLoteForm);

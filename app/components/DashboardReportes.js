@@ -69,4 +69,4 @@ const styles = StyleSheet.create({
 });
 
 
-AppRegistry.registerComponent('DashboardReportes', () => DashboardReportes);
+//AppRegistry.registerComponent('DashboardReportes', () => DashboardReportes);

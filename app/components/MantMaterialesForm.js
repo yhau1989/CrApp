@@ -274,4 +274,4 @@ const styles = StyleSheet.create({
 });
 
 
-AppRegistry.registerComponent('MantMaterialesForm', () => MantMaterialesForm);
+//AppRegistry.registerComponent('MantMaterialesForm', () => MantMaterialesForm);

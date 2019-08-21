@@ -85,4 +85,4 @@ const styles = StyleSheet.create({
 });
 
 
-AppRegistry.registerComponent('ResetPasswordForm', () => ResetPasswordForm);
+//AppRegistry.registerComponent('ResetPasswordForm', () => ResetPasswordForm);

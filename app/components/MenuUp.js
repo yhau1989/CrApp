@@ -42,4 +42,4 @@ const styles = StyleSheet.create({
     },
 });
 
-AppRegistry.registerComponent('MenuUp', () => MenuUp);
+//AppRegistry.registerComponent('MenuUp', () => MenuUp);

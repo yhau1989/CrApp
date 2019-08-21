@@ -64,4 +64,4 @@ const styles = StyleSheet.create({
 });
 
 
-AppRegistry.registerComponent('Dashboard', () => Dashboard);
+//AppRegistry.registerComponent('Dashboard', () => Dashboard);

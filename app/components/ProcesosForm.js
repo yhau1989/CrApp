@@ -83,4 +83,4 @@ const styles = StyleSheet.create({
 });
 
 
-AppRegistry.registerComponent('ProcesosForm', () => ProcesosForm);
+//AppRegistry.registerComponent('ProcesosForm', () => ProcesosForm);

@@ -151,4 +151,4 @@ const styles = StyleSheet.create({
 });
 
 
-AppRegistry.registerComponent('ReporteStock', () => ReporteStock);
+//AppRegistry.registerComponent('ReporteStock', () => ReporteStock);

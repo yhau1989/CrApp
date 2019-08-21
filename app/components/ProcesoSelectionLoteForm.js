@@ -295,4 +295,4 @@ const styles = StyleSheet.create({
 });
 
 
-AppRegistry.registerComponent('ProcesoSelectionLoteForm', () => ProcesoSelectionLoteForm);
+//AppRegistry.registerComponent('ProcesoSelectionLoteForm', () => ProcesoSelectionLoteForm);

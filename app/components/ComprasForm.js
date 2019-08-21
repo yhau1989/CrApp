@@ -249,4 +249,4 @@ const styles = StyleSheet.create({
 });
 
 
-AppRegistry.registerComponent('ComprasForm', () => ComprasForm);
+//AppRegistry.registerComponent('ComprasForm', () => ComprasForm);
