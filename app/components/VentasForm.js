@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { Select, Option } from "react-native-chooser";
 import {
-    Alert, StyleSheet, AppRegistry, TextInput, Text, View, TouchableOpacity,
+    Alert, StyleSheet, AsyncStorage, TextInput, Text, View, TouchableOpacity,
     TouchableWithoutFeedback, StatusBar, SafeAreaView, KeyboardAvoidingView, ScrollView, ActivityIndicator, 
 } from 'react-native';
 import { listmaterial } from '../apis/materialapi';
 import { listcliente } from '../apis/clientesapi';
+import {addventa} from '../apis/ventasapi';
 
 
 
@@ -14,27 +15,76 @@ export default class VentasForm extends React.Component {
     constructor(props) {
         super(props);
          this.state = {
-            usuarioComprador: '11', precio: '', color: '', usuarioVendedor: '', idMaterial: '', 
+            usuarioComprador: '', precio: '', color: '', usuarioVendedor: '', idMaterial: '', 
             valueMateial: 'Seleccione Material', idProveedor: '', valueProveedor: 'Seleccione Cliente', 
             dataSourceMaterial: '', dataSourceProveedor: '', isLoading: true, existeError: false, lista: new Set(), lista2: new Set(), peso:'',
-            subtotal: 0, iva: 0, neto: 0, tiempos:0, mensaje:''}
+            subtotal: 0, iva: 0, neto: 0, }
         this._onPressButton = this._onPressButton.bind(this)
         
     }
 
+    getUserId = async () => {
+        let userId = '';
+        try {
+            userId = await AsyncStorage.getItem('userId') || '';
+        } catch (error) {
+            // Error retrieving data
+            console.log(error.message);
+        }
+        
+        this.setState({ usuarioComprador: userId})
+    }
+
     componentWillMount() {
         this.loadCompo()
+        this.getUserId()
+    }
+
+    
+    vaciarCar = () => {
+        //console.warn("i made it here")
+        this.setState({ existeError: false, isLoading: false, lista: new Set(), lista2: new Set(), subtotal: 0, iva: 0, neto: 0, idProveedor: '', valueProveedor: 'Seleccione Cliente', })
     }
 
 
     venderPress()
     {
-        if(this.state.lista.size)
+        if (this.state.lista.size === 0 || this.state.idProveedor.length === 0)
         {
-            alert('Agregue productos para la venta')
+            alert('Agregue productos para la venta, seleccione un cliente.')
         }
         else
         {
+            let venta = {
+                vendedor: this.state.usuarioComprador,
+                cliente: this.state.idProveedor,
+                valortotal:this.state.neto,
+                detalle: Array.from(this.state.lista)
+            } 
+
+           
+            addventa({venta}).then((responseJson) => {
+                let error = (responseJson.error == 0) ? false : true
+                if(error)
+                {
+                    alert(responseJson.mensaje)
+                    this.setState({ existeError: error, isLoading: false, })
+                }
+                else
+                {
+                    Alert.alert(
+                        responseJson.mensaje,
+                        responseJson.data,
+                        [
+                            { text: 'OK', onPress: this.vaciarCar},
+                        ],
+                        { cancelable: false },
+                    );
+                }
+
+            }).catch((error) => {
+                alert('Problemas al grabar la venta')
+            })
             
         }
 
@@ -44,7 +94,7 @@ export default class VentasForm extends React.Component {
     _onPressButton() {
 
         if (this.state.idMaterial.length == 0 || this.state.precio.length == 0 || this.state.peso.length == 0 || this.state.color.trim().length == 0) {
-            Alert.alert('Ingese valores')
+            alert('Ingese valores')
         }
         else
         {
@@ -55,10 +105,12 @@ export default class VentasForm extends React.Component {
             let subtotalg2 = 0
             
             let item = {
-                idmaterial: this.state.idMaterial,
+                idmaterial: this.state.idMaterial * 1,
                 descripcion: this.state.color,
                 precio: this.state.precio,
                 peso: this.state.peso,
+                iva: this.state.precio * 0.12,
+                valortotal: this.state.precio * 1.12,
                 indice: listaU.size + 1
             }
             listaU.add(item)
@@ -121,7 +173,7 @@ export default class VentasForm extends React.Component {
             let error = (responseJson.error == 0) ? false : true
             this.setState({ existeError: error, isLoading: false, dataSourceMaterial: this.validateList(responseJson) })
         }).catch((error) => {
-            Alert.alert('Problemas para listar los tipo de materiales')
+            alert('Problemas para listar los tipo de materiales')
         })
     }
 
@@ -130,7 +182,7 @@ export default class VentasForm extends React.Component {
             let error = (responseJson.error == 0) ? false : true
             this.setState({ existeError: error, isLoading: false, dataSourceProveedor: this.validateList(responseJson) })
         }).catch((error) => {
-            Alert.alert('Problemas para listar los proveedores')
+            alert('Problemas para listar los proveedores')
         })
     }
 

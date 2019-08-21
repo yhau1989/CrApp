@@ -1,15 +1,26 @@
 import * as React from 'react';
-import { View, StyleSheet, AppRegistry, Text} from 'react-native';
+import { View, StyleSheet, AsyncStorage, Text} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import NavigationService from "./NavigationService";
 
 
 export default class Dashboard extends React.Component {
     
+    deleteUserId = async () => {
+        try {
+            await AsyncStorage.removeItem('userId');
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
     registerPressMantenimientos() { NavigationService.navigate('Mantenimientos'); }
     registerPressOperacioneDashs() { NavigationService.navigate('DashboardProcesos'); }
     registerReportes() { NavigationService.navigate('DashboardReportes'); }
-    registerPressSalir() { NavigationService.navigate('Login'); }
+    registerPressSalir() { 
+        this.deleteUserId();
+        NavigationService.navigate('Login'); 
+    }
 
     render() {
         return (

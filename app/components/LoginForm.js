@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Alert, View, StyleSheet, AppRegistry, TouchableOpacity, Text, TextInput, Button} from 'react-native';
+import { Alert, View, StyleSheet, AsyncStorage, TouchableOpacity, Text, TextInput} from 'react-native';
 import {login} from '../apis/usuarioapi';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import NavigationService from "./NavigationService";
@@ -11,6 +11,14 @@ export default class LoginForm extends React.Component {
         this.state = { email: '', password: ''};
         this._onPressButton = this._onPressButton.bind(this);
     }
+
+    saveUserId = async (userId) => {
+        try {
+            await AsyncStorage.setItem('userId', userId);
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
 
     _onPressButton() 
     {
@@ -26,6 +34,7 @@ export default class LoginForm extends React.Component {
                 if (responseJson.error == 0)
                 {
                     this.setState({ email: '', password: '' });
+                    this.saveUserId(responseJson.data);
                     NavigationService.navigate('Dashboard');
                 }
                 else

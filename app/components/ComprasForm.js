@@ -28,11 +28,12 @@ export default class ComprasForm extends React.Component {
 
     _onPressButton() {
 
-        let proveedor = this.state.tipo
+        let proveedor = this.state.idProveedor
         let material = this.state.idMaterial
         let comprador = this.state.usuarioComprador
         let valor = this.state.valorCompra
 
+      
         if (proveedor.length <= 0 || material.length<=0 || comprador.length<=0 || valor.length<= 0) {
             Alert.alert('Ingrese los datos para continuar')
         }
