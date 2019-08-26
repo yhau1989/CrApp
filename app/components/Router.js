@@ -58,7 +58,7 @@ const AuthStack = createStackNavigator({
     navigationOptions: {
       title: 'Mantenimientos',
       headerMode: 'screen',
-      headerStyle: { backgroundColor: '#69dd9a', },
+      headerStyle: { backgroundColor: '#2ecc71', },
       headerTintColor: 'black',
       headerTitleStyle: { fontWeight: 'bold', }
     }
@@ -88,7 +88,7 @@ const AuthStack = createStackNavigator({
     navigationOptions: {
       title: 'Procesamiento de Materia Prima',
       headerMode: 'screen',
-      headerStyle: { backgroundColor: '#69dd9a', },
+      headerStyle: { backgroundColor: '#2ecc71', },
       headerTintColor: 'black',
       headerTitleStyle: { fontWeight: 'bold', }
     }
@@ -128,7 +128,7 @@ const AuthStack = createStackNavigator({
     navigationOptions: {
       title: 'Operaciones',
       headerMode: 'screen',
-      headerStyle: { backgroundColor: '#69dd9a', },
+      headerStyle: { backgroundColor: '#2ecc71', },
       headerTintColor: 'black',
       headerTitleStyle: { fontWeight: 'bold', }
     }
@@ -138,7 +138,7 @@ const AuthStack = createStackNavigator({
     navigationOptions: {
       title: 'Reportes',
       headerMode: 'screen',
-      headerStyle: { backgroundColor: '#69dd9a', },
+      headerStyle: { backgroundColor: '#2ecc71', },
       headerTintColor: 'black',
       headerTitleStyle: { fontWeight: 'bold', }
     }

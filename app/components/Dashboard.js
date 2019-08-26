@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         flex: 1,
-        backgroundColor: '#69dd9a',
+        //backgroundColor: '#69dd9a',
         width: '100%'
     },
     welcome: {
