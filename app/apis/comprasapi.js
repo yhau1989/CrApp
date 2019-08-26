@@ -1,12 +1,19 @@
 //const url_base = 'http://localhost/CrServices/api/usr/';
 const url_base = 'http://35.222.84.162/CrServices/api/comp/';
 
-export async function listcompra() {
+export async function listcompra(fechaInicio, fechaFin) {
 
     let myurl = url_base + 'complist.php';
+    let rangos = {
+        compra: {
+            fecini: fechaInicio,
+            fecfin: fechaFin
+        }
+    };
     try {
         return await fetch(myurl, {
                 method: 'POST', // or 'PUT'
+                body: JSON.stringify(rangos),
                 headers: { 'Content-Type': 'application/json' }
             })
             .then((response) => response.json())

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Select, Option } from "react-native-chooser";
-import { Alert, StyleSheet, AppRegistry, Text, View, TouchableOpacity, 
+import { Alert, StyleSheet, Text, View, TouchableOpacity, 
          TouchableWithoutFeedback, StatusBar, SafeAreaView, KeyboardAvoidingView } from 'react-native';
 import DatePicker from 'react-native-datepicker'
 import { listloteselection, editlote  } from '../apis/lotesapi';

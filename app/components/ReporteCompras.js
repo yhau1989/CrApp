@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {
-    Alert, StyleSheet, AppRegistry, ActivityIndicator, Text, Picker, View, TouchableOpacity,
-    TouchableWithoutFeedback, StatusBar, SafeAreaView, KeyboardAvoidingView
+    Alert, StyleSheet, ActivityIndicator, Text, View
 } from 'react-native';
+import DatePicker from 'react-native-datepicker'
 import Table from 'react-native-simple-table'
 import { listcompra } from '../apis/comprasapi';
 
@@ -36,7 +36,7 @@ export default class ReporteCompras extends React.Component {
     constructor(props) {
         super(props)
         //this.getlisClientes()
-        this.state = { dataSource: '', isLoading: true, existeError: false}
+        this.state = { dataSource: '', isLoading: true, existeError: false,finicio: '', ffin: '',}
         
     }
 
@@ -45,7 +45,7 @@ export default class ReporteCompras extends React.Component {
     componentWillMount() {
         //this._isMounted = true
         //Alert.alert('Cargando.......')
-        listcompra().then((responseJson) => {
+        listcompra(this.state.finicio, this.state.ffin).then((responseJson) => {
             //let error = (responseJson.error == 0) ? false : true
             this.setState({ isLoading: false, dataSource: responseJson.data })
         }).catch((error) => {
@@ -68,23 +68,83 @@ export default class ReporteCompras extends React.Component {
        
         
         return (
-            // <SafeAreaView style={styles.containerForm}>
-            //     <StatusBar barStyle="light-content" />
-            //     <KeyboardAvoidingView behavior="padding" style={styles.containerForm}>
-            //         <TouchableWithoutFeedback>
-
-
-            //             <View style={{ width: '90%', paddingTop: 10 }}>
-            //                 <Table height={500} columnWidth={40} columns={columns} dataSource={this.state.dataSource} />
-            //             </View> 
-
-            //         </TouchableWithoutFeedback>
-            //     </KeyboardAvoidingView>
-
-                
-            // </SafeAreaView>
-
+           
             <View style={{ width: '90%', padding: 10 }}>
+                <View>
+                        <Text style={styles.labelItem}>Fecha inicio</Text>
+                                <DatePicker
+                                    style={{ width: 200 }}
+                                    date={this.state.finicio}
+                                    mode="datetime"
+                                    placeholder="yyyy-mm-dd hh:mm:ss"
+                                    format="YYYY-MM-DD HH:mm:ss"
+                                    minDate="2019-01-01"
+                                    maxDate="2099-06-01"
+                                    confirmBtnText="Ok"
+                                    cancelBtnText="Cancelar"
+                                    customStyles={{
+                                        dateIcon: {
+                                            position: 'absolute',
+                                            left: 0,
+                                            top: 4,
+                                            marginLeft: 6
+                                        },
+                                        dateTouchBody: {
+                                            width: 330,
+                                            margin: 5,
+                                            padding: 3,
+                                        },
+                                        dateInput: {
+                                            borderColor: 'grey',
+                                            borderRadius: 5,
+                                            width: 330,
+                                        },
+                                        placeholderText: {
+                                            width: 330,
+                                            padding: 50,
+                                        },
+                                    }}
+                                    onDateChange={(date) => { this.setState({ finicio: date }) }}
+                        />
+
+                            <Text style={styles.labelItem}>fecha fin</Text>
+                                <DatePicker
+                                    style={{ width: 200 }}
+                                    date={this.state.ffin}
+                                    mode="datetime"
+                                    placeholder="yyyy-mm-dd hh:mm:ss"
+                                    format="YYYY-MM-DD HH:mm:ss"
+                                    minDate="2019-01-01"
+                                    maxDate="2099-06-01"
+                                    confirmBtnText="Ok"
+                                    cancelBtnText="Cancelar"
+                                    customStyles={{
+                                        dateIcon: {
+                                            position: 'absolute',
+                                            left: 0,
+                                            top: 4,
+                                            marginLeft: 6
+                                        },
+                                        dateTouchBody:{
+                                            width:330,
+                                            margin: 5,
+                                            padding: 3,
+                                        },
+                                        dateInput: {
+                                            borderColor: 'grey',
+                                            borderRadius: 5,
+                                            width: 330,
+                                        },
+                                        placeholderText:{
+                                            width: 330,
+                                            padding: 50,
+                                        },
+                                    }}
+                                    onDateChange={(date) => { this.setState({ ffin: date }) }}
+                                />
+            
+                </View>
+                
                 <Table height={500} columnWidth={40} columns={columns} dataSource={this.state.dataSource} />
             </View> 
 
@@ -150,6 +210,9 @@ const styles = StyleSheet.create({
     textLateral: {
         color: 'grey',
         paddingBottom: 10,
+    },
+    labelItem: {
+        fontWeight: '700',
     },
 });
 

@@ -3,12 +3,19 @@ const url_base = 'http://35.222.84.162/CrServices/api/ventas/';
 
 
 
-export async function listVentasCabeceras() {
+export async function listVentasCabeceras(fechaInicio, fechaFin) {
 
     let myurl = url_base + 'ventaslist.php';
+    let rangos = {
+        compra: {
+            fecini: fechaInicio,
+            fecfin: fechaFin
+        }
+    };
     try {
         return await fetch(myurl, {
                 method: 'POST', // or 'PUT'
+                body: JSON.stringify(rangos),
                 headers: { 'Content-Type': 'application/json' }
             })
             .then((response) => response.json())
