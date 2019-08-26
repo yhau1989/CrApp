@@ -26,7 +26,7 @@ export default class MantClientesForm extends React.Component {
         this.setState({ value: label, idClient: value })
         let client = this.state.dataSource.data.filter(client => client.id == value)
         if (client.length > 0) {
-            Alert.alert('Si desea cambiar los datosm habilite el control editar')
+            Alert.alert('Si desea cambiar los datos habilite el control editar')
             this.setState({ colorAccionNew: 'grey', colorAccionEdit: 'grey', idClient: client[0].id, ruc: client[0].ruc, nombre: client[0].nombres, apellido: client[0].apellidos, direccion: client[0].direccion, email: client[0].email, telefono: client[0].telefono })
         } 
     }

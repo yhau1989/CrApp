@@ -18,6 +18,8 @@ import ProcesoSelectionLoteForm from './ProcesoSelectionLoteForm';
 import ProcesarLoteForm from './ProcesarLoteForm';
 import ProcesoAlmacenajeLoteForm from './ProcesoAlmacenajeLoteForm';
 import ReporteStock from './ReporteStock';
+import ReporteCompras from './ReporteCompras';
+import ReporteVentas from './ReporteVentas';
 
 
 const AuthStack = createStackNavigator({
@@ -182,11 +184,38 @@ const AuthStack = createStackNavigator({
       headerTintColor: 'black',
       headerTitleStyle: { fontWeight: 'bold', }
     }
-  },  
+  }, 
+  ReporteCompras: {
+    screen: ReporteCompras,
+    navigationOptions: {
+      title: 'Reporte - Compras',
+      headerMode: 'screen',
+      headerStyle: { backgroundColor: '#2ecc71', },
+      headerTintColor: 'black',
+      headerTitleStyle: { fontWeight: 'bold', }
+    }
+  }, 
+  ReporteVentas: {
+    screen: ReporteVentas,
+    navigationOptions: {
+      title: 'Reporte - Ventas',
+      headerMode: 'screen',
+      headerStyle: { backgroundColor: '#2ecc71', },
+      headerTintColor: 'black',
+      headerTitleStyle: { fontWeight: 'bold', }
+    }
+  }, 
+
+  
+  
+  
+
+
+
 },
 {
   initialRouteName: 'Login',
-  //initialRouteName: 'Ventas',
+  //initialRouteName: 'ReporteVentas',
   defaultNavigationOptions: {headerMode: 'screen'},
 });
 

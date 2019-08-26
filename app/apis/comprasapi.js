@@ -3,7 +3,7 @@ const url_base = 'http://35.222.84.162/CrServices/api/comp/';
 
 export async function listcompra() {
 
-    let myurl = url_base + 'lotelist.php';
+    let myurl = url_base + 'complist.php';
     try {
         return await fetch(myurl, {
                 method: 'POST', // or 'PUT'

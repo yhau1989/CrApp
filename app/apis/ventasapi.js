@@ -5,7 +5,7 @@ const url_base = 'http://35.222.84.162/CrServices/api/ventas/';
 
 export async function listVentasCabeceras() {
 
-    let myurl = url_base + 'lotelist.php';
+    let myurl = url_base + 'ventaslist.php';
     try {
         return await fetch(myurl, {
                 method: 'POST', // or 'PUT'

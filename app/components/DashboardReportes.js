@@ -7,8 +7,8 @@ import NavigationService from "./NavigationService";
 export default class DashboardReportes extends React.Component {
     
     // registerPressMantenimientos() { NavigationService.navigate('Mantenimientos'); }
-    // registerPressCompras() { NavigationService.navigate('Compras'); }
-    // registerPressVentas() { NavigationService.navigate('Ventas'); }
+    registerVentas() { NavigationService.navigate('ReporteVentas'); }
+    registerCompras() { NavigationService.navigate('ReporteCompras'); }
     registerStockReport() { NavigationService.navigate('ReporteStock'); }
 
    // registerPressSalir() { NavigationService.navigate('Login'); }
@@ -20,15 +20,15 @@ export default class DashboardReportes extends React.Component {
                     <Text style={styles.welcome}>
                     <Ionicons name="md-stats" size={36} color="#191919" /> Reportes</Text>
                 <View style={{ width: '100%' }}>
-                            <Text style={styles.instructions} >
+                    <Text style={styles.instructions} onPress={this.registerVentas.bind(this)}>
                         <Ionicons name="ios-rocket" size={26} color="#191919"  />   Ventas
                         </Text>
-                        <Text style={styles.instructions} >
+                    <Text style={styles.instructions} onPress={this.registerCompras.bind(this)}>
                         <Ionicons name="ios-cart" size={26} color="#191919"  />   Compras
                         </Text>
-                        <Text style={styles.instructions} >
+                        {/* <Text style={styles.instructions} >
                         <Ionicons name="ios-switch" size={26} color="#191919" />   Materias Primas
-                        </Text>
+                        </Text> */}
 
                     <Text style={styles.instructions} onPress={this.registerStockReport.bind(this)}>
                         <Ionicons name="ios-pulse" size={26} color="#191919" />   Stock

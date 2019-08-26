@@ -26,7 +26,7 @@ export default class MantProveedoresForm extends React.Component {
         this.setState({ value: label, id: value })
         let provee = this.state.dataSource.data.filter(prov => prov.id == value)
         if (provee.length > 0) {
-            Alert.alert('Si desea cambiar los datosm habilite el control editar')
+            Alert.alert('Si desea cambiar los datos habilite el control editar')
             this.setState({ colorAccionNew: 'grey', colorAccionEdit: 'grey', id: provee[0].id, ruc: provee[0].ruc, nombre: provee[0].nombres, apellido: provee[0].apellidos, direccion: provee[0].direccion, email: provee[0].email, telefono: provee[0].telefono })
         }
        
