@@ -7,7 +7,7 @@ export async function listVentasCabeceras(fechaInicio, fechaFin) {
 
     let myurl = url_base + 'ventaslist.php';
     let rangos = {
-        compra: {
+        venta: {
             fecini: fechaInicio,
             fecfin: fechaFin
         }

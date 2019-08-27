@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-    Alert, StyleSheet, ActivityIndicator, Text, View
+    Alert, StyleSheet, ActivityIndicator, Text, View, TouchableOpacity
 } from 'react-native';
 import DatePicker from 'react-native-datepicker'
 import Table from 'react-native-simple-table'
@@ -36,7 +36,6 @@ const columns = [
 
 export default class ReporteVentas extends React.Component {
 
-  
 
     constructor(props) {
         super(props)
@@ -45,11 +44,8 @@ export default class ReporteVentas extends React.Component {
         
     }
 
-    
-
-    componentWillMount() {
-        //this._isMounted = true
-        //Alert.alert('Cargando.......')
+    _onPressButton()
+    {
         listVentasCabeceras(this.state.finicio, this.state.ffin).then((responseJson) => {
             //let error = (responseJson.error == 0) ? false : true
             this.setState({ isLoading: false, dataSource: responseJson.data })
@@ -58,7 +54,20 @@ export default class ReporteVentas extends React.Component {
         })
     }
 
-     
+    _onPressButtonCancel() {
+        listVentasCabeceras('','').then((responseJson) => {
+            //let error = (responseJson.error == 0) ? false : true
+
+            this.setState({ finicio: '', ffin: '', isLoading: false, dataSource: responseJson.data })
+        }).catch((error) => {
+            Alert.alert('Problemas para listar los clientes')
+        })
+    }
+
+    componentWillMount() {
+        this._onPressButton()
+
+    }
 
     render() {
 
@@ -147,9 +156,24 @@ export default class ReporteVentas extends React.Component {
                                     }}
                                     onDateChange={(date) => { this.setState({ ffin: date }) }}
                                 />
-            
+                    <TouchableOpacity onPress={this._onPressButton.bind(this)}>
+                        <Text style={styles.botonText}>Filtrar</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={this._onPressButtonCancel.bind(this)}>
+                        <Text style={styles.botonText}>Borrar Filtrar</Text>
+                    </TouchableOpacity>
                 </View>
-                <Table fontSize={8} height={500} columnWidth={40} columns={columns} dataSource={this.state.dataSource} />
+
+                {
+                    (this.state.dataSource) ? 
+                        <Table fontSize={8} height={500} columnWidth={40} columns={columns} dataSource={this.state.dataSource} />
+                    :(
+                            <View style={{ flex: 1, padding: 20 }}>
+                                <Text>No hay datos para la consulta</Text>
+                            </View>
+                    )
+                }
+                
             </View> 
         );
     }
@@ -214,6 +238,17 @@ const styles = StyleSheet.create({
     },
     labelItem: {
         fontWeight: '700',
+    },
+    botonText: {
+        color: '#2ecc71',
+        textAlign: 'center',
+        backgroundColor: 'black',
+        margin: 6,
+        padding: 10,
+        borderRadius: 5,
+        fontWeight: '700',
+        width: 200,
+        fontSize: 16
     },
 });
 
