@@ -115,6 +115,26 @@ export async function addlote(idMaterial, peso) {
 
 
 
+export async function lotebyId(idMaterial) {
+
+    let myurl = url_base + 'lotelistbymaterial.php'
+    let editcli = {
+        material: {
+            id: idMaterial
+        }
+    };
+
+    try {
+        return await fetch(myurl, {
+                method: 'POST', // or 'PUT'
+                body: JSON.stringify(editcli), // data can be `string` or {object}!
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then((response) => response.json())
+            .then((responseJson) => {return responseJson;})
+            .catch((error) => { return error;});
+    } catch (error) { return error;}
+}
 
 
 
