@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Select, Option } from "react-native-chooser";
 import {
-    Alert, StyleSheet, AppRegistry, TextInput, Text, View, TouchableOpacity,
+    Alert, StyleSheet, AsyncStorage, TextInput, Text, View, TouchableOpacity,
     TouchableWithoutFeedback, StatusBar, SafeAreaView, KeyboardAvoidingView
 } from 'react-native';
 import { listmaterial } from '../apis/materialapi';
@@ -16,21 +16,36 @@ export default class ComprasForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            usuarioComprador: '11', valorCompra: '', peso: '', usuarioVendedor: '', idMaterial: '', valueMateial: 'Seleccione Material', idProveedor: '', valueProveedor: 'Seleccione Proveedor', 
+            usuarioLogon: '', valorCompra: '', peso: '', usuarioVendedor: '', idMaterial: '', valueMateial: 'Seleccione Material', idProveedor: '', valueProveedor: 'Seleccione Proveedor', 
                         dataSourceMaterial: '', dataSourceProveedor:'', isLoading: true, existeError: false }
         this._onPressButton = this._onPressButton.bind(this);
     }
 
-    componentWillMount() {
-        this.loadCompo()
+    getUserId = async () => {
+        let userId = '';
+        try {
+            userId = await AsyncStorage.getItem('userId') || '';
+        } catch (error) {
+            // Error retrieving data
+            console.log(error.message);
+        }
+
+        this.setState({ usuarioLogon: userId })
     }
+
+    componentWillMount()
+    {
+        this.loadCompo()
+        this.getUserId()
+    }
+
 
 
     _onPressButton() {
 
         let proveedor = this.state.idProveedor
         let material = this.state.idMaterial
-        let comprador = this.state.usuarioComprador
+        let comprador = this.state.usuarioLogon
         let valor = this.state.valorCompra
 
       
@@ -40,7 +55,7 @@ export default class ComprasForm extends React.Component {
         else
         {
             Alert.alert('Cargando...')
-            addcompra(this.state.idProveedor, this.state.idMaterial, this.state.peso, this.state.usuarioComprador, this.state.valorCompra).then((responseJson) => {
+            addcompra(this.state.idProveedor, this.state.idMaterial, this.state.peso, this.state.usuarioLogon, this.state.valorCompra).then((responseJson) => {
                 if (responseJson.error == 0){
                     this.cancelPress()
                 }

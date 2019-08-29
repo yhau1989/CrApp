@@ -1,59 +1,70 @@
 import * as React from 'react';
 import { Select, Option } from "react-native-chooser";
-import { Alert, StyleSheet, AppRegistry, Text, View, TouchableOpacity, 
+import {
+    Alert, StyleSheet, AsyncStorage, Text, View, TouchableOpacity, 
          TouchableWithoutFeedback, StatusBar, SafeAreaView, KeyboardAvoidingView } from 'react-native';
 import DatePicker from 'react-native-datepicker'
 import { listlotetrituracion, editlote } from '../apis/lotesapi';
-import { materialById } from '../apis/materialapi';
+import { getOdtListTrituracion, saveProcesoTrituracion } from "../apis/odtapi";
 
 
 export default class ProcesarLoteForm extends React.Component {
-     _isMounted = false;
 
     constructor(props) {
         super(props)
-        this.state = { id: '', tipo: '', value: 'Seleccione un lote', dataSource: '', isLoading: true, existeError: false, finicio: '', ffin: '', labelLote: '', labelMaterial: '', labelPeso: '' }
+        this.state = { usuarioLogon: '', id: '', tipo: '', value: 'Seleccione una ODT', dataSource: '', isLoading: true, existeError: false, finicio: '', ffin: '', labelLote: '', labelMaterial: '', labelPeso: '' }
         this._onPressButton = this._onPressButton.bind(this)
     }
 
-    componentWillUnmount() {
-        this._isMounted = false;
+    getUserId = async () => {
+        let userId = '';
+        try {
+            userId = await AsyncStorage.getItem('userId') || '';
+        } catch (error) {
+            console.log(error.message);
+        }
+
+        this.setState({ usuarioLogon: userId })
     }
 
+    componentWillMount() {
+        this.getlistODT()
+        this.getUserId()
+    }
+
+   
     onSelect(value, label) {
         this.setState({ value: label, id: value })
-        let lote = this.state.dataSource.data.filter(mat => mat.lote == value)
-        if (lote.length > 0) {
-
-            this.setState({ labelLote: lote[0].lote, labelPeso: lote[0].peso })
-            this.nameMaterial(lote[0].material)
+        let odt = this.state.dataSource.data.filter(mat => mat.orden_id == value)
+        if (odt.length > 0) {
+            this.setState({ labelLote: odt[0].orden_id, labelPeso: odt[0].peso_total, labelMaterial: odt[0].tipo_material})
         }
     }
 
 
-    nameMaterial(tipoMaterial) {
-        materialById(tipoMaterial).then((responseJson) => {
-            if (responseJson.error == 0) {
-                this.setState({ labelMaterial: responseJson.data[0].tipo })
-            }
-            else {
-                Alert.alert('Problemas para mostrar información del lote, intente nuevamente')
-            }
-        }).catch((error) => {
-            Alert.alert('Problemas para mostrar información del lote, intente nuevamente')
-        })
-    }
+   
 
     _onPressButton() {
         let idLote = this.state.id
         let fini = this.state.finicio
         let ffin = this.state.ffin
 
+       
+
         if (idLote.length <= 0 || fini.length <= 0 || ffin.length <= 0) {
             Alert.alert('Ingrese los datos para continuar')
         }
         else {
-            editlote('t', idLote, 11, fini, ffin).then((responseJson) => {
+             let odt = {
+                odt:{
+                     id: idLote,
+                     usuario: this.state.usuarioLogon,
+                     fini: fini,
+                     ffin: ffin
+                }
+            }
+
+            saveProcesoTrituracion(odt).then((responseJson) => {
                 Alert.alert(responseJson.mensaje)
                 this.cancelPress()
             }).catch((error) => {
@@ -61,7 +72,6 @@ export default class ProcesarLoteForm extends React.Component {
             })
         }
     }
-
 
 
     validateList = (obj) => {
@@ -73,15 +83,11 @@ export default class ProcesarLoteForm extends React.Component {
         return (obj.data && obj.data.length > 0) ? obj : lista
     }
 
-    getlisLotes() {
-        this._isMounted = true
-        listlotetrituracion().then((responseJson) => {
+    getlistODT() {
+       
+        getOdtListTrituracion().then((responseJson) => {
             let error = (responseJson.error == 0) ? false : true
-           
-            if (this._isMounted) {
-                this.setState({ existeError: error, isLoading: false, dataSource: this.validateList(responseJson) })
-            }
-           
+            this.setState({ existeError: error, isLoading: false, dataSource: this.validateList(responseJson) })
         }).catch((error) => {
             Alert.alert('Problemas para listar los tipos de materiales')
         })
@@ -99,13 +105,16 @@ export default class ProcesarLoteForm extends React.Component {
         }
     }
 
-    cancelPress() { this.setState({ finicio: '', ffin: '', id: '', tipo: '', value: 'Seleccione un lote', labelLote: '', labelMaterial: '', labelPeso: '' }) }
+    cancelPress() { 
+        this.getlistODT()
+        this.setState({ finicio: '', ffin: '', id: '', tipo: '', value: 'Seleccione un lote', labelLote: '', labelMaterial: '', labelPeso: '' }) 
+    }
 
 
 
     render() {
 
-        this.getlisLotes();
+        
         if (this.state.isLoading && this.state.existeError === false) {
             return (
                 <View style={styles.containerForm}>
@@ -125,7 +134,7 @@ export default class ProcesarLoteForm extends React.Component {
                         <TouchableWithoutFeedback>
 
                             <View style={{ width: '80%' }}>
-                                <Text style={styles.labelItem}>Lotes</Text>
+                                <Text style={styles.labelItem}>ODT</Text>
                                 <Select
                                     onSelect={this.onSelect.bind(this)}
                                     defaultText={this.state.value}
@@ -136,15 +145,15 @@ export default class ProcesarLoteForm extends React.Component {
                                      {
                                         this.state.dataSource.data ?
                                             (
-                                                this.state.dataSource.data.map((lotes) => (
-                                                    <Option key={lotes.lote} value={lotes.lote}>{`Lote: ${lotes.lote}`}</Option>
+                                                this.state.dataSource.data.map((odt) => (
+                                                    <Option key={odt.orden_id} value={odt.orden_id}>{`ODT: ${odt.orden_id}`}</Option>
                                                 ))
                                             )
                                             : ('')
                                     } 
                                 </Select>
 
-                                <Text style={styles.labelItem}>Lote: <Text style={styles.textLateral}>{this.state.labelLote}</Text></Text>
+                                <Text style={styles.labelItem}>ODT: <Text style={styles.textLateral}>{this.state.labelLote}</Text></Text>
                                 <Text style={styles.labelItem}>Material: <Text style={styles.textLateral}>{this.state.labelMaterial}</Text></Text>
                                 <Text style={styles.labelItem}>Peso: <Text style={styles.textLateral}>{this.state.labelPeso}</Text></Text>
 

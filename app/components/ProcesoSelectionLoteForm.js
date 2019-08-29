@@ -1,24 +1,95 @@
 import * as React from 'react';
 import { Select, Option } from "react-native-chooser";
-import { Alert, StyleSheet, Text, View, TouchableOpacity, 
-         TouchableWithoutFeedback, StatusBar, SafeAreaView, KeyboardAvoidingView } from 'react-native';
+import { Alert, StyleSheet, Text, View, TouchableOpacity, FlatList, AsyncStorage} from 'react-native';
+import { CheckBox } from "react-native-elements";
 import DatePicker from 'react-native-datepicker'
-import { listloteselection, editlote  } from '../apis/lotesapi';
-import { materialById} from '../apis/materialapi';
+import { listloteselection, lotebyId  } from '../apis/lotesapi';
+import { materialById, listmaterial} from '../apis/materialapi';
+import { saveOdt} from '../apis/odtapi';
 
 
 export default class ProcesoSelectionLoteForm extends React.Component {
-     _isMounted = false;
+     
 
     constructor(props) {
         super(props)
-        this.state = { id: '', tipo: '', value: 'Seleccione un lote', dataSource: '', isLoading: true, existeError: false, finicio: '', ffin: '', labelLote:'', labelMaterial:'', labelPeso:''  }
+        this.state = {
+            usuarioLogon: '',id: '', idMaterial:'', tipo: '', value: 'Seleccione un lote', dataSource: '', 
+        isLoading: true, existeError: false, finicio: '', ffin: '', labelLote:'', labelMaterial:'', labelPeso:''  
+            , dataSourceMateriales: '', valueMaterial: 'Seleccione material',
+            checkedList: [], dataFlat:[], pesoTotal: 0, lotesODT:[]
+    
+        }
         this._onPressButton = this._onPressButton.bind(this)
     }
 
-    componentWillUnmount() {
-        this._isMounted = false;
+
+    getUserId = async () => {
+        let userId = '';
+        try {
+            userId = await AsyncStorage.getItem('userId') || '';
+        } catch (error) {
+            // Error retrieving data
+            console.log(error.message);
+        }
+
+        this.setState({ usuarioLogon: userId })
     }
+
+    componentWillMount()
+    {
+        this.loadMaterials()
+        this.getlisLotes()
+        this.getUserId()
+    }
+
+
+    loadMaterials()
+    {
+        listmaterial().then((responseJson) => {
+            let error = (responseJson.error == 0) ? false : true
+            this.setState({ existeError: error, isLoading: false, dataSourceMateriales: this.validateList(responseJson) })
+        }).catch((error) => {
+            Alert.alert('Problemas para mostrar información del materiales, intente nuevamente')
+        })
+    }
+
+
+    getlotesbyId(idMaterial)
+    {
+        lotebyId(idMaterial).then((responseJson) => {
+            let error = (responseJson.error == 0) ? false : true
+            let flt = this.armarDataForFlat(this.validateList(responseJson).data)
+            this.setState({ existeError: error, isLoading: false, dataSource: this.validateList(responseJson), 
+                dataFlat: flt.flat, 'checkedList': flt.checks, pesoTotal: 0, lotesODT: [] })
+        }).catch((error) => {
+            Alert.alert('Problemas para mostrar Lotes de este tipo de material, intente nuevamente')
+        })
+    }
+
+
+    armarDataForFlat(lotes)
+    {
+        let dataflo = [] , lisatChecks = []
+        let data = { flat : [], checks: []}
+
+        if (lotes && lotes.length > 0)
+        {
+            lotes.forEach(element => {
+                lisatChecks.push(false);
+                dataflo.push({ key: `${lisatChecks.length}`, idLote: element.lote, peso: element.peso })
+                
+            });
+            data.flat = dataflo
+            data.checks = lisatChecks
+        }
+        else
+        {
+            Alert.alert('No existen Lotes para este tipo de material')
+        }
+        return data   
+    }
+
 
 
     onSelect(value, label) {
@@ -29,6 +100,11 @@ export default class ProcesoSelectionLoteForm extends React.Component {
             this.setState({ labelLote: lote[0].lote, labelPeso: lote[0].peso })
             this.nameMaterial(lote[0].material)
         }
+    }
+
+    onSelectMaterial(value, label) {
+        this.setState({ valueMaterial: label, idMaterial: value })
+        this.getlotesbyId(value)
     }
 
 
@@ -48,21 +124,33 @@ export default class ProcesoSelectionLoteForm extends React.Component {
     }
 
     _onPressButton() {
-        let idLote = this.state.id
         let fini = this.state.finicio
         let ffin = this.state.ffin
+        let lotes = this.state.lotesODT
+        let peso = this.state.pesoTotal
+        let idmaterial = this.state.idMaterial
 
-        if(idLote.length <= 0 || fini.length <= 0 || ffin.length <= 0)
+        if (fini.length <= 0 || ffin.length <= 0 || lotes.length <= 0 || peso <= 0 || idmaterial.length <= 0)
         {
             Alert.alert('Ingrese los datos para continuar')
         }
         else
         {
-            editlote('s', idLote, 11, fini, ffin).then((responseJson) =>{
+            let odt = {
+                odt: {
+                    material: idmaterial,
+                    peso:peso,
+                    user_selecciona:this.state.usuarioLogon,
+                    fecini: fini,
+                    fecfin: ffin,
+                    lotes: lotes
+                }
+            }
+            saveOdt(odt).then((responseJson) =>{
                 Alert.alert(responseJson.mensaje)
                 this.cancelPress()
             }).catch((error) => {
-                Alert.alert('Problemas para listar los Seleccione un lote')
+                Alert.alert('Problemas para guardar la ODT')
             })
         }
     }
@@ -78,13 +166,9 @@ export default class ProcesoSelectionLoteForm extends React.Component {
     }
 
     getlisLotes() {
-        this._isMounted = true
-
         listloteselection().then((responseJson) => {
             let error = (responseJson.error == 0) ? false : true
-            if (this._isMounted) {
                 this.setState({ existeError: error, isLoading: false, dataSource: this.validateList(responseJson) })
-            }
            
         }).catch((error) => {
             Alert.alert('Problemas para listar los Seleccione un lote')
@@ -103,13 +187,33 @@ export default class ProcesoSelectionLoteForm extends React.Component {
         }
     }
 
-    cancelPress() { this.setState({ finicio: '', ffin: '', id: '', tipo: '', value: 'Seleccione un lote', labelLote: '', labelMaterial: '', labelPeso: ''}) }
+    cancelPress() { this.setState({ finicio: '', ffin: '', id: '', tipo: '', valueMaterial: 'Seleccione material', labelLote: '', labelMaterial: '', labelPeso: '', checkedList: [], dataFlat: [], pesoTotal: 0, lotesODT: []}) }
 
+    touch(index, lote, peso) {
+        let pesoTotalOdt = new Number(this.state.pesoTotal)
+        let lotes = this.state.lotesODT
+        let estados = this.state.checkedList
 
+        if (estados[index])
+        {
+            estados[index] = false
+            pesoTotalOdt = pesoTotalOdt - new Number(peso)
+            if (lotes.indexOf(lote) >= 0)
+                lotes.splice(lotes.indexOf(lote), 1)
+
+        }
+        else
+        {
+            estados[index] = true
+            lotes.push(lote)
+            pesoTotalOdt = pesoTotalOdt + new Number(peso)
+        }
+        this.setState({ checkedList: estados, pesoTotal: pesoTotalOdt, lotesODT: lotes})
+    }
 
     render() {
 
-        this.getlisLotes();
+        
         if (this.state.isLoading && this.state.existeError === false) {
             return (
                 <View style={styles.containerForm}>
@@ -123,34 +227,63 @@ export default class ProcesoSelectionLoteForm extends React.Component {
             return (
 
 
-                <SafeAreaView style={styles.containerForm}>
-                    <StatusBar barStyle="light-content" />
-                    <KeyboardAvoidingView behavior="padding" style={styles.containerForm}>
-                        <TouchableWithoutFeedback>
+                <View style={styles.containerForm}>
+                            <View style={{ width: '90%' }}>
 
-                            <View style={{ width: '80%' }}>
-                                <Text style={styles.labelItem}>Lotes</Text>
+                                <Text style={styles.labelItem}>Tipo de material</Text>
                                 <Select
-                                    onSelect={this.onSelect.bind(this)}
-                                    defaultText={this.state.value}
+                                    onSelect={this.onSelectMaterial.bind(this)}
+                                    defaultText={this.state.valueMaterial}
                                     style={{ margin: 7, width: '96%', borderRadius: 5, borderColor: 'grey', borderWidth: 1, }}
                                     textStyle={{}}
                                     backdropStyle={{ backgroundColor: "#F6F8FA", }}
                                     optionListStyle={{ backgroundColor: "#ffffff", width: '80%', height: '60%', }}>
-                                     {
-                                        this.state.dataSource.data ?
+                                    {
+                                        this.state.dataSourceMateriales.data ?
                                             (
-                                                this.state.dataSource.data.map((lotes) => (
-                                                    <Option key={lotes.lote} value={lotes.lote}>{`Lote: ${lotes.lote}`}</Option>
+                                                this.state.dataSourceMateriales.data.map((material) => (
+                                                    <Option key={material.id} value={material.id}>{`${material.tipo}`}</Option>
                                                 ))
                                             )
                                             : ('')
-                                    } 
+                                    }
                                 </Select>
 
-                                <Text style={styles.labelItem}>Lote: <Text style={styles.textLateral}>{this.state.labelLote}</Text></Text>
-                                <Text style={styles.labelItem}>Material: <Text style={styles.textLateral}>{this.state.labelMaterial}</Text></Text>
-                                <Text style={styles.labelItem}>Peso: <Text style={styles.textLateral}>{this.state.labelPeso}</Text></Text>
+
+                                <Text style={styles.labelItem}>Lotes</Text>
+                        <FlatList style={{ height: 200, marginVertical: 5, backgroundColor:'#F9F9F9', borderRadius:10}}
+                                    data={this.state.dataFlat}
+                                    renderItem={({ item }) => (
+
+                                        <View style={styles.containerHijo}>
+                                            <View style={styles.containerHijo70}>
+                                                <Text>
+                                                    <Text style={styles.labelItem}>Lote: </Text>
+                                                    {item.idLote}
+                                                </Text>
+                                                <Text>
+                                                    {`Peso: ${item.peso} Kg`}
+                                                </Text>
+                                            </View>
+                                            <View style={styles.containerHijo30}>
+                                                <CheckBox
+                                                    key={item.key}
+                                                    center
+                                                    iconRight
+                                                    //iconType='material'
+                                                    checkedIcon='check-square'
+                                                    //uncheckedIcon='square'
+                                                    checkedColor='#2ecc71'
+                                                    checked={this.state.checkedList[item.key]}
+                                                    onPress={this.touch.bind(this, item.key, item.idLote, item.peso)}
+                                                />
+                                            </View>
+                                        </View>
+
+                                    )}
+                                />
+
+                        <Text style={styles.labelItem}>Peso Total de ODT: <Text style={styles.textLateral}>{`${this.state.pesoTotal} Kg`}</Text></Text>
 
                                 <Text style={styles.labelItem}>Fecha inicio</Text>
                                 <DatePicker
@@ -233,11 +366,7 @@ export default class ProcesoSelectionLoteForm extends React.Component {
                                     </TouchableOpacity>
                                 </View>
                             </View>
-
-                        </TouchableWithoutFeedback>
-                    </KeyboardAvoidingView>
-
-                </SafeAreaView>
+                </View>
 
 
 
@@ -253,12 +382,13 @@ export default class ProcesoSelectionLoteForm extends React.Component {
 
 const styles = StyleSheet.create({
     containerForm: {
-        justifyContent: 'center',
+        //justifyContent: 'center',
         alignItems: 'center',
-        flex: 1,
+        //flex: 1,
         color: '#323232',
         width: '100%',
-        height: '100%'
+        height: '100%',
+        paddingTop: 15,
     },
     viewMaint: {
         display: 'flex',
@@ -292,7 +422,27 @@ const styles = StyleSheet.create({
     labelItem: {
         fontWeight: '700',
     },
+    containerHijo: {
+        flex: 1,
+        width: '100%',
+        height: 50,
+        alignItems: 'flex-start',
+        flexDirection: 'row',
+        borderBottomWidth: 0.23,
+        padding: 5,
+        
+    },
+    containerHijo70: {
+        flex: 1,
+        width: '95%',
+        height: 50,
+    },
+    containerHijo30: {
+        flex: 1,
+        flexDirection: 'row',
+        width: '10%',
+        height: 50,
+        justifyContent: 'flex-end',
+    },
 });
 
-
-//AppRegistry.registerComponent('ProcesoSelectionLoteForm', () => ProcesoSelectionLoteForm);

@@ -148,7 +148,7 @@ const AuthStack = createStackNavigator({
   LoteSeleccionamiento: {
     screen: ProcesoSelectionLoteForm,
     navigationOptions: {
-      title: '(Proceso Lote) Seleccionamiento',
+      title: 'Proceso seleccionamiento',
       headerMode: 'screen',
       headerStyle: { backgroundColor: '#2ecc71', },
       headerTintColor: 'black',
@@ -158,7 +158,7 @@ const AuthStack = createStackNavigator({
   ProcesarLoteForm: {
     screen: ProcesarLoteForm,
     navigationOptions: {
-      title: '(Proceso Lote) Trituración',
+      title: 'Proceso trituración',
       headerMode: 'screen',
       headerStyle: { backgroundColor: '#2ecc71', },
       headerTintColor: 'black',
@@ -168,7 +168,7 @@ const AuthStack = createStackNavigator({
   ProcesoAlmacenajeLoteForm: {
     screen: ProcesoAlmacenajeLoteForm,
     navigationOptions: {
-      title: '(Proceso Lote) Almacenaje',
+      title: 'Proceso almacenaje',
       headerMode: 'screen',
       headerStyle: { backgroundColor: '#2ecc71', },
       headerTintColor: 'black',
@@ -214,8 +214,8 @@ const AuthStack = createStackNavigator({
 
 },
 {
-  //initialRouteName: 'Login',
-  initialRouteName: 'Example',
+  initialRouteName: 'Login',
+  //initialRouteName: 'ProcesarLoteForm',
   defaultNavigationOptions: {headerMode: 'screen'},
 });
 

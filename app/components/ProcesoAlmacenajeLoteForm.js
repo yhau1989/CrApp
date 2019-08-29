@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Select, Option } from "react-native-chooser";
-import { Alert, StyleSheet, AppRegistry, Text, View, TouchableOpacity, 
+import {
+    Alert, StyleSheet, AsyncStorage, Text, View, TouchableOpacity, 
          TouchableWithoutFeedback, StatusBar, SafeAreaView, KeyboardAvoidingView } from 'react-native';
 import DatePicker from 'react-native-datepicker'
 import { listlotealmacena, editlote } from '../apis/lotesapi';
@@ -9,17 +10,30 @@ import { materialById } from '../apis/materialapi';
 
 export default class ProcesoAlmacenajeLoteForm extends React.Component {
 
-    _isMounted = false;
-
     constructor(props) {
         super(props)
-        this.state = { id: '', tipo: '', value: 'Seleccione un lote', dataSource: '', isLoading: true, existeError: false, finicio: '', ffin: '', labelLote: '', labelMaterial: '', labelPeso: '' }
+        this.state = { usuarioLogon: '', id: '', tipo: '', value: 'Seleccione un lote', dataSource: '', isLoading: true, existeError: false, finicio: '', ffin: '', labelLote: '', labelMaterial: '', labelPeso: '' }
         this._onPressButton = this._onPressButton.bind(this)
     }
 
-    componentWillUnmount() {
-        this._isMounted = false;
+    componentWillMount() {
+        this.getlisLotes();
+        this.getUserId()
     }
+
+    getUserId = async () => {
+        let userId = '';
+        try {
+            userId = await AsyncStorage.getItem('userId') || '';
+        } catch (error) {
+            // Error retrieving data
+            console.log(error.message);
+        }
+
+        this.setState({ usuarioLogon: userId })
+    }
+
+    
 
 
     onSelect(value, label) {
@@ -55,7 +69,7 @@ export default class ProcesoAlmacenajeLoteForm extends React.Component {
             Alert.alert('Ingrese los datos para continuar')
         }
         else {
-            editlote('a', idLote, 11, fini, ffin).then((responseJson) => {
+            editlote('a', idLote, this.state.usuarioLogon, fini, ffin).then((responseJson) => {
                 Alert.alert(responseJson.mensaje)
                 this.cancelPress()
             }).catch((error) => {
@@ -75,13 +89,9 @@ export default class ProcesoAlmacenajeLoteForm extends React.Component {
     }
 
     getlisLotes() {
-        this._isMounted = true
         listlotealmacena().then((responseJson) => {
             let error = (responseJson.error == 0) ? false : true
-            if (this._isMounted) {
-                this.setState({ existeError: error, isLoading: false, dataSource: this.validateList(responseJson) })
-            }
-           
+            this.setState({ existeError: error, isLoading: false, dataSource: this.validateList(responseJson) })
         }).catch((error) => {
             Alert.alert('Problemas para listar los Seleccione un lote')
         })
@@ -104,7 +114,7 @@ export default class ProcesoAlmacenajeLoteForm extends React.Component {
 
     render() {
 
-        this.getlisLotes();
+        
         if (this.state.isLoading && this.state.existeError === false) {
             return (
                 <View style={styles.containerForm}>
