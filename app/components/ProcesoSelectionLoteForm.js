@@ -134,6 +134,9 @@ export default class ProcesoSelectionLoteForm extends React.Component {
         {
             Alert.alert('Ingrese los datos para continuar')
         }
+        else if (this.hoy(fini, ffin)) {
+            Alert.alert('Las fechas deben estar en un rango valido')
+        }
         else
         {
             let odt = {
@@ -209,6 +212,29 @@ export default class ProcesoSelectionLoteForm extends React.Component {
             pesoTotalOdt = pesoTotalOdt + new Number(peso)
         }
         this.setState({ checkedList: estados, pesoTotal: pesoTotalOdt, lotesODT: lotes})
+    }
+
+
+    hoy(fini, ffin) {
+        let x = new Date()
+        let xday = x.getDate()
+        let xmont = x.getMonth()
+
+        let finiDay = parseInt(fini.split(' ')[0].split('-')[2])
+        let finiMonth = parseInt(fini.split(' ')[0].split('-')[1])
+        let finiYear = parseInt(fini.split(' ')[0].split('-')[0])
+
+        let ffinDay = parseInt(ffin.split(' ')[0].split('-')[2])
+        let ffinMonth = parseInt(ffin.split(' ')[0].split('-')[1])
+        let ffinYear = parseInt(ffin.split(' ')[0].split('-')[0])
+
+
+        if (finiYear >= x.getFullYear() && finiMonth >= xmont && finiDay >= xday && finiDay <= ffinDay && finiMonth <= ffinMonth && finiYear <= ffinYear) {
+            return false
+        }
+        else {
+            return true
+        }
     }
 
     render() {

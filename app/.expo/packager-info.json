@@ -1,10 +1,10 @@
 {
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 20176,
+  "packagerPid": 16256,
   "expoServerNgrokUrl": "https://t8-4jy.yhau1989.app.exp.direct",
   "packagerNgrokUrl": "https://packager.t8-4jy.yhau1989.app.exp.direct",
-  "ngrokPid": 20788,
+  "ngrokPid": 16928,
   "devToolsPort": 19002,
   "webpackServerPort": null
 }

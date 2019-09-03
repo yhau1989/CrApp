@@ -215,7 +215,7 @@ const AuthStack = createStackNavigator({
 },
 {
   initialRouteName: 'Login',
-  //initialRouteName: 'ProcesarLoteForm',
+  //initialRouteName: 'ProcesoAlmacenajeLoteForm',
   defaultNavigationOptions: {headerMode: 'screen'},
 });
 

@@ -57,13 +57,29 @@ export async function saveProcesoTrituracion(odt) {
 }
 
 
-//odtsettritura
+
+export async function saveProcesoAlmacena(odt) {
+
+    let myurl = url_base + 'odtsetalmacena.php';
+
+    try {
+        return await fetch(myurl, {
+            method: 'POST', // or 'PUT'
+            body: JSON.stringify(odt),
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then((response) => response.json())
+            .then((responseJson) => { return responseJson; })
+            .catch((error) => { return error; });
+    } catch (error) { return error; }
+
+}
 
 
 
 export async function getOdtListAlmacenamiento() {
 
-    let myurl = url_base + 'odtadd.php';
+    let myurl = url_base + 'odtalmacenalist.php';
 
     try {
         return await fetch(myurl, {

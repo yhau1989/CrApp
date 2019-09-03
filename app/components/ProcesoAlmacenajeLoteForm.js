@@ -2,23 +2,56 @@ import * as React from 'react';
 import { Select, Option } from "react-native-chooser";
 import {
     Alert, StyleSheet, AsyncStorage, Text, View, TouchableOpacity, 
-         TouchableWithoutFeedback, StatusBar, SafeAreaView, KeyboardAvoidingView } from 'react-native';
+    TouchableWithoutFeedback, StatusBar, SafeAreaView, KeyboardAvoidingView, TextInput } from 'react-native';
 import DatePicker from 'react-native-datepicker'
 import { listlotealmacena, editlote } from '../apis/lotesapi';
 import { materialById } from '../apis/materialapi';
+import { listmaterial} from '../apis/materialapi';
+import { getOdtListAlmacenamiento, saveProcesoAlmacena } from "../apis/odtapi";
+
 
 
 export default class ProcesoAlmacenajeLoteForm extends React.Component {
 
     constructor(props) {
         super(props)
-        this.state = { usuarioLogon: '', id: '', tipo: '', value: 'Seleccione un lote', dataSource: '', isLoading: true, existeError: false, finicio: '', ffin: '', labelLote: '', labelMaterial: '', labelPeso: '' }
+        this.state = { usuarioLogon: '', id: '', tipo: '', value: 'Seleccione una ODT', dataSource: '', 
+            isLoading: true, existeError: false, finicio: '', ffin: '', labelLote: '', labelMaterial: '', labelPeso: '', 
+            dataSourceMaterial: '', valueMaterial: 'Tipos de materiales', idMaterial: '', pesoTriturado:'', }
         this._onPressButton = this._onPressButton.bind(this)
     }
 
     componentWillMount() {
-        this.getlisLotes();
+        this.getlistODT()
         this.getUserId()
+        this.getlisMateriales()
+    }
+
+
+
+    hoy(fini,ffin)
+    {
+        let x = new Date()
+        let xday = x.getDate()
+        let xmont = x.getMonth()
+
+        let finiDay = parseInt(fini.split(' ')[0].split('-')[2]) 
+        let finiMonth = parseInt(fini.split(' ')[0].split('-')[1]) 
+        let finiYear = parseInt(fini.split(' ')[0].split('-')[0]) 
+
+        let ffinDay = parseInt(ffin.split(' ')[0].split('-')[2])
+        let ffinMonth = parseInt(ffin.split(' ')[0].split('-')[1])
+        let ffinYear = parseInt(ffin.split(' ')[0].split('-')[0]) 
+
+
+        if (finiYear >= x.getFullYear() && finiMonth >= xmont && finiDay >= xday && finiDay <= ffinDay && finiMonth <= ffinMonth && finiYear <= ffinYear)
+        {
+            return false
+        }
+        else
+        {
+            return true
+        }
     }
 
     getUserId = async () => {
@@ -34,15 +67,11 @@ export default class ProcesoAlmacenajeLoteForm extends React.Component {
     }
 
     
-
-
     onSelect(value, label) {
         this.setState({ value: label, id: value })
-        let lote = this.state.dataSource.data.filter(mat => mat.lote == value)
-        if (lote.length > 0) {
-
-            this.setState({ labelLote: lote[0].lote, labelPeso: lote[0].peso })
-            this.nameMaterial(lote[0].material)
+        let odt = this.state.dataSource.data.filter(mat => mat.orden_id == value)
+        if (odt.length > 0) {
+            this.setState({ labelLote: odt[0].orden_id, labelPeso: odt[0].peso_total, labelMaterial: odt[0].tipo_material })
         }
     }
 
@@ -64,16 +93,35 @@ export default class ProcesoAlmacenajeLoteForm extends React.Component {
         let idLote = this.state.id
         let fini = this.state.finicio
         let ffin = this.state.ffin
+        let peso = this.state.pesoTriturado
+        let material = this.state.idMaterial
 
-        if (idLote.length <= 0 || fini.length <= 0 || ffin.length <= 0) {
-            Alert.alert('Ingrese los datos para continuar')
+        if (idLote.length <= 0 || fini.length <= 0 || ffin.length <= 0 || peso.length <= 0 || material.length <= 0) {
+            Alert.alert('Ingrese datos para continuar')
+        } 
+        else if (this.hoy(fini, ffin))
+        {
+            Alert.alert('Las fechas deben estar en un rango valido')
         }
         else {
-            editlote('a', idLote, this.state.usuarioLogon, fini, ffin).then((responseJson) => {
+
+            let odt = {
+                odt:{
+                        id: idLote,
+                    usuario: this.state.usuarioLogon,
+                        fini : fini,
+                        ffin: ffin,
+                        material: material,
+                        peso: peso,
+                        faltante: (this.state.labelPeso - peso)
+                    }
+                }
+
+            saveProcesoAlmacena(odt).then((responseJson) => {
                 Alert.alert(responseJson.mensaje)
                 this.cancelPress()
             }).catch((error) => {
-                Alert.alert('Problemas para listar los Seleccione un lote')
+                Alert.alert('Problemas al grabar la transacción')
             })
         }
     }
@@ -109,7 +157,40 @@ export default class ProcesoAlmacenajeLoteForm extends React.Component {
         }
     }
 
-    cancelPress() { this.setState({ finicio: '', ffin: '', id: '', tipo: '', value: 'Seleccione un lote', labelLote: '', labelMaterial: '', labelPeso: '' }) }
+    cancelPress() 
+    { 
+        this.setState({ finicio: '', ffin: '', id: '', tipo: '', value: 'Seleccione una ODT', labelLote: '', labelMaterial: '', labelPeso: '', valueMaterial: 'Tipos de materiales', idMaterial: '', pesoTriturado: ''}) 
+        this.getlistODT()
+    }
+
+    getlisMateriales() {
+        listmaterial().then((responseJson) => {
+            let error = (responseJson.error == 0) ? false : true
+            this.setState({ existeError: error, isLoading: false, dataSourceMaterial: this.validateList(responseJson) })
+        }).catch((error) => {
+            Alert.alert('Problemas para listar los tipos de materiales')
+        })
+    }
+
+
+    onSelectMaterial(value, label) {
+        this.setState({ valueMaterial: label, idMaterial: value })
+        let lote = this.state.dataSource.data.filter(mat => mat.lote == value)
+        if (lote.length > 0) {
+
+            this.setState({ labelLote: lote[0].lote, labelPeso: lote[0].peso })
+            this.nameMaterial(lote[0].material)
+        }
+    }
+
+    getlistODT() {
+        getOdtListAlmacenamiento().then((responseJson) => {
+            let error = (responseJson.error == 0) ? false : true
+            this.setState({ existeError: error, isLoading: false, dataSource: this.validateList(responseJson) })
+        }).catch((error) => {
+            Alert.alert('Problemas para listar los tipos de materiales')
+        })
+    }
 
 
     render() {
@@ -127,14 +208,10 @@ export default class ProcesoAlmacenajeLoteForm extends React.Component {
 
             return (
 
-
-                <SafeAreaView style={styles.containerForm}>
-                    <StatusBar barStyle="light-content" />
-                    <KeyboardAvoidingView behavior="padding" style={styles.containerForm}>
-                        <TouchableWithoutFeedback>
+                <View style={styles.containerForm}>
 
                             <View style={{ width: '80%' }}>
-                                <Text style={styles.labelItem}>Lotes</Text>
+                                <Text style={styles.labelItem}>ODT</Text>
                                 <Select
                                     onSelect={this.onSelect.bind(this)}
                                     defaultText={this.state.value}
@@ -145,17 +222,40 @@ export default class ProcesoAlmacenajeLoteForm extends React.Component {
                                      {
                                         this.state.dataSource.data ?
                                             (
-                                                this.state.dataSource.data.map((lotes) => (
-                                                    <Option key={lotes.lote} value={lotes.lote}>{`Lote: ${lotes.lote}`}</Option>
+                                                this.state.dataSource.data.map((odt) => (
+                                                    <Option key={odt.orden_id} value={odt.orden_id}>{`ODT: ${odt.orden_id}`}</Option>
                                                 ))
                                             )
                                             : ('')
                                     } 
                                 </Select>
 
-                                <Text style={styles.labelItem}>Lote: <Text style={styles.textLateral}>{this.state.labelLote}</Text></Text>
+                                <Text style={styles.labelItem}>ODT: <Text style={styles.textLateral}>{this.state.labelLote}</Text></Text>
                                 <Text style={styles.labelItem}>Material: <Text style={styles.textLateral}>{this.state.labelMaterial}</Text></Text>
                                 <Text style={styles.labelItem}>Peso: <Text style={styles.textLateral}>{this.state.labelPeso}</Text></Text>
+
+                                <Text style={styles.labelItem}>Material triturado</Text>
+                                <Select
+                                    onSelect={this.onSelectMaterial.bind(this)}
+                                    defaultText={this.state.valueMaterial}
+                                    style={{ margin: 7, width: '96%', borderRadius: 5, borderColor: 'grey', borderWidth: 1, }}
+                                    textStyle={{}}
+                                    backdropStyle={{ backgroundColor: "#F6F8FA", }}
+                                    optionListStyle={{ backgroundColor: "#ffffff", width: '80%', height: '60%', }}>
+                                    {
+                                        this.state.dataSourceMaterial.data ?
+                                            (
+                                                this.state.dataSourceMaterial.data.map((material) => (
+                                                    <Option key={material.id} value={material.id}>{material.tipo}</Option>
+                                                ))
+                                            )
+                                            : ('')
+                                    }
+                                </Select>
+
+                                
+                                <Text style={styles.labelItem}>Peso Triturado</Text>
+                                <TextInput style={styles.input} placeholder='peso triturado' value={this.state.pesoTriturado} onChangeText={(value) => this.setState({ pesoTriturado: value })} />
 
                                 <Text style={styles.labelItem}>Fecha inicio</Text>
                                 <DatePicker
@@ -242,12 +342,8 @@ export default class ProcesoAlmacenajeLoteForm extends React.Component {
                                 </View>
                             </View>
 
-                        </TouchableWithoutFeedback>
-                    </KeyboardAvoidingView>
-
-                </SafeAreaView>
-
-
+                       
+                </View>
 
             );
 
@@ -261,12 +357,12 @@ export default class ProcesoAlmacenajeLoteForm extends React.Component {
 
 const styles = StyleSheet.create({
     containerForm: {
-        justifyContent: 'center',
+        paddingTop: 5,
         alignItems: 'center',
-        flex: 1,
         color: '#323232',
         width: '100%',
         height: '100%'
+
     },
     viewMaint: {
         display: 'flex',
