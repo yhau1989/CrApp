@@ -103,6 +103,10 @@ export default class ProcesoAlmacenajeLoteForm extends React.Component {
         {
             Alert.alert('Las fechas deben estar en un rango valido')
         }
+        else if (this.state.labelPeso < peso)
+        {
+            Alert.alert('Peso triturado no puede ser mayor al peso total de la ODT')
+        }
         else {
 
             let odt = {
@@ -175,7 +179,7 @@ export default class ProcesoAlmacenajeLoteForm extends React.Component {
 
     onSelectMaterial(value, label) {
         this.setState({ valueMaterial: label, idMaterial: value })
-        let lote = this.state.dataSource.data.filter(mat => mat.lote == value)
+        let lote = this.state.dataSourceMaterial.data.filter(mat => mat.lote == value)
         if (lote.length > 0) {
 
             this.setState({ labelLote: lote[0].lote, labelPeso: lote[0].peso })

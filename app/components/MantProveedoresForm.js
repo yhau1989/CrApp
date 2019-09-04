@@ -5,7 +5,7 @@ import {
     TouchableWithoutFeedback, StatusBar, SafeAreaView, KeyboardAvoidingView
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { addproveedor, listproveedor, editproveedor } from '../apis/proveedorapi';
+import { addproveedor, listproveedorMant, editproveedor } from '../apis/proveedorapi';
 
 
 export default class MantProveedoresForm extends React.Component {
@@ -14,7 +14,8 @@ export default class MantProveedoresForm extends React.Component {
 
     constructor(props) {
         super(props)
-        this.state = { colorAccionNew: 'grey', colorAccionEdit: 'grey', accion: 'new', id: '', ruc: '', nombre: '', apellido: '', direccion: '', email: '', telefono: '', value: 'Lista de Proveedores', dataSource: '', isLoading: true, existeError: false }
+        this.state = { colorAccionNew: 'grey', colorAccionEdit: 'grey', accion: 'new', id: '', ruc: '', nombre: '', apellido: '', direccion: '', email: '', 
+            telefono: '', value: 'Lista de Proveedores', dataSource: '', isLoading: true, existeError: false, estado_proveedor:'1' }
         this._onPressButton = this._onPressButton.bind(this)
     }
 
@@ -27,7 +28,9 @@ export default class MantProveedoresForm extends React.Component {
         let provee = this.state.dataSource.data.filter(prov => prov.id == value)
         if (provee.length > 0) {
             Alert.alert('Si desea cambiar los datos habilite el control editar')
-            this.setState({ colorAccionNew: 'grey', colorAccionEdit: 'grey', id: provee[0].id, ruc: provee[0].ruc, nombre: provee[0].nombres, apellido: provee[0].apellidos, direccion: provee[0].direccion, email: provee[0].email, telefono: provee[0].telefono })
+            this.setState({ colorAccionNew: 'grey', colorAccionEdit: 'grey', 
+            id: provee[0].id, ruc: provee[0].ruc, nombre: provee[0].nombres, apellido: provee[0].apellidos, 
+                direccion: provee[0].direccion, email: provee[0].email, telefono: provee[0].telefono, estado_proveedor: provee[0].estado })
         }
        
     }
@@ -47,7 +50,7 @@ export default class MantProveedoresForm extends React.Component {
             if(this.state.accion == 'new')
             {
                 Alert.alert('addproveedor')
-                addproveedor(ruc, nombre, apellido, direccion, telefono).then((responseJson) => {
+                addproveedor(ruc, nombre, apellido, direccion, telefono, this.state.estado_proveedor).then((responseJson) => {
                     let error = (responseJson.error == 0) ? false : true
                     this.setState({ existeError: error})
                     Alert.alert(responseJson.mensaje)
@@ -61,7 +64,7 @@ export default class MantProveedoresForm extends React.Component {
                     Alert.alert('Ingrese los datos para continuar')
                 }
                 else{
-                    editproveedor(this.state.id, ruc, nombre, apellido, direccion, telefono).then((responseJson) => {
+                    editproveedor(this.state.id, ruc, nombre, apellido, direccion, telefono, this.state.estado_proveedor).then((responseJson) => {
                         let error = (responseJson.error == 0) ? false : true
                         this.setState({ existeError: error, })
                         Alert.alert(responseJson.mensaje)
@@ -85,7 +88,7 @@ export default class MantProveedoresForm extends React.Component {
 
     getlisProveedores() {
         this._isMounted = true
-        listproveedor().then((responseJson) => {
+        listproveedorMant().then((responseJson) => {
             let error = (responseJson.error == 0) ? false : true
             if (this._isMounted) {
                 this.setState({ existeError: error, isLoading: false, dataSource: this.validateList(responseJson) })
@@ -96,7 +99,7 @@ export default class MantProveedoresForm extends React.Component {
         })
     }
 
-    newPress() { this.setState({ value: 'Lista de Proveedores', colorAccionNew: '#2ecc71', colorAccionEdit: 'grey', accion: 'new', idClient: '', ruc: '', nombre: '', apellido: '', direccion: '', email: '', telefono: '' }) }
+    newPress() { this.setState({ value: 'Lista de Proveedores', colorAccionNew: '#2ecc71', colorAccionEdit: 'grey', accion: 'new', idClient: '', ruc: '', nombre: '', apellido: '', direccion: '', email: '', telefono: '', estado_proveedor: '1' }) }
 
     editPress() {
 
@@ -109,7 +112,7 @@ export default class MantProveedoresForm extends React.Component {
         }
     }
 
-    cancelPress() { this.setState({ colorAccionNew: 'grey', colorAccionEdit: 'grey', accion: 'new', id: '', ruc: '', nombre: '', apellido: '', direccion: '', email: '', telefono: '', value: 'Lista de Proveedores' }) }
+    cancelPress() { this.setState({ colorAccionNew: 'grey', colorAccionEdit: 'grey', accion: 'new', id: '', ruc: '', nombre: '', apellido: '', direccion: '', email: '', telefono: '', value: 'Lista de Proveedores', estado_proveedor:'1' }) }
 
 
 
@@ -159,10 +162,10 @@ export default class MantProveedoresForm extends React.Component {
 
                             <View style={styles.input}>
                                 <Picker
-                                    selectedValue={this.state.language}
+                                    selectedValue={this.state.estado_proveedor}
                                     style={{ width: '100%' }}
                                     itemStyle={{ width: '100%' }}
-                                    onValueChange={(itemValue, itemIndex) => this.setState({ language: itemValue })}>
+                                    onValueChange={(itemValue, itemIndex) => this.setState({ estado_proveedor: itemValue })}>
                                     <Picker.Item label="Activo" value="1" />
                                     <Picker.Item label="Inactivo" value="2" />
                                 </Picker>

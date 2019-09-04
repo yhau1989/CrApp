@@ -19,7 +19,23 @@ export async function listproveedor() {
 }
 
 
-export async function editproveedor(id,ruc, nombres,apellidos,direccion,telefono) {
+export async function listproveedorMant() {
+
+    let myurl = url_base + 'proveelistmant.php';
+    try {
+        return await fetch(myurl, {
+            method: 'POST', // or 'PUT'
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then((response) => response.json())
+            .then((responseJson) => { return responseJson; })
+            .catch((error) => { return error; });
+    } catch (error) { return error; }
+
+}
+
+
+export async function editproveedor(id, ruc, nombres, apellidos, direccion, telefono, estado) {
 
     let myurl = url_base + 'proveeedit.php'
     let editprovee = {
@@ -29,7 +45,8 @@ export async function editproveedor(id,ruc, nombres,apellidos,direccion,telefono
             nombres: nombres,
             apellidos: apellidos,
             direccion: direccion,
-            telefono: telefono
+            telefono: telefono,
+            estado: estado
         }
     };
 
@@ -46,7 +63,7 @@ export async function editproveedor(id,ruc, nombres,apellidos,direccion,telefono
 }
 
 
-export async function addproveedor(ruc, nombres, apellidos, direccion, telefono) {
+export async function addproveedor(ruc, nombres, apellidos, direccion, telefono, estado) {
 
     let myurl = url_base + 'proveeadd.php'
     let provee = {
@@ -55,7 +72,8 @@ export async function addproveedor(ruc, nombres, apellidos, direccion, telefono)
             nombres: nombres,
             apellidos: apellidos,
             direccion: direccion,
-            telefono: telefono
+            telefono: telefono,
+            estado: estado
         }
     };
 
