@@ -3,7 +3,7 @@ import { Select, Option } from "react-native-chooser";
 import { Alert, StyleSheet, AppRegistry, TextInput, Text, Picker, View, TouchableOpacity, 
          TouchableWithoutFeedback, StatusBar, SafeAreaView, KeyboardAvoidingView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { listmaterial, editmaterial, addmaterial} from '../apis/materialapi';
+import { listmaterialMant, editmaterial, addmaterial} from '../apis/materialapi';
 
 
 export default class MantMaterialesForm extends React.Component {
@@ -12,7 +12,8 @@ export default class MantMaterialesForm extends React.Component {
 
     constructor(props) {
         super(props)
-        this.state = { colorAccionNew: 'grey', colorAccionEdit: 'grey', accion: 'new', id: '', tipo: '',value: 'Tipos de materiales', dataSource: '', isLoading: true, existeError: false }
+        this.state = { colorAccionNew: 'grey', colorAccionEdit: 'grey', 
+        accion: 'new', id: '', tipo: '',value: 'Tipos de materiales', dataSource: '', isLoading: true, existeError: false, estado_material:'1' }
         this._onPressButton = this._onPressButton.bind(this)
     }
 
@@ -25,7 +26,7 @@ export default class MantMaterialesForm extends React.Component {
         let lote = this.state.dataSource.data.filter(mat => mat.lote == value)
         if (lote.length > 0) {
 
-            this.setState({ labelLote: lote[0].lote, labelPeso: lote[0].peso })
+            this.setState({ labelLote: lote[0].lote, labelPeso: lote[0].peso, estado_material: lote[0].material})
             this.nameMaterial(lote[0].material)
         }
     }
@@ -59,7 +60,7 @@ export default class MantMaterialesForm extends React.Component {
 
             if (this.state.accion == 'new') {
 
-                addmaterial(tipo).then((responseJson) => {
+                addmaterial(tipo, this.state.estado_material).then((responseJson) => {
                     let error = (responseJson.error == 0) ? false : true
                     this.setState({ existeError: error })
                     Alert.alert(responseJson.mensaje)
@@ -73,7 +74,7 @@ export default class MantMaterialesForm extends React.Component {
                     Alert.alert('Ingrese los datos para continuar')
                 }
                 else {
-                    editmaterial(this.state.id, tipo).then((responseJson) => {
+                    editmaterial(this.state.id, tipo, this.state.estado_material).then((responseJson) => {
                         let error = (responseJson.error == 0) ? false : true
                         this.setState({ existeError: error, })
                         Alert.alert(responseJson.mensaje)
@@ -99,7 +100,7 @@ export default class MantMaterialesForm extends React.Component {
 
     getlisMateriales() {
         this._isMounted = true
-        listmaterial().then((responseJson) => {
+        listmaterialMant().then((responseJson) => {
             let error = (responseJson.error == 0) ? false : true
             if (this._isMounted) {
                 this.setState({ existeError: error, isLoading: false, dataSource: this.validateList(responseJson) })
@@ -110,19 +111,21 @@ export default class MantMaterialesForm extends React.Component {
         })
     }
 
-    newPress() { this.setState({ value: 'Tipos de materiales', colorAccionNew: '#2ecc71', colorAccionEdit: 'grey', accion: 'new', id: '', tipo:''}) }
+    newPress() { this.setState({ value: 'Tipos de materiales', colorAccionNew: '#2ecc71', colorAccionEdit: 'grey', accion: 'new', id: '', tipo: '', estado_material: '1'}) }
 
     editPress() {
 
         if (this.state.id.length > 0) {
             let materiales = this.state.dataSource.data.filter(mat => mat.id == this.state.id)
             if (materiales.length > 0) {
-                this.setState({ colorAccionNew: 'grey', colorAccionEdit: '#2ecc71', accion: 'edit', id: materiales[0].id, tipo: materiales[0].tipo,})
+                this.setState({ colorAccionNew: 'grey', colorAccionEdit: '#2ecc71', accion: 'edit', id: materiales[0].id, tipo: materiales[0].tipo, 
+                estado_material: materiales[0].estado })
             }
         }
     }
 
-    cancelPress() { this.setState({ colorAccionNew: 'grey', colorAccionEdit: 'grey', accion: 'new', id: '', tipo: '', value: 'Tipos de materiales' }) }
+    cancelPress() { this.setState({ colorAccionNew: 'grey', colorAccionEdit: 'grey', accion: 'new', id: '', 
+        tipo: '', value: 'Tipos de materiales', estado_material:'1' }) }
 
 
 
@@ -168,10 +171,10 @@ export default class MantMaterialesForm extends React.Component {
 
                                 <View style={styles.input}>
                                     <Picker
-                                        selectedValue={this.state.language}
+                                        selectedValue={this.state.estado_material}
                                         style={{ width: '100%' }}
                                         itemStyle={{ width: '100%' }}
-                                        onValueChange={(itemValue, itemIndex) => this.setState({ language: itemValue })}>
+                                        onValueChange={(itemValue, itemIndex) => this.setState({ estado_material: itemValue })}>
                                         <Picker.Item label="Activo" value="1" />
                                         <Picker.Item label="Inactivo" value="2" />
                                     </Picker>

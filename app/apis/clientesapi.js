@@ -18,8 +18,25 @@ export async function listcliente() {
 
 
 
+export async function listclienteMant() {
 
-export async function editcliente(id,ruc, nombres,apellidos,direccion,telefono) {
+    let myurl = url_base + 'clientlistmant.php';
+    try {
+        return await fetch(myurl, {
+            method: 'POST', // or 'PUT'
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then((response) => response.json())
+            .then((responseJson) => { return responseJson; })
+            .catch((error) => { return error; });
+    } catch (error) { return error; }
+
+}
+
+
+
+
+export async function editcliente(id,ruc, nombres,apellidos,direccion,telefono, estado) {
 
     let myurl = url_base + 'clientedit.php'
     let editcli = {
@@ -29,7 +46,8 @@ export async function editcliente(id,ruc, nombres,apellidos,direccion,telefono) 
             nombres: nombres,
             apellidos: apellidos,
             direccion: direccion,
-            telefono: telefono
+            telefono: telefono,
+            estado: estado
         }
     };
 
@@ -46,7 +64,7 @@ export async function editcliente(id,ruc, nombres,apellidos,direccion,telefono) 
 }
 
 
-export async function addcliente(ruc, nombres, apellidos, direccion, telefono) {
+export async function addcliente(ruc, nombres, apellidos, direccion, telefono, estado) {
 
     let myurl = url_base + 'clientadd.php'
     let clint = {
@@ -55,7 +73,8 @@ export async function addcliente(ruc, nombres, apellidos, direccion, telefono) {
             nombres: nombres,
             apellidos: apellidos,
             direccion: direccion,
-            telefono: telefono
+            telefono: telefono,
+            estado: estado
         }
     };
 

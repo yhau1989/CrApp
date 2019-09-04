@@ -4,7 +4,7 @@ import {
     Alert, StyleSheet, AppRegistry, TextInput, Text, Picker, View, TouchableOpacity,
     TouchableWithoutFeedback, StatusBar, SafeAreaView, KeyboardAvoidingView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { addcliente, listcliente, editcliente } from '../apis/clientesapi';
+import { addcliente, listclienteMant, editcliente, listcliente } from '../apis/clientesapi';
 
 
 
@@ -14,7 +14,9 @@ export default class MantClientesForm extends React.Component {
 
     constructor(props) {
         super(props)
-        this.state = { colorAccionNew: 'grey', colorAccionEdit: 'grey', accion:'new', idClient: '', ruc: '', nombre: '', apellido: '', direccion: '', telefono: '', value: 'Lista de Clientes', dataSource: '', isLoading: true, existeError: false}
+        this.state = { colorAccionNew: 'grey', colorAccionEdit: 'grey', accion:'new', idClient: '', ruc: '', nombre: '', 
+                       apellido: '', direccion: '', telefono: '', value: 'Lista de Clientes', dataSource: '', 
+                       isLoading: true, existeError: false, estado_cliente:'1'}
         this._onPressButton = this._onPressButton.bind(this)
     }
 
@@ -27,7 +29,10 @@ export default class MantClientesForm extends React.Component {
         let client = this.state.dataSource.data.filter(client => client.id == value)
         if (client.length > 0) {
             Alert.alert('Si desea cambiar los datos habilite el control editar')
-            this.setState({ colorAccionNew: 'grey', colorAccionEdit: 'grey', idClient: client[0].id, ruc: client[0].ruc, nombre: client[0].nombres, apellido: client[0].apellidos, direccion: client[0].direccion, email: client[0].email, telefono: client[0].telefono })
+            this.setState({ colorAccionNew: 'grey', colorAccionEdit: 'grey', 
+                            idClient: client[0].id, ruc: client[0].ruc, nombre: client[0].nombres, 
+                            apellido: client[0].apellidos, direccion: client[0].direccion, 
+                email: client[0].email, telefono: client[0].telefono, estado_cliente: client[0].estado})
         } 
     }
 
@@ -45,7 +50,7 @@ export default class MantClientesForm extends React.Component {
             Alert.alert('Cargando...')
             if(this.state.accion == 'new')
             {
-                addcliente(ruc, nombre, apellido, direccion, telefono).then((responseJson) => {
+                addcliente(ruc, nombre, apellido, direccion, telefono, this.state.estado_cliente).then((responseJson) => {
                     let error = (responseJson.error == 0) ? false : true
                     this.setState({ existeError: error})
                     this.getlisClientes()
@@ -61,7 +66,7 @@ export default class MantClientesForm extends React.Component {
                 }
                 else
                 {
-                    editcliente(this.state.idClient, ruc, nombre, apellido, direccion, telefono).then((responseJson) => {
+                    editcliente(this.state.idClient, ruc, nombre, apellido, direccion, telefono, this.state.estado_cliente).then((responseJson) => {
                         let error = (responseJson.error == 0) ? false : true
                         this.setState({ existeError: error, })
                         this.getlisClientes()
@@ -86,7 +91,7 @@ export default class MantClientesForm extends React.Component {
 
     getlisClientes()
     {
-        listcliente().then((responseJson) => {
+        listclienteMant().then((responseJson) => {
             this.setState({ isLoading: false, dataSource: this.validateList(responseJson) })
            
         }).catch((error) => {
@@ -94,7 +99,8 @@ export default class MantClientesForm extends React.Component {
         })
     }
 
-    newPress() { this.setState({ value: 'Lista de Clientes', colorAccionNew: '#2ecc71', colorAccionEdit: 'grey', accion: 'new', idClient:'', ruc: '', nombre: '', apellido: '', direccion: '', email: '', telefono: '' })}
+    newPress() { this.setState({ value: 'Lista de Clientes', colorAccionNew: '#2ecc71', colorAccionEdit: 'grey', 
+        accion: 'new', idClient: '', ruc: '', nombre: '', apellido: '', direccion: '', email: '', telefono: '', estado_cliente: '1'})}
 
     editPress()
     {
@@ -109,7 +115,8 @@ export default class MantClientesForm extends React.Component {
 
     cancelPress() { 
         this.getlisClientes()
-        this.setState({ colorAccionNew: 'grey', colorAccionEdit: 'grey', accion: 'new', idClient: '', ruc: '', nombre: '', apellido: '', direccion: '', email: '', telefono: '', value: 'Lista de Clientes'})}
+        this.setState({ colorAccionNew: 'grey', colorAccionEdit: 'grey', accion: 'new', idClient: '', ruc: '', nombre: '', 
+            apellido: '', direccion: '', email: '', telefono: '', value: 'Lista de Clientes', estado_cliente:'1'})}
 
 
     render() {
@@ -162,10 +169,10 @@ export default class MantClientesForm extends React.Component {
 
                                  <View style={styles.input}>
                                      <Picker
-                                         selectedValue={this.state.language}
+                                         selectedValue={this.state.estado_cliente}
                                          style={{ width: '100%' }}
                                          itemStyle={{ width: '100%' }}
-                                         onValueChange={(itemValue, itemIndex) => this.setState({ language: itemValue })}>
+                                         onValueChange={(itemValue, itemIndex) => this.setState({ estado_cliente: itemValue })}>
                                          <Picker.Item label="Activo" value="1" />
                                          <Picker.Item label="Inactivo" value="2" />
                                      </Picker>

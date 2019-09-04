@@ -18,16 +18,32 @@ export async function listmaterial() {
 
 }
 
+export async function listmaterialMant() {
+
+    let myurl = url_base + 'mtrlistmant.php';
+    try {
+        return await fetch(myurl, {
+            method: 'POST', // or 'PUT'
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then((response) => response.json())
+            .then((responseJson) => { return responseJson; })
+            .catch((error) => { return error; });
+    } catch (error) { return error; }
+
+}
 
 
 
-export async function editmaterial(id, tipo) {
+
+export async function editmaterial(id, tipo, estado) {
 
     let myurl = url_base + 'mtredit.php'
     let editmat = {
         mtr: {
             id: id,
-            tipo: tipo
+            tipo: tipo,
+            estado: estado
         }
     };
 
@@ -44,12 +60,13 @@ export async function editmaterial(id, tipo) {
 }
 
 
-export async function addmaterial(tipo) {
+export async function addmaterial(tipo, estado) {
     
     let myurl = url_base + 'mtradd.php'
     let mtr = {
         mtr: {
-            tipo: tipo
+            tipo: tipo,
+            estado: estado
         }
     };
 
