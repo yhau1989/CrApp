@@ -21,6 +21,8 @@ import ReporteStock from './ReporteStock';
 import ReporteCompras from './ReporteCompras';
 import ReporteVentas from './ReporteVentas';
 
+import Compras2Form from './Compras2Form';
+
 
 const AuthStack = createStackNavigator({
   Login: {
@@ -66,7 +68,7 @@ const AuthStack = createStackNavigator({
     }
   },
   Compras: {
-    screen: ComprasForm,
+    screen: Compras2Form,
     navigationOptions: {
       title: 'Comprar',
       headerMode: 'screen',
@@ -207,15 +209,22 @@ const AuthStack = createStackNavigator({
   }, 
 
   
-  
-  
-
+Compras2Form: {
+  screen: Compras2Form,
+    navigationOptions: {
+      title: 'Compras 2',
+      headerMode: 'screen',
+      headerStyle: { backgroundColor: '#2ecc71', },
+      headerTintColor: 'black',
+      headerTitleStyle: { fontWeight: 'bold', }
+    }
+  }, 
 
 
 },
 {
   initialRouteName: 'Login',
-  //initialRouteName: 'ProcesoAlmacenajeLoteForm',
+  //initialRouteName: 'Compras2Form',
   defaultNavigationOptions: {headerMode: 'screen'},
 });
 

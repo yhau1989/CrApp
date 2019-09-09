@@ -53,19 +53,10 @@ export async function editcompra(id,ruc, nombres,apellidos,direccion,telefono) {
 }
 
 
-export async function addcompra(proveedor, material, peso, comprador, valor) {
+export async function addcompra(clint) {
 
     let myurl = url_base + 'compadd.php'
-    let clint = {
-        compra: {
-            proveedor: proveedor,
-            material: material,
-            peso: peso,
-            comprador: comprador,
-            valor: valor
-        }
-    };
-
+   
     try {
         return await fetch(myurl, {
                 method: 'POST', // or 'PUT'
