@@ -8,27 +8,29 @@ import { listmaterialMant, editmaterial, addmaterial} from '../apis/materialapi'
 
 export default class MantMaterialesForm extends React.Component {
 
-    _isMounted = false;
+    
 
     constructor(props) {
         super(props)
-        this.state = { colorAccionNew: 'grey', colorAccionEdit: 'grey', 
-        accion: 'new', id: '', tipo: '',value: 'Tipos de materiales', dataSource: '', isLoading: true, existeError: false, estado_material:'1' }
+        this.state = {
+            colorAccionNew: '#2ecc71', colorAccionEdit: 'grey', 
+        accion: 'new', id: '', tipo: '',value: 'Tipos de materiales', dataSource: '', isLoading: true, existeError: false, estado_material:'1' , showActivo:false}
         this._onPressButton = this._onPressButton.bind(this)
     }
 
-    componentWillUnmount() {
-        this._isMounted = false;
+    componentWillMount() {
+        this.getlisMateriales();
     }
 
+   
     onSelect(value, label) {
-        this.setState({ value: label, id: value })
-        let lote = this.state.dataSource.data.filter(mat => mat.lote == value)
-        if (lote.length > 0) {
-
-            this.setState({ labelLote: lote[0].lote, labelPeso: lote[0].peso, estado_material: lote[0].material})
-            this.nameMaterial(lote[0].material)
+        this.setState({ value: label, id: value, colorAccionNew: 'grey', colorAccionEdit: '#2ecc71', accion: 'edit', tipo: label, showActivo:true})
+        let materiales = this.state.dataSource.data.filter(mat => mat.id == value)
+        if (materiales.length > 0) {
+            this.setState({estado_material: materiales[0].estado})
         }
+
+
     }
 
 
@@ -64,6 +66,7 @@ export default class MantMaterialesForm extends React.Component {
                     let error = (responseJson.error == 0) ? false : true
                     this.setState({ existeError: error })
                     Alert.alert(responseJson.mensaje)
+                    this.cancelPress()
                 }).catch((error) => {
                     //Alert.alert('existen problemas de conexión')
                     Alert.alert(error)
@@ -78,6 +81,7 @@ export default class MantMaterialesForm extends React.Component {
                         let error = (responseJson.error == 0) ? false : true
                         this.setState({ existeError: error, })
                         Alert.alert(responseJson.mensaje)
+                        this.cancelPress()
                     }).catch((error) => {
                         //Alert.alert('existen problemas de conexión')
                         Alert.alert(error)
@@ -99,13 +103,9 @@ export default class MantMaterialesForm extends React.Component {
     }
 
     getlisMateriales() {
-        this._isMounted = true
         listmaterialMant().then((responseJson) => {
             let error = (responseJson.error == 0) ? false : true
-            if (this._isMounted) {
-                this.setState({ existeError: error, isLoading: false, dataSource: this.validateList(responseJson) })
-            }
-
+            this.setState({ existeError: error, isLoading: false, dataSource: this.validateList(responseJson) })
         }).catch((error) => {
             Alert.alert('Problemas para listar los tipos de materiales')
         })
@@ -124,14 +124,17 @@ export default class MantMaterialesForm extends React.Component {
         }
     }
 
-    cancelPress() { this.setState({ colorAccionNew: 'grey', colorAccionEdit: 'grey', accion: 'new', id: '', 
-        tipo: '', value: 'Tipos de materiales', estado_material:'1' }) }
+    cancelPress() {
+        this.setState({
+            colorAccionNew: '#2ecc71', colorAccionEdit: 'grey', accion: 'new', id: '', tipo: '', value: 'Tipos de materiales', estado_material: '1', showActivo: false}) 
+        this.getlisMateriales()
+        }
 
 
 
     render() {
 
-        this.getlisMateriales();
+       
         if (this.state.isLoading && this.state.existeError === false) {
             return (
                 <View style={styles.containerForm}>
@@ -144,11 +147,31 @@ export default class MantMaterialesForm extends React.Component {
 
 
             <SafeAreaView style={styles.containerForm}>
-                <StatusBar barStyle="light-content" />
+                {/* <StatusBar barStyle="light-content" /> */}
+                
+                <View style={styles.footer}>
+                    <View style={styles.boxlateral}>
+                        <Text style={{ paddingBottom: 6, color: this.state.colorAccionNew }} onPress={this.newPress.bind(this)}>
+                            <Ionicons name="ios-person-add" size={20} color={this.state.colorAccionNew} />    Nuevo
+                            </Text>
+                    </View>
+                    <View style={styles.boxlateral} >
+                        <Text style={{ paddingBottom: 6, color: this.state.colorAccionEdit }} onPress={this.editPress.bind(this)}>
+                            <Ionicons name="md-create" size={20} color={this.state.colorAccionEdit} />    Editar
+                            </Text>
+                    </View>
+                    <View style={styles.boxlateral}>
+                        <Text style={styles.textLateral} onPress={this.cancelPress.bind(this)}>
+                            <Ionicons name="md-close" size={20} color={this.state.colorAccion} />    Cancelar
+                            </Text>
+                    </View>
+                </View>
+
                 <KeyboardAvoidingView behavior="padding" style={styles.containerForm}>
                     <TouchableWithoutFeedback>
 
                             <View style={{ width: '80%' }}>
+                                <Text style={styles.labelItem}>Listado de tipo de materiales</Text>
                                 <Select
                                     onSelect={this.onSelect.bind(this)}
                                     defaultText={this.state.value}
@@ -167,18 +190,26 @@ export default class MantMaterialesForm extends React.Component {
                                     }
                                 </Select>
 
-                                <TextInput style={styles.input} placeholder='Tipo' value={this.state.tipo} onChangeText={(value) => this.setState({ tipo: value })} />
+                                <Text style={styles.labelItem}>Descripción</Text>
+                                <TextInput style={styles.input} placeholder='Tipo de material (nuevo)' value={this.state.tipo} onChangeText={(value) => this.setState({ tipo: value })} />
 
-                                <View style={styles.input}>
-                                    <Picker
-                                        selectedValue={this.state.estado_material}
-                                        style={{ width: '100%' }}
-                                        itemStyle={{ width: '100%' }}
-                                        onValueChange={(itemValue, itemIndex) => this.setState({ estado_material: itemValue })}>
-                                        <Picker.Item label="Activo" value="1" />
-                                        <Picker.Item label="Inactivo" value="2" />
-                                    </Picker>
+                            {this.state.showActivo ? (
+                                <View>
+                                    <Text style={styles.labelItem}>Descripción</Text>
+                                    <View style={styles.input}>
+                                        <Picker
+                                            selectedValue={this.state.estado_material}
+                                            style={{ width: '100%' }}
+                                            itemStyle={{ width: '100%' }}
+                                            onValueChange={(itemValue, itemIndex) => this.setState({ estado_material: itemValue })}>
+                                            <Picker.Item label="Activo" value="1" />
+                                            <Picker.Item label="Inactivo" value="2" />
+                                        </Picker>
+                                    </View>
                                 </View>
+                               
+                            ) : null}
+                                
 
                                 <View style={styles.viewMaint}>
                                     <TouchableOpacity onPress={this._onPressButton.bind(this)}>
@@ -190,23 +221,7 @@ export default class MantMaterialesForm extends React.Component {
                     </TouchableWithoutFeedback>
                 </KeyboardAvoidingView>
                 
-                    <View style={styles.footer}>
-                        <View style={styles.boxlateral}>
-                        <Text style={{ paddingBottom: 10, color: this.state.colorAccionNew }} onPress={this.newPress.bind(this)}>
-                                <Ionicons name="ios-person-add" size={20} color={this.state.colorAccionNew} />    Nuevo
-                            </Text>
-                        </View>
-                        <View style={styles.boxlateral} >
-                        <Text style={{ paddingBottom: 10, color: this.state.colorAccionEdit }} onPress={this.editPress.bind(this)}>
-                                <Ionicons name="md-create" size={20} color={this.state.colorAccionEdit} />    Editar
-                            </Text>
-                        </View>
-                        <View style={styles.boxlateral}>
-                            <Text style={styles.textLateral} onPress={this.cancelPress.bind(this)}>
-                                <Ionicons name="md-close" size={20} color={this.state.colorAccion} />    Cancelar
-                            </Text>
-                        </View>
-                    </View>
+                   
                 
             </SafeAreaView>
             
@@ -252,11 +267,6 @@ const styles = StyleSheet.create({
         fontSize: 16
     },
     footer: {
-        position: 'absolute',
-        flex: 0.1,
-        left: 0,
-        right: 0,
-        bottom: -10,
         flexDirection: 'row',
         height: 60,
         alignItems: 'center',
@@ -273,6 +283,11 @@ const styles = StyleSheet.create({
     textLateral: {
         color: 'grey',
         paddingBottom: 10,
+    },
+    labelItem: {
+        fontWeight: '700',
+        paddingLeft: 5,
+        paddingRight: 5
     },
 });
 
