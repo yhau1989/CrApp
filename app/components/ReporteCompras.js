@@ -16,9 +16,14 @@ const columns = [
         width:90
     },
     {
-        title: 'Lote',
-        dataIndex: 'lote',
-        width: 60
+        title: 'Peso total Kg',
+        dataIndex: 'peso_total',
+        width: 100
+    },
+    {
+        title: 'Valor total $',
+        dataIndex: 'valor_total',
+        width: 100
     },
     {
         title: 'Fecha de compra',

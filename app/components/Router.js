@@ -180,7 +180,7 @@ const AuthStack = createStackNavigator({
   ReporteStock: {
     screen: ReporteStock,
     navigationOptions: {
-      title: 'Reporte - Stocks',
+      title: 'Stocks para la venta',
       headerMode: 'screen',
       headerStyle: { backgroundColor: '#2ecc71', },
       headerTintColor: 'black',
@@ -224,7 +224,7 @@ Compras2Form: {
 },
 {
   initialRouteName: 'Login',
-  //initialRouteName: 'Materiales',
+  //initialRouteName: 'Proveedores',
   defaultNavigationOptions: {headerMode: 'screen'},
 });
 

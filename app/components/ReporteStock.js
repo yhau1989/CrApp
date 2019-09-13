@@ -16,7 +16,7 @@ const columns = [
         width: 250,
     },
     {
-        title: 'Stock (libras)',
+        title: 'Stock (kg)',
         dataIndex: 'stock',
         width: 90
     }

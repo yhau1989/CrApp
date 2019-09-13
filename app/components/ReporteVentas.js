@@ -26,9 +26,9 @@ const columns = [
         width: 160
     },
     {
-        title: 'Valor $',
+        title: 'Valor total $',
         dataIndex: 'valor_total',
-        width: 60
+        width: 100
     }
 ];
 

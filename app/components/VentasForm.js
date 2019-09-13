@@ -23,6 +23,15 @@ export default class VentasForm extends React.Component {
         
     }
 
+    validateIsNumberValid(number) {
+        if (Number(number) && Number(number) > 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    };
+
     getUserId = async () => {
         let userId = '';
         try {
@@ -94,7 +103,10 @@ export default class VentasForm extends React.Component {
     _onPressButton() {
 
         if (this.state.idMaterial.length == 0 || this.state.precio.length == 0 || this.state.peso.length == 0 || this.state.color.trim().length == 0) {
-            alert('Ingese valores')
+            Alert.alert('Ingese valores')
+        }
+        else if (!this.validateIsNumberValid(this.state.precio) || !this.validateIsNumberValid(this.state.peso)) {
+            Alert.alert('Ingrese cantidades numericas en formatos validos')
         }
         else
         {
@@ -105,12 +117,12 @@ export default class VentasForm extends React.Component {
             let subtotalg2 = 0
             
             let item = {
-                idmaterial: this.state.idMaterial * 1,
+                idmaterial: this.state.idMaterial * 1, 
                 descripcion: this.state.color,
-                precio: this.state.precio,
-                peso: this.state.peso,
-                iva: this.state.precio * 0.12,
-                valortotal: this.state.precio * 1.12,
+                precio: Number(this.state.precio).toFixed(2) ,
+                peso: Number(this.state.peso).toFixed(2) ,
+                iva: Number(this.state.precio * 0.12).toFixed(2) ,
+                valortotal: Number(this.state.precio * 1.12).toFixed(2) ,
                 indice: listaU.size + 1
             }
             listaU.add(item)

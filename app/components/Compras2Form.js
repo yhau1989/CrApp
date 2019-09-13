@@ -97,7 +97,11 @@ export default class Compras2Form extends React.Component {
     _onPressButton() {
 
         if (this.state.idMaterial.length == 0 || this.state.precio.length == 0 || this.state.peso.length == 0 || this.state.color.trim().length == 0) {
-            alert('Ingese valores')
+            Alert.alert('Ingese valores')
+        }
+        else if (!this.validateIsNumberValid(this.state.precio) || !this.validateIsNumberValid(this.state.peso))
+        {
+            Alert.alert('Ingrese cantidades numéricas en formatos válidos')
         }
         else
         {
@@ -110,12 +114,12 @@ export default class Compras2Form extends React.Component {
             
             let item = {
                 material: this.state.idMaterial * 1,
-                valor: this.state.precio,
+                valor: Number(this.state.precio).toFixed(2), 
                 descripcion: this.state.color,
-                peso: this.state.peso,
-                precio: this.state.precio,
-                iva: this.state.precio * 0.12,
-                valor_total: this.state.precio * 1.12,
+                peso: Number(this.state.peso).toFixed(2) ,
+                precio: Number(this.state.precio).toFixed(2) ,
+                iva: Number(this.state.precio * 0.12).toFixed(2) ,
+                valor_total: Number(this.state.precio * 1.12).toFixed(2),
                 indice: listaU.size + 1
             }
             listaU.add(item)
@@ -253,6 +257,16 @@ export default class Compras2Form extends React.Component {
         this.setState({ lista: listaU, lista2: items, subtotal: subtotalg2, items, iva: iv, neto: net, peso_total: pesoTotal })
         
     }
+
+
+    validateIsNumberValid(number) {
+        if (Number(number) && Number(number) > 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    };
 
     render() {
 

@@ -89,6 +89,15 @@ export default class ProcesoAlmacenajeLoteForm extends React.Component {
         })
     }
 
+    validateIsNumberValid(number){
+        if (Number(number) && Number(number) > 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    };
+
     _onPressButton() {
         let idLote = this.state.id
         let fini = this.state.finicio
@@ -103,7 +112,11 @@ export default class ProcesoAlmacenajeLoteForm extends React.Component {
         {
             Alert.alert('Las fechas deben estar en un rango valido')
         }
-        else if (this.state.labelPeso < peso)
+        else if (!this.validateIsNumberValid(this.state.labelPeso) || !this.validateIsNumberValid(peso))
+        {
+            Alert.alert('Ingrese cantidades numericas en formatos validos')
+        }
+        else if (Number(this.state.labelPeso) < Number(peso))
         {
             Alert.alert('Peso triturado no puede ser mayor al peso total de la ODT')
         }

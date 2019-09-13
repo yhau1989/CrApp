@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Select, Option } from "react-native-chooser";
 import {
-    Alert, StyleSheet, AppRegistry, TextInput, Text, Picker, View, TouchableOpacity,
+    Alert, StyleSheet, TextInput, Text, Picker, View, TouchableOpacity,
     TouchableWithoutFeedback, StatusBar, SafeAreaView, KeyboardAvoidingView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { addcliente, listclienteMant, editcliente, listcliente } from '../apis/clientesapi';
@@ -10,13 +10,12 @@ import { addcliente, listclienteMant, editcliente, listcliente } from '../apis/c
 
 export default class MantClientesForm extends React.Component {
 
-   
-
     constructor(props) {
         super(props)
-        this.state = { colorAccionNew: 'grey', colorAccionEdit: 'grey', accion:'new', idClient: '', ruc: '', nombre: '', 
+        this.state = {
+            colorAccionNew: '#2ecc71', colorAccionEdit: 'grey', accion:'new', idClient: '', ruc: '', nombre: '', 
                        apellido: '', direccion: '', telefono: '', value: 'Lista de Clientes', dataSource: '', 
-                       isLoading: true, existeError: false, estado_cliente:'1'}
+            isLoading: true, existeError: false, estado_cliente: '1', showActivo: false}
         this._onPressButton = this._onPressButton.bind(this)
     }
 
@@ -27,12 +26,13 @@ export default class MantClientesForm extends React.Component {
     onSelect(value, label) { 
         this.setState({ value: label, idClient: value })
         let client = this.state.dataSource.data.filter(client => client.id == value)
-        if (client.length > 0) {
-            Alert.alert('Si desea cambiar los datos habilite el control editar')
-            this.setState({ colorAccionNew: 'grey', colorAccionEdit: 'grey', 
+        if (client.length > 0) 
+        {
+            this.setState({
+                colorAccionNew: 'grey', colorAccionEdit: '#2ecc71', accion: 'edit',
                             idClient: client[0].id, ruc: client[0].ruc, nombre: client[0].nombres, 
                             apellido: client[0].apellidos, direccion: client[0].direccion, 
-                email: client[0].email, telefono: client[0].telefono, estado_cliente: client[0].estado})
+                email: client[0].email, telefono: client[0].telefono, estado_cliente: client[0].estado, showActivo: true})
         } 
     }
 
@@ -50,10 +50,10 @@ export default class MantClientesForm extends React.Component {
             Alert.alert('Cargando...')
             if(this.state.accion == 'new')
             {
-                addcliente(ruc, nombre, apellido, direccion, telefono, this.state.estado_cliente).then((responseJson) => {
+                addcliente(ruc, nombre, apellido, direccion, telefono, 1).then((responseJson) => {
                     let error = (responseJson.error == 0) ? false : true
                     this.setState({ existeError: error})
-                    this.getlisClientes()
+                    this.cancelPress()
                     Alert.alert(responseJson.mensaje)
                 }).catch((error) => {
                     Alert.alert('existen problemas de conexión')
@@ -69,7 +69,7 @@ export default class MantClientesForm extends React.Component {
                     editcliente(this.state.idClient, ruc, nombre, apellido, direccion, telefono, this.state.estado_cliente).then((responseJson) => {
                         let error = (responseJson.error == 0) ? false : true
                         this.setState({ existeError: error, })
-                        this.getlisClientes()
+                        this.cancelPress()
                         Alert.alert(responseJson.mensaje)
                     }).catch((error) => {
                         Alert.alert('existen problemas de conexión')
@@ -99,7 +99,9 @@ export default class MantClientesForm extends React.Component {
         })
     }
 
-    newPress() { this.setState({ value: 'Lista de Clientes', colorAccionNew: '#2ecc71', colorAccionEdit: 'grey', 
+    newPress() {
+        this.setState({
+            value: 'Lista de Clientes', colorAccionNew: '#2ecc71', colorAccionEdit: 'grey', showActivo: false, 
         accion: 'new', idClient: '', ruc: '', nombre: '', apellido: '', direccion: '', email: '', telefono: '', estado_cliente: '1'})}
 
     editPress()
@@ -115,8 +117,10 @@ export default class MantClientesForm extends React.Component {
 
     cancelPress() { 
         this.getlisClientes()
-        this.setState({ colorAccionNew: 'grey', colorAccionEdit: 'grey', accion: 'new', idClient: '', ruc: '', nombre: '', 
-            apellido: '', direccion: '', email: '', telefono: '', value: 'Lista de Clientes', estado_cliente:'1'})}
+        this.setState({
+            colorAccionNew: '#2ecc71', colorAccionEdit: 'grey', accion: 'new', idClient: '', ruc: '', nombre: '', 
+            apellido: '', direccion: '', email: '', telefono: '', value: 'Lista de Clientes', estado_cliente: '1', showActivo: false})
+        }
 
 
     render() {
@@ -139,10 +143,29 @@ export default class MantClientesForm extends React.Component {
 
                  <SafeAreaView style={styles.containerForm}>
                      <StatusBar barStyle="light-content" />
+                     <View style={styles.footer}>
+                         <View style={styles.boxlateral}>
+                             <Text style={{ paddingBottom: 10, color: this.state.colorAccionNew }} onPress={this.newPress.bind(this)}>
+                                 <Ionicons name="ios-person-add" size={20} color={this.state.colorAccionNew} />    Nuevo
+                            </Text>
+                         </View>
+                         <View style={styles.boxlateral} >
+                             <Text style={{ paddingBottom: 10, color: this.state.colorAccionEdit }} onPress={this.editPress.bind(this)}>
+                                 <Ionicons name="md-create" size={20} color={this.state.colorAccionEdit} />    Editar
+                            </Text>
+                         </View>
+                         <View style={styles.boxlateral}>
+                             <Text style={styles.textLateral} onPress={this.cancelPress.bind(this)}>
+                                 <Ionicons name="md-close" size={20} color={this.state.colorAccion} />    Cancelar
+                            </Text>
+                         </View>
+                     </View>
                      <KeyboardAvoidingView behavior="padding" style={styles.containerForm}>
                          <TouchableWithoutFeedback>
 
+                            
                              <View style={{width:'80%'}}>
+                                 <Text style={styles.labelItem}>Lista de clientes</Text>
                                  <Select
                                      onSelect={this.onSelect.bind(this)}
                                      defaultText={this.state.value}
@@ -161,23 +184,37 @@ export default class MantClientesForm extends React.Component {
                                      }
                                  </Select>
 
+                                 <Text style={styles.labelItem}>Ruc</Text>
                                  <TextInput style={styles.input} placeholder='Ruc' value={this.state.ruc} onChangeText={(value) => this.setState({ ruc: value })} />
+                                 <Text style={styles.labelItem}>Nombres</Text>
                                  <TextInput style={styles.input} placeholder='Nombres' value={this.state.nombre} onChangeText={(value) => this.setState({ nombre: value })} />
+                                 <Text style={styles.labelItem}>Apellidos</Text>
                                  <TextInput style={styles.input} placeholder='Apellidos' value={this.state.apellido} onChangeText={(value) => this.setState({ apellido: value })} />
+                                 <Text style={styles.labelItem}>Dirección</Text>
                                  <TextInput style={styles.input} placeholder='Dirección' value={this.state.direccion} onChangeText={(value) => this.setState({ direccion: value })} />
+                                 <Text style={styles.labelItem}>Teléfono</Text>
                                  <TextInput style={styles.input} placeholder='Teléfono' value={this.state.telefono} onChangeText={(value) => this.setState({ telefono: value })} />
 
-                                 <View style={styles.input}>
-                                     <Picker
-                                         selectedValue={this.state.estado_cliente}
-                                         style={{ width: '100%' }}
-                                         itemStyle={{ width: '100%' }}
-                                         onValueChange={(itemValue, itemIndex) => this.setState({ estado_cliente: itemValue })}>
-                                         <Picker.Item label="Activo" value="1" />
-                                         <Picker.Item label="Inactivo" value="2" />
-                                     </Picker>
-                                 </View>
+                               
 
+
+                                 {this.state.showActivo ? (
+                                     <View>
+
+                                         <Text style={styles.labelItem}>Estado</Text>
+                                         <View style={styles.input}>
+                                             <Picker
+                                                 selectedValue={this.state.estado_cliente}
+                                                 style={{ width: '100%' }}
+                                                 itemStyle={{ width: '100%' }}
+                                                 onValueChange={(itemValue, itemIndex) => this.setState({ estado_cliente: itemValue })}>
+                                                 <Picker.Item label="Activo" value="1" />
+                                                 <Picker.Item label="Inactivo" value="2" />
+                                             </Picker>
+                                         </View>
+                                     </View>
+
+                                 ) : null}
 
                         
                                  <View style={styles.viewMaint}>
@@ -192,28 +229,8 @@ export default class MantClientesForm extends React.Component {
                          </TouchableWithoutFeedback>
                      </KeyboardAvoidingView>
                      
-                     <View style={styles.footer}>
-                         <View style={styles.boxlateral}>
-                             <Text style={{ paddingBottom: 10, color: this.state.colorAccionNew }} onPress={this.newPress.bind(this)}>
-                                 <Ionicons name="ios-person-add" size={20} color={this.state.colorAccionNew} />    Nuevo
-                        </Text>
-                         </View>
-                         <View style={styles.boxlateral} >
-                             <Text style={{ paddingBottom: 10, color: this.state.colorAccionEdit }} onPress={this.editPress.bind(this)}>
-                                 <Ionicons name="md-create" size={20} color={this.state.colorAccionEdit} />    Editar
-                        </Text>
-                         </View>
-                         <View style={styles.boxlateral}>
-                             <Text style={styles.textLateral} onPress={this.cancelPress.bind(this)}>
-                                 <Ionicons name="md-close" size={20} color={this.state.colorAccion} />    Cancelar
-                        </Text>
-                         </View>
-                     </View>
+                     
                  </SafeAreaView>
-
-
-
-
                
              );        
     }
@@ -221,9 +238,9 @@ export default class MantClientesForm extends React.Component {
 
 const styles = StyleSheet.create({
     containerForm: {
-        justifyContent: 'center',
+        //justifyContent: 'center',
         alignItems: 'center',
-        flex: 1,
+        //flex: 1,
         color: '#323232',
         width: '100%',
         height: '100%'
@@ -234,12 +251,12 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     input: {
-        borderColor: 'grey',
         borderWidth: 1,
         backgroundColor: 'white',
         borderColor: 'grey',
         margin: 6,
-        padding: 5,
+       paddingRight: 5,
+        paddingLeft:5,
         borderRadius: 5,
     },
     botonText: {
@@ -254,11 +271,6 @@ const styles = StyleSheet.create({
         fontSize: 16
     },
     footer: {
-        position: 'absolute',
-        flex: 0.1,
-        left: 0,
-        right: 0,
-        bottom: -10,
         flexDirection: 'row',
         height: 60,
         alignItems: 'center',
@@ -275,6 +287,11 @@ const styles = StyleSheet.create({
     textLateral: {
         color: 'grey',
         paddingBottom: 10,
+    },
+    labelItem: {
+        fontWeight: '700',
+        paddingLeft: 5,
+        paddingRight: 5
     },
 });
 

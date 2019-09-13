@@ -62,7 +62,7 @@ export default class MantMaterialesForm extends React.Component {
 
             if (this.state.accion == 'new') {
 
-                addmaterial(tipo, this.state.estado_material).then((responseJson) => {
+                addmaterial(tipo, 1).then((responseJson) => {
                     let error = (responseJson.error == 0) ? false : true
                     this.setState({ existeError: error })
                     Alert.alert(responseJson.mensaje)
@@ -111,7 +111,10 @@ export default class MantMaterialesForm extends React.Component {
         })
     }
 
-    newPress() { this.setState({ value: 'Tipos de materiales', colorAccionNew: '#2ecc71', colorAccionEdit: 'grey', accion: 'new', id: '', tipo: '', estado_material: '1'}) }
+    newPress() { 
+        this.cancelPress()    
+        this.setState({ value: 'Tipos de materiales', colorAccionNew: '#2ecc71', colorAccionEdit: 'grey', accion: 'new', id: '', tipo: '', estado_material: '1'}) 
+    }
 
     editPress() {
 
@@ -195,7 +198,7 @@ export default class MantMaterialesForm extends React.Component {
 
                             {this.state.showActivo ? (
                                 <View>
-                                    <Text style={styles.labelItem}>Descripción</Text>
+                                    <Text style={styles.labelItem}>Estado</Text>
                                     <View style={styles.input}>
                                         <Picker
                                             selectedValue={this.state.estado_material}

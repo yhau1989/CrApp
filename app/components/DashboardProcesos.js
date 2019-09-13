@@ -19,17 +19,18 @@ export default class DashboardProcesos extends React.Component {
                     <Text style={styles.welcome}>
                     <Ionicons name="ios-apps" size={26} color="#191919" /> Seleccionar Proceso</Text>
                 <View style={{ width: '100%' }}>
-                            <Text style={styles.instructions} onPress={this.registerPressCompras.bind(this)}>
+                            
+                    <Text style={styles.instructions} onPress={this.registerPressCompras.bind(this)}>
                         <MaterialIcons name="shopping-cart" size={26} color="#191919" />   Compras
                         </Text>
+
+                    <Text style={styles.instructions} onPress={this.registerPressOperaciones.bind(this)}>
+                        <Ionicons name="ios-git-network" size={26} color="#191919" />  Operaciones de matria prima
+                        </Text>
+
                         <Text style={styles.instructions} onPress={this.registerPressVentas.bind(this)}>
                         <Entypo name="shop" size={26} color="#191919" />   Ventas
                         </Text>
-                        <Text style={styles.instructions} onPress={this.registerPressOperaciones.bind(this)}>
-                        <Ionicons name="ios-git-network" size={26} color="#191919" />  Operaciones de matria prima
-                        </Text>
-                        
-                        
                     </View>
                 </View>
         );
