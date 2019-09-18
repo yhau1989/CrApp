@@ -118,8 +118,8 @@ export default class Compras2Form extends React.Component {
                 descripcion: this.state.color,
                 peso: Number(this.state.peso).toFixed(2) ,
                 precio: Number(this.state.precio).toFixed(2) ,
-                iva: Number(this.state.precio * 0.12).toFixed(2) ,
-                valor_total: Number(this.state.precio * 1.12).toFixed(2),
+                iva: Number(this.state.precio * 0).toFixed(2) ,
+                valor_total: Number(this.state.precio * 1).toFixed(2),
                 indice: listaU.size + 1
             }
             listaU.add(item)
@@ -128,7 +128,7 @@ export default class Compras2Form extends React.Component {
             for (let [value] of listaU.entries()) {
                 subtotalg2 = subtotalg + parseFloat(value.precio)
                 pesoTotal = pesoTotal + parseFloat(value.peso) 
-                iv = subtotalg2 * 0.12
+                iv = subtotalg2 * 0
                 net = subtotalg2 + iv
 
                
@@ -231,7 +231,7 @@ export default class Compras2Form extends React.Component {
         for (let [value] of listaU.entries()) {
             subtotalg2 = subtotalg2 + parseFloat(value.precio)
             pesoTotal = pesoTotal + parseFloat(value.peso) 
-            iv = subtotalg2 * 0.12
+            iv = subtotalg2 * 0
             net = subtotalg2 + iv
 
             //subtotalg2 = subtotalg2.toFixed(2)

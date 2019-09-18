@@ -150,7 +150,7 @@ const AuthStack = createStackNavigator({
   LoteSeleccionamiento: {
     screen: ProcesoSelectionLoteForm,
     navigationOptions: {
-      title: 'Proceso seleccionamiento',
+      title: 'Proceso selección',
       headerMode: 'screen',
       headerStyle: { backgroundColor: '#2ecc71', },
       headerTintColor: 'black',
