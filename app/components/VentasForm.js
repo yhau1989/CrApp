@@ -121,8 +121,8 @@ export default class VentasForm extends React.Component {
                 descripcion: this.state.color,
                 precio: Number(this.state.precio).toFixed(2) ,
                 peso: Number(this.state.peso).toFixed(2) ,
-                iva: Number(this.state.precio * 0).toFixed(2) ,
-                valortotal: Number(this.state.precio * 1).toFixed(2) ,
+                iva: Number(this.state.precio * 0.12).toFixed(2) ,
+                valortotal: Number(this.state.precio * 1.12).toFixed(2) ,
                 indice: listaU.size + 1
             }
             listaU.add(item)
@@ -130,7 +130,7 @@ export default class VentasForm extends React.Component {
             let items = new Set()
             for (let [value] of listaU.entries()) {
                 subtotalg2 = subtotalg + parseFloat(value.precio)
-                iv = subtotalg2 * 0
+                iv = subtotalg2 * 0.12
                 net = subtotalg2 + iv
 
                
@@ -230,7 +230,7 @@ export default class VentasForm extends React.Component {
         let items = new Set()
         for (let [value] of listaU.entries()) {
             subtotalg2 = subtotalg2 + parseFloat(value.precio)
-            iv = subtotalg2 * 0
+            iv = subtotalg2 * 0.12
             net = subtotalg2 + iv
 
             //subtotalg2 = subtotalg2.toFixed(2)

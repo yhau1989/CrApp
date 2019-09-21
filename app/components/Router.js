@@ -224,7 +224,7 @@ Compras2Form: {
 },
 {
   initialRouteName: 'Login',
-  //initialRouteName: 'Proveedores',
+  //initialRouteName: 'ReporteVentas',
   defaultNavigationOptions: {headerMode: 'screen'},
 });
 

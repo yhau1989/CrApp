@@ -40,7 +40,7 @@ export default class ProcesosForm extends React.Component {
                 <Text style={styles.welcome}>Procesamiento de Materia Prima</Text>
                 <View style={{ width: '100%' }}>
                     <Text style={styles.instructions} onPress={this.LoteSeleccionamiento.bind(this)}>
-                        <MaterialCommunityIcons name="selection" size={26} color="#191919" />   Seleccionamiento
+                        <MaterialCommunityIcons name="selection" size={26} color="#191919" />   Selección
                         </Text>
                     <Text style={styles.instructions} onPress={this.ProcesarLoteForm.bind(this)}>
                         <Entypo name="stumbleupon" size={26} color="#191919" />   Trituración
