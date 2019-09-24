@@ -1,10 +1,10 @@
 {
-  "expoServerPort": null,
-  "packagerPort": null,
-  "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
+  "expoServerPort": 19000,
+  "packagerPort": 19001,
+  "packagerPid": 18176,
+  "expoServerNgrokUrl": "https://vu-ewg.yhau1989.app.exp.direct",
+  "packagerNgrokUrl": "https://packager.vu-ewg.yhau1989.app.exp.direct",
+  "ngrokPid": 5844,
   "devToolsPort": 19002,
   "webpackServerPort": null
 }

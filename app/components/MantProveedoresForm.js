@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { Select, Option } from "react-native-chooser";
 import {
-    Alert, StyleSheet, TextInput, Text, Picker, View, TouchableOpacity,
-    TouchableWithoutFeedback, StatusBar, SafeAreaView, KeyboardAvoidingView
-} from 'react-native';
+    Alert, StyleSheet, TextInput, Text, Picker, View, TouchableOpacity, ScrollView} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { addproveedor, listproveedorMant, editproveedor } from '../apis/proveedorapi';
 
@@ -133,9 +131,8 @@ export default class MantProveedoresForm extends React.Component {
         }
 
         return (
-            <SafeAreaView style={styles.containerForm}>
-                <StatusBar barStyle="light-content" />
-
+            <ScrollView>
+          
                 <View style={styles.footer}>
                     <View style={styles.boxlateral}>
                         <Text style={{ paddingBottom: 10, color: this.state.colorAccionNew }} onPress={this.newPress.bind(this)}>
@@ -154,9 +151,16 @@ export default class MantProveedoresForm extends React.Component {
                     </View>
                 </View>
 
-                <KeyboardAvoidingView behavior="padding" style={styles.containerForm}>
-                    <TouchableWithoutFeedback>
+                <View style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    textAlign: 'center',
+                    flex: 1,
+                }}>
 
+
+
+                    
                         <View style={{ width: '80%' }}>
                             
                             <Text style={styles.labelItem}>Lista de proveedores</Text>
@@ -213,13 +217,10 @@ export default class MantProveedoresForm extends React.Component {
                                 </TouchableOpacity>
                             </View>
                         </View>
+                </View>
 
-                    </TouchableWithoutFeedback>
-                </KeyboardAvoidingView>
 
-                
-
-            </SafeAreaView>
+            </ScrollView>
 
         );
     }
