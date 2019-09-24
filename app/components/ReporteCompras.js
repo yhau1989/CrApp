@@ -165,7 +165,7 @@ export default class ReporteCompras extends React.Component {
                 
                 {
                     (this.state.dataSource) ?
-                        <Table fontSize={8} height={500} columnWidth={40} columns={columns} dataSource={this.state.dataSource} />
+                        <Table fontSize={8} height={200} columnWidth={40} columns={columns} dataSource={this.state.dataSource} />
                         : (
                             <View style={{ flex: 1, padding: 20 }}>
                                 <Text>No hay datos para la consulta</Text>

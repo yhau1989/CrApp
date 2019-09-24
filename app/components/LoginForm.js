@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { Alert, View, StyleSheet, AsyncStorage, TouchableOpacity, Text, TextInput} from 'react-native';
+import { Alert, View, StyleSheet, AsyncStorage, TouchableOpacity, Text, TextInput,
+TouchableWithoutFeedback, StatusBar, SafeAreaView, KeyboardAvoidingView
+} from 'react-native';
 import {login} from '../apis/usuarioapi';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import NavigationService from "./NavigationService";
@@ -46,7 +48,7 @@ export default class LoginForm extends React.Component {
             });
         }
     }
-
+S
     registerPress () {NavigationService.navigate('Register');}
 
     resetPasswordPress() { NavigationService.navigate('ResetPassword');}
@@ -54,25 +56,37 @@ export default class LoginForm extends React.Component {
 
     render() {
         return (
-                <View style={styles.containerForm}>
-                <MaterialCommunityIcons name="recycle" size={76} color="#191919"/>
-                
-                                    <Text style={styles.welcome}>Procefibras App</Text>
-                    <TextInput style={styles.input} placeholder='Email' placeholderTextColor='#323232' value={this.state.email} onChangeText={(value) => this.setState({ email: value.trim() })} />
-                    <TextInput placeholderTextColor='#323232' secureTextEntry={true} style={styles.input} value={this.state.password} placeholder='Contraseña' onChangeText={(value) => this.setState({ password: value.trim() })} />
 
-                    <TouchableOpacity onPress={this._onPressButton.bind(this)}>
-                        <Text style={styles.botonText}>Ingresar <Ionicons name="ios-arrow-forward" size={14} color="#2ecc71"/>
-                        </Text>
-                    </TouchableOpacity>
 
-                    <Text style={styles.instructions}>
-                      Si no tienes cuenta <Text style={styles.link} onPress={ this.registerPress.bind(this) }>registrate aquí</Text>
-                    </Text>
-                    <Text style={styles.instructions}>
-                        <Text style={styles.link} onPress={this.resetPasswordPress.bind(this)}>Recuperar contraseña</Text>
-                    </Text>
-                </View>
+             <SafeAreaView style={styles.containerForm}>
+                <StatusBar barStyle="light-content" />
+                <KeyboardAvoidingView behavior="padding" style={styles.containerForm}>
+                    <TouchableWithoutFeedback>
+                        <View style={{width: '100%', justifyContent: 'center', alignItems: 'center',}}>
+                        <MaterialCommunityIcons name="recycle" size={76} color="#191919"/>
+                        
+                            <Text style={styles.welcome}>Procefibras App</Text>
+                            <TextInput style={styles.input} placeholder='Email' placeholderTextColor='#323232' value={this.state.email} onChangeText={(value) => this.setState({ email: value.trim() })} />
+                            <TextInput placeholderTextColor='#323232' secureTextEntry={true} style={styles.input} value={this.state.password} placeholder='Contraseña' onChangeText={(value) => this.setState({ password: value.trim() })} />
+
+                            <TouchableOpacity onPress={this._onPressButton.bind(this)}>
+                                <Text style={styles.botonText}>Ingresar <Ionicons name="ios-arrow-forward" size={14} color="#2ecc71"/>
+                                </Text>
+                            </TouchableOpacity>
+
+                            <Text style={styles.instructions}>
+                            Si no tienes cuenta <Text style={styles.link} onPress={ this.registerPress.bind(this) }>registrate aquí</Text>
+                            </Text>
+                            <Text style={styles.instructions}>
+                                <Text style={styles.link} onPress={this.resetPasswordPress.bind(this)}>Recuperar contraseña</Text>
+                            </Text>
+                        </View>
+
+                    </TouchableWithoutFeedback>
+                </KeyboardAvoidingView>
+            </SafeAreaView>
+
+
         );
     }
 }
@@ -81,9 +95,11 @@ const styles = StyleSheet.create({
     containerForm: {
         justifyContent: 'center',
         alignItems: 'center',
+        textAlign: 'center',
         flex: 1,
         backgroundColor: '#2ecc71',
         color: '#323232',
+        width: '100%',
     },
     welcome: {
         fontSize: 25,
@@ -105,6 +121,7 @@ const styles = StyleSheet.create({
         width: '80%',
         borderRadius: 5,
         backgroundColor: '#69dd9a',
+        
     },
     botonText:{
         color: '#2ecc71',

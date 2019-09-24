@@ -13,12 +13,12 @@ const columns = [
     {
         title: 'Material',
         dataIndex: 'tipo',
-        width: 250,
+        width: 240,
     },
     {
         title: 'Stock (kg)',
         dataIndex: 'stock',
-        width: 90
+        width: 100
     }
 ];
 
@@ -67,21 +67,14 @@ export default class ReporteStock extends React.Component {
        
         
         return (
-            <SafeAreaView style={styles.containerForm}>
-                <StatusBar barStyle="light-content" />
-                <KeyboardAvoidingView behavior="padding" style={styles.containerForm}>
-                    <TouchableWithoutFeedback>
 
 
-                        <View style={{ width: '90%', paddingTop: 10 }}>
-                            <Table height={500} columnWidth={40} columns={columns} dataSource={this.state.dataSource} />
-                        </View> 
+            <View style={{ width: '100%', paddingLeft:5, paddingTop: 10 }}>
+                <Table height={550} columnWidth={40} columns={columns} dataSource={this.state.dataSource} />
+            </View> 
 
-                    </TouchableWithoutFeedback>
-                </KeyboardAvoidingView>
-
-                
-            </SafeAreaView>
+            
+           
 
 
 

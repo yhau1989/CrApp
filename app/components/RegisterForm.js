@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { Alert, View, StyleSheet, AppRegistry, TouchableOpacity, TextInput, Button, Text} from 'react-native';
+import {
+    Alert, View, StyleSheet, TextInput, TouchableOpacity, Text,
+    TouchableWithoutFeedback, StatusBar, SafeAreaView, KeyboardAvoidingView
+} from 'react-native';
 import { registro } from '../apis/usuarioapi';
 
 
@@ -40,17 +43,33 @@ export default class RegisterForm extends React.Component {
 
     render() {
         return (
-                <View style={styles.containerForm}>
-                    <TextInput placeholderTextColor='#323232' style={styles.input} placeholder='Nombres' onChangeText={(value) => this.setState({ nombre: value.trim() })} />
-                    <TextInput placeholderTextColor='#323232' style={styles.input} placeholder='Apellidos' onChangeText={(value) => this.setState({ apellido: value.trim() })} />
-                    <TextInput placeholderTextColor='#323232' style={styles.input} placeholder='Email' onChangeText={(value) => this.setState({ email: value.trim() })} />
-                    <TextInput placeholderTextColor='#323232' secureTextEntry={true} style={styles.input} placeholder='Contraseña' onChangeText={(value) => this.setState({ password: value.trim() })}/>
 
-                    <TouchableOpacity onPress={this._onPressButton.bind(this)}>
-                        <Text style={styles.botonText}>Registrarse</Text>
-                    </TouchableOpacity>
 
-                </View>
+        
+            <SafeAreaView style={styles.containerForm}>
+                <StatusBar barStyle="light-content" />
+                <KeyboardAvoidingView behavior="padding" style={styles.containerForm}>
+                    <TouchableWithoutFeedback>
+
+                        <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center', }}>
+                            <TextInput placeholderTextColor='#323232' style={styles.input} placeholder='Nombres' onChangeText={(value) => this.setState({ nombre: value.trim() })} />
+                            <TextInput placeholderTextColor='#323232' style={styles.input} placeholder='Apellidos' onChangeText={(value) => this.setState({ apellido: value.trim() })} />
+                            <TextInput placeholderTextColor='#323232' style={styles.input} placeholder='Email' onChangeText={(value) => this.setState({ email: value.trim() })} />
+                            <TextInput placeholderTextColor='#323232' secureTextEntry={true} style={styles.input} placeholder='Contraseña' onChangeText={(value) => this.setState({ password: value.trim() })} />
+
+                            <TouchableOpacity onPress={this._onPressButton.bind(this)}>
+                                <Text style={styles.botonText}>Registrarse</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                    </TouchableWithoutFeedback>
+                </KeyboardAvoidingView>
+            </SafeAreaView>
+
+
+
+
+
 
         );
     }
@@ -60,9 +79,11 @@ const styles = StyleSheet.create({
     containerForm: {
         justifyContent: 'center',
         alignItems: 'center',
+        textAlign: 'center',
         flex: 1,
         backgroundColor: '#2ecc71',
         color: '#323232',
+        width: '100%',
     },
     welcome: {
         fontSize: 25,
