@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { Select, Option } from "react-native-chooser";
 import {
-    Alert, StyleSheet, AsyncStorage, TextInput, Text, View, TouchableOpacity,
-    TouchableWithoutFeedback, StatusBar, SafeAreaView, KeyboardAvoidingView, ScrollView, ActivityIndicator, 
+    Alert, StyleSheet, AsyncStorage, TextInput, Text, View, TouchableOpacity, SafeAreaView, KeyboardAvoidingView, ScrollView, ActivityIndicator, 
 } from 'react-native';
 import { listmaterial } from '../apis/materialapi';
 import {addventa} from '../apis/ventasapi';
@@ -204,9 +203,10 @@ export default class Compras2Form extends React.Component {
 
     cancelPress() { 
         this.loadCompo()
-        this.setState({ peso: '', precio:'', color:'', usuarioVendedor: '', idMaterial: '', valueMateial: 'Seleccione Material', idProveedor: '', valueProveedor: 'Seleccione Proveedor', valorCompra: '' }) 
+        this.setState({ peso: '', precio:'', color:'', usuarioVendedor: '', idMaterial: '', 
+                        valueMateial: 'Seleccione Material', idProveedor: '', valueProveedor: 'Seleccione Proveedor', 
+                        valorCompra: '' }) 
     }
-
 
     deleteItem(indic)
     {
@@ -281,13 +281,12 @@ export default class Compras2Form extends React.Component {
 
         return (
 
-            <SafeAreaView style={styles.containerForm}>
-                <StatusBar barStyle="light-content" />
-                <KeyboardAvoidingView behavior="padding" style={styles.containerForm}>
-                    <TouchableWithoutFeedback>
-                        
-                    
-                        <View style={{ width: '90%', paddingLeft:20 }}>
+
+            <KeyboardAvoidingView style={styles.containerForm} behavior="padding" enabled>
+                <SafeAreaView>
+                    <ScrollView>
+
+                        <View style={{ width: '90%', paddingHorizontal:10, paddingBottom:100 }}>
                            
                             
                             <Text style={styles.labelItem}>Proveedor</Text>
@@ -335,13 +334,13 @@ export default class Compras2Form extends React.Component {
                                 display: 'flex',
                                 flexDirection: 'row', justifyContent: 'flex-start', }}>
 
-                                <View View={{ width: 450, }}>
+                                <View View={{ width: 200, }}>
                                     <Text style={styles.labelItem}>Precio</Text>
-                                    <TextInput keyboardType={'numeric'} style={styles.input} width={175} placeholder='$' value={this.state.precio} onChangeText={(value) => this.setState({ precio: value })} /> 
+                                    <TextInput keyboardType={'numeric'} style={styles.input} width={145} placeholder='$' value={this.state.precio} onChangeText={(value) => this.setState({ precio: value })} /> 
                                 </View>
-                                <View View={{ width: 450, }}>
+                                <View View={{ width: 200, }}>
                                     <Text style={styles.labelItem}>Peso</Text>
-                                    <TextInput keyboardType={'numeric'} style={styles.input} width={175} value={this.state.peso} onChangeText={(value) => this.setState({ peso: value })} />
+                                    <TextInput keyboardType={'numeric'} style={styles.input} width={145} value={this.state.peso} onChangeText={(value) => this.setState({ peso: value })} />
                                 </View>
                                 {/* <View View={{ width: 300, }}>       
                                     <Text style={styles.labelItem}>Descripcion (color)</Text>
@@ -355,12 +354,15 @@ export default class Compras2Form extends React.Component {
                                 <TouchableOpacity onPress={this._onPressButton.bind(this)}>
                                     <Text style={styles.botonText}>Añadir item</Text>
                                 </TouchableOpacity>
+
                                 <TouchableOpacity onPress={this.cancelPress.bind(this)}>
                                     <Text style={styles.botonText}>Cancelar</Text>
                                 </TouchableOpacity>
+                              
                                 <TouchableOpacity onPress={this.venderPress.bind(this)}>
                                     <Text style={styles.botonText}>Comprar</Text>
                                 </TouchableOpacity>
+                               
                             </View>
 
                             <Text><Text style={styles.labelItem}>Items: </Text>{this.state.lista2.size}</Text>
@@ -371,22 +373,24 @@ export default class Compras2Form extends React.Component {
                                 <Text><Text style={styles.labelItem}> | Total neto: </Text>$ {this.state.neto}</Text>
                             </Text>
 
-                            <ScrollView style={{ height: 300, padding:3, marginTop: 10, borderTopWidth: 0.23, borderTopColor: 'grey' }}>
+                            <ScrollView style={{ padding:3, marginTop: 10, borderTopWidth: 0.23, borderTopColor: 'grey' }}>
                                 {this.state.lista2}
                             </ScrollView> 
                             
                         </View>
-                    </TouchableWithoutFeedback>
-                </KeyboardAvoidingView>
-
-                
-            </SafeAreaView>
-
+                    
+                    </ScrollView>
+                </SafeAreaView>
+            </KeyboardAvoidingView>
         );
     }
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        width: '100%',
+    },
     containerForm: {
        paddingTop: 5,
         color: '#323232',
@@ -396,7 +400,9 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        paddingLeft: 15,
+        marginVertical: 10,
     },
     input: {
         borderColor: 'grey',
@@ -411,7 +417,7 @@ const styles = StyleSheet.create({
         color: '#2ecc71',
         textAlign: 'center',
         backgroundColor: 'black',
-        margin: 6,
+        margin: 2,
         padding: 10,
         borderRadius: 5,
         fontWeight: '700',

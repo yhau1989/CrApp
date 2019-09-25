@@ -206,25 +206,12 @@ const AuthStack = createStackNavigator({
       headerTintColor: 'black',
       headerTitleStyle: { fontWeight: 'bold', }
     }
-  }, 
-
-  
-Compras2Form: {
-  screen: Compras2Form,
-    navigationOptions: {
-      title: 'Compras 2',
-      headerMode: 'screen',
-      headerStyle: { backgroundColor: '#2ecc71', },
-      headerTintColor: 'black',
-      headerTitleStyle: { fontWeight: 'bold', }
-    }
-  }, 
-
+  },
 
 },
 {
   initialRouteName: 'Login',
-  //initialRouteName: 'Materiales',
+  //initialRouteName: 'ProcesoAlmacenajeLoteForm',
   defaultNavigationOptions: {headerMode: 'screen'},
 });
 

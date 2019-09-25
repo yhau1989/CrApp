@@ -8,6 +8,7 @@ import { listlotealmacena, editlote } from '../apis/lotesapi';
 import { materialById } from '../apis/materialapi';
 import { listmaterial} from '../apis/materialapi';
 import { getOdtListAlmacenamiento, saveProcesoAlmacena } from "../apis/odtapi";
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 
@@ -225,9 +226,11 @@ export default class ProcesoAlmacenajeLoteForm extends React.Component {
 
             return (
 
-                <View style={styles.containerForm}>
+                <KeyboardAvoidingView style={styles.containerForm} behavior="padding" enabled>
+                    <SafeAreaView>
+                        <ScrollView>
 
-                            <View style={{ width: '80%' }}>
+                            <View style={{ paddingHorizontal:35, alignContent:'center', paddingBottom: 100 }}>
                                 <Text style={styles.labelItem}>ODT</Text>
                                 <Select
                                     onSelect={this.onSelect.bind(this)}
@@ -293,17 +296,17 @@ export default class ProcesoAlmacenajeLoteForm extends React.Component {
                                             marginLeft: 6
                                         },
                                         dateTouchBody: {
-                                            width: 330,
+                                            width: 275,
                                             margin: 5,
                                             padding: 3,
                                         },
                                         dateInput: {
                                             borderColor: 'grey',
                                             borderRadius: 5,
-                                            width: 330,
+                                            width: 275,
                                         },
                                         placeholderText: {
-                                            width: 330,
+                                            width: 275,
                                             padding: 50,
                                         },
                                     }}
@@ -329,17 +332,17 @@ export default class ProcesoAlmacenajeLoteForm extends React.Component {
                                             marginLeft: 6
                                         },
                                         dateTouchBody: {
-                                            width: 330,
+                                            width: 275,
                                             margin: 5,
                                             padding: 3,
                                         },
                                         dateInput: {
                                             borderColor: 'grey',
                                             borderRadius: 5,
-                                            width: 330,
+                                            width: 275,
                                         },
                                         placeholderText: {
-                                            width: 330,
+                                            width: 275,
                                             padding: 50,
                                         },
                                     }}
@@ -359,8 +362,10 @@ export default class ProcesoAlmacenajeLoteForm extends React.Component {
                                 </View>
                             </View>
 
-                       
-                </View>
+                        </ScrollView>
+                    </SafeAreaView>
+                </KeyboardAvoidingView>
+                
 
             );
 
@@ -374,11 +379,11 @@ export default class ProcesoAlmacenajeLoteForm extends React.Component {
 
 const styles = StyleSheet.create({
     containerForm: {
-        paddingTop: 5,
-        alignItems: 'center',
+        //alignItems: 'center',
+        flex: 1,
         color: '#323232',
         width: '100%',
-        height: '100%'
+        paddingVertical: 10,
 
     },
     viewMaint: {

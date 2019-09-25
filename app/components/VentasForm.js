@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Select, Option } from "react-native-chooser";
 import {
     Alert, StyleSheet, AsyncStorage, TextInput, Text, View, TouchableOpacity,
-    TouchableWithoutFeedback, StatusBar, SafeAreaView, KeyboardAvoidingView, ScrollView, ActivityIndicator, 
+    SafeAreaView, KeyboardAvoidingView, ScrollView, ActivityIndicator, 
 } from 'react-native';
 import { listmaterial } from '../apis/materialapi';
 import { listcliente } from '../apis/clientesapi';
@@ -270,13 +270,15 @@ export default class VentasForm extends React.Component {
 
         return (
 
-            <SafeAreaView style={styles.containerForm}>
-                <StatusBar barStyle="light-content" />
-                <KeyboardAvoidingView behavior="padding" style={styles.containerForm}>
-                    <TouchableWithoutFeedback>
-                        
+            <KeyboardAvoidingView style={styles.containerForm} behavior="padding" enabled>
+                <SafeAreaView>
+                    <ScrollView>
+
+
+                   
+           
                     
-                        <View style={{ width: '90%', paddingLeft:20 }}>
+                        <View style={{ width: '95%', paddingHorizontal: 10, paddingBottom: 100 }}>
                            
                             <Text style={styles.labelItem}>Cliente</Text>
                             <Select
@@ -334,7 +336,7 @@ export default class VentasForm extends React.Component {
                                 </View>
                                 <View View={{ width: 300, }}>       
                                     <Text style={styles.labelItem}>Descripcion (color)</Text>
-                                    <TextInput style={styles.input} width={200}  value={this.state.color} onChangeText={(value) => this.setState({ color: value })} />
+                                    <TextInput style={styles.input} width={180}  value={this.state.color} onChangeText={(value) => this.setState({ color: value })} />
                                 </View>
 
                             </View>
@@ -359,22 +361,26 @@ export default class VentasForm extends React.Component {
                                 <Text><Text style={styles.labelItem}> | Total neto: </Text>$ {this.state.neto}</Text>
                             </Text>
 
-                            <ScrollView style={{ height: 300, padding:3, marginTop: 10, borderTopWidth: 0.23, borderTopColor: 'grey' }}>
+                            <ScrollView style={{ padding:3, marginTop: 10, borderTopWidth: 0.23, borderTopColor: 'grey' }}>
                                 {this.state.lista2}
                             </ScrollView> 
                             
                         </View>
-                    </TouchableWithoutFeedback>
-                </KeyboardAvoidingView>
 
-                
-            </SafeAreaView>
+                    </ScrollView>
+                </SafeAreaView>
+            </KeyboardAvoidingView>
+                   
 
         );
     }
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        width: '100%',
+    },
     containerForm: {
        paddingTop: 5,
         color: '#323232',
@@ -399,7 +405,7 @@ const styles = StyleSheet.create({
         color: '#2ecc71',
         textAlign: 'center',
         backgroundColor: 'black',
-        margin: 6,
+        margin: 2,
         padding: 10,
         borderRadius: 5,
         fontWeight: '700',

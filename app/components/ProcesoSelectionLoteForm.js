@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Select, Option } from "react-native-chooser";
-import { Alert, StyleSheet, Text, View, TouchableOpacity, FlatList, AsyncStorage} from 'react-native';
+import { Alert, StyleSheet, Text, View, TouchableOpacity, FlatList, AsyncStorage, SafeAreaView, KeyboardAvoidingView, ScrollView} from 'react-native';
 import { CheckBox } from "react-native-elements";
 import DatePicker from 'react-native-datepicker'
 import { listloteselection, lotebyId  } from '../apis/lotesapi';
@@ -252,9 +252,14 @@ export default class ProcesoSelectionLoteForm extends React.Component {
 
             return (
 
+                <KeyboardAvoidingView style={styles.containerForm} behavior="padding" enabled>
+                    <SafeAreaView>
+                        <ScrollView>
+                        
 
-                <View style={styles.containerForm}>
-                            <View style={{ width: '90%' }}>
+
+               
+                            <View style={{ width: '90%', textAlign:'center', paddingHorizontal: 20, paddingBottom: 100 }}>
 
                                 <Text style={styles.labelItem}>Tipo de material</Text>
                                 <Select
@@ -330,17 +335,17 @@ export default class ProcesoSelectionLoteForm extends React.Component {
                                             marginLeft: 6
                                         },
                                         dateTouchBody: {
-                                            width: 330,
+                                            width: 275,
                                             margin: 5,
                                             padding: 3,
                                         },
                                         dateInput: {
                                             borderColor: 'grey',
                                             borderRadius: 5,
-                                            width: 330,
+                                            width: 275,
                                         },
                                         placeholderText: {
-                                            width: 330,
+                                            width: 275,
                                             padding: 50,
                                         },
                                     }}
@@ -366,17 +371,17 @@ export default class ProcesoSelectionLoteForm extends React.Component {
                                             marginLeft: 6
                                         },
                                         dateTouchBody:{
-                                            width:330,
+                                            width:275,
                                             margin: 5,
                                             padding: 3,
                                         },
                                         dateInput: {
                                             borderColor: 'grey',
                                             borderRadius: 5,
-                                            width: 330,
+                                            width: 275,
                                         },
                                         placeholderText:{
-                                            width: 330,
+                                            width: 275,
                                             padding: 50,
                                         },
                                     }}
@@ -392,9 +397,11 @@ export default class ProcesoSelectionLoteForm extends React.Component {
                                     </TouchableOpacity>
                                 </View>
                             </View>
-                </View>
+               
 
-
+                        </ScrollView>
+                    </SafeAreaView>
+                </KeyboardAvoidingView>              
 
             );
 
@@ -408,13 +415,8 @@ export default class ProcesoSelectionLoteForm extends React.Component {
 
 const styles = StyleSheet.create({
     containerForm: {
-        //justifyContent: 'center',
-        alignItems: 'center',
-        //flex: 1,
-        color: '#323232',
+        flex: 1,
         width: '100%',
-        height: '100%',
-        paddingTop: 15,
     },
     viewMaint: {
         display: 'flex',

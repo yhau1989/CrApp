@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Select, Option } from "react-native-chooser";
 import {
-    Alert, StyleSheet, TextInput, Text, Picker, View, TouchableOpacity, ScrollView} from 'react-native';
+    Alert, StyleSheet, TextInput, Text, Picker, View, TouchableOpacity, ScrollView, KeyboardAvoidingView, SafeAreaView} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { addproveedor, listproveedorMant, editproveedor } from '../apis/proveedorapi';
 
@@ -131,8 +131,9 @@ export default class MantProveedoresForm extends React.Component {
         }
 
         return (
-            <ScrollView>
-          
+
+
+            <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
                 <View style={styles.footer}>
                     <View style={styles.boxlateral}>
                         <Text style={{ paddingBottom: 10, color: this.state.colorAccionNew }} onPress={this.newPress.bind(this)}>
@@ -151,76 +152,68 @@ export default class MantProveedoresForm extends React.Component {
                     </View>
                 </View>
 
-                <View style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    textAlign: 'center',
-                    flex: 1,
-                }}>
+                 <SafeAreaView>
+                    <ScrollView>
+                        <View style={{ paddingTop: 10, paddingBottom: 40, paddingHorizontal: 20 }}>
+                                    
+                                    <Text style={styles.labelItem}>Lista de proveedores</Text>
+                                    <Select
+                                        onSelect={this.onSelect.bind(this)}
+                                        defaultText={this.state.value}
+                                        style={{ margin: 7, width: '96%', borderRadius: 5, borderColor: 'grey', borderWidth: 1, }}
+                                        textStyle={{}}
+                                        backdropStyle={{ backgroundColor: "#F6F8FA", }}
+                                        optionListStyle={{ backgroundColor: "#ffffff", width: '80%', height: '60%', }}>
+                                        {
+                                            this.state.dataSource.data ? (
+                                                this.state.dataSource.data.map((client) => (
+                                                    <Option key={client.id} value={client.id}>{`${client.nombres} ${client.apellidos}`}</Option>
+                                                )
+                                                )
+                                            )
+                                                : ('')
+                                        }
+                                    </Select>
+
+                                    <Text style={styles.labelItem}>Ruc</Text>
+                                    <TextInput style={styles.input} placeholder='Ruc' value={this.state.ruc} onChangeText={(value) => this.setState({ ruc: value })} />
+                                    <Text style={styles.labelItem}>Nombres</Text>
+                                    <TextInput style={styles.input} placeholder='Nombres' value={this.state.nombre} onChangeText={(value) => this.setState({ nombre: value })} />
+                                    <Text style={styles.labelItem}>Apellidos</Text>
+                                    <TextInput style={styles.input} placeholder='Apellidos' value={this.state.apellido} onChangeText={(value) => this.setState({ apellido: value })} />
+                                    <Text style={styles.labelItem}>Dirección</Text>
+                                    <TextInput style={styles.input} placeholder='Dirección' value={this.state.direccion} onChangeText={(value) => this.setState({ direccion: value })} />
+                                    <Text style={styles.labelItem}>Teléfono</Text>
+                                    <TextInput style={styles.input} placeholder='Teléfono' value={this.state.telefono} onChangeText={(value) => this.setState({ telefono: value })} />
 
 
+                                    {this.state.showActivo ? (
+                                        <View>
+                                            <Text style={styles.labelItem}>Estado</Text>
+                                            <View style={styles.input}>
+                                                <Picker
+                                                    selectedValue={this.state.estado_proveedor}
+                                                    style={{ width: '100%' }}
+                                                    itemStyle={{ width: '100%' }}
+                                                    onValueChange={(itemValue, itemIndex) => this.setState({ estado_proveedor: itemValue })}>
+                                                    <Picker.Item label="Activo" value="1" />
+                                                    <Picker.Item label="Inactivo" value="2" />
+                                                </Picker>
+                                            </View>
+                                        </View>
+                                    ) : null}
+                                
 
-                    
-                        <View style={{ width: '80%' }}>
-                            
-                            <Text style={styles.labelItem}>Lista de proveedores</Text>
-                            <Select
-                                onSelect={this.onSelect.bind(this)}
-                                defaultText={this.state.value}
-                                style={{ margin: 7, width: '96%', borderRadius: 5, borderColor: 'grey', borderWidth: 1, }}
-                                textStyle={{}}
-                                backdropStyle={{ backgroundColor: "#F6F8FA", }}
-                                optionListStyle={{ backgroundColor: "#ffffff", width: '80%', height: '60%', }}>
-                                {
-                                    this.state.dataSource.data ? (
-                                        this.state.dataSource.data.map((client) => (
-                                            <Option key={client.id} value={client.id}>{`${client.nombres} ${client.apellidos}`}</Option>
-                                        )
-                                        )
-                                    )
-                                        : ('')
-                                }
-                            </Select>
-
-                            <Text style={styles.labelItem}>Ruc</Text>
-                            <TextInput style={styles.input} placeholder='Ruc' value={this.state.ruc} onChangeText={(value) => this.setState({ ruc: value })} />
-                            <Text style={styles.labelItem}>Nombres</Text>
-                            <TextInput style={styles.input} placeholder='Nombres' value={this.state.nombre} onChangeText={(value) => this.setState({ nombre: value })} />
-                            <Text style={styles.labelItem}>Apellidos</Text>
-                            <TextInput style={styles.input} placeholder='Apellidos' value={this.state.apellido} onChangeText={(value) => this.setState({ apellido: value })} />
-                            <Text style={styles.labelItem}>Dirección</Text>
-                            <TextInput style={styles.input} placeholder='Dirección' value={this.state.direccion} onChangeText={(value) => this.setState({ direccion: value })} />
-                            <Text style={styles.labelItem}>Teléfono</Text>
-                            <TextInput style={styles.input} placeholder='Teléfono' value={this.state.telefono} onChangeText={(value) => this.setState({ telefono: value })} />
-
-
-                            {this.state.showActivo ? (
-                                <View>
-                                    <Text style={styles.labelItem}>Estado</Text>
-                                    <View style={styles.input}>
-                                        <Picker
-                                            selectedValue={this.state.estado_proveedor}
-                                            style={{ width: '100%' }}
-                                            itemStyle={{ width: '100%' }}
-                                            onValueChange={(itemValue, itemIndex) => this.setState({ estado_proveedor: itemValue })}>
-                                            <Picker.Item label="Activo" value="1" />
-                                            <Picker.Item label="Inactivo" value="2" />
-                                        </Picker>
+                                    <View style={styles.viewMaint}>
+                                        <TouchableOpacity onPress={this._onPressButton.bind(this)}>
+                                            <Text style={styles.botonText}>Guardar</Text>
+                                        </TouchableOpacity>
                                     </View>
                                 </View>
-                            ) : null}
-                           
+                    </ScrollView>
+                 </SafeAreaView>
+            </KeyboardAvoidingView>
 
-                            <View style={styles.viewMaint}>
-                                <TouchableOpacity onPress={this._onPressButton.bind(this)}>
-                                    <Text style={styles.botonText}>Guardar</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                </View>
-
-
-            </ScrollView>
 
         );
     }
@@ -228,10 +221,12 @@ export default class MantProveedoresForm extends React.Component {
 
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        width: '100%',
+    },
     containerForm: {
-        //justifyContent: 'center',
         alignItems: 'center',
-        //flex: 1,
         color: '#323232',
         width: '100%',
         height: '100%'
@@ -239,7 +234,8 @@ const styles = StyleSheet.create({
     viewMaint: {
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        paddingBottom: 100,
     },
     input: {
         borderWidth: 1,

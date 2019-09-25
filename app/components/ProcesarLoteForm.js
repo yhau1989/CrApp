@@ -202,17 +202,17 @@ export default class ProcesarLoteForm extends React.Component {
                                             marginLeft: 6
                                         },
                                         dateTouchBody: {
-                                            width: 330,
+                                            width: 275,
                                             margin: 5,
                                             padding: 3,
                                         },
                                         dateInput: {
                                             borderColor: 'grey',
                                             borderRadius: 5,
-                                            width: 330,
+                                            width: 275,
                                         },
                                         placeholderText: {
-                                            width: 330,
+                                            width: 275,
                                             padding: 50,
                                         },
                                     }}
@@ -238,17 +238,17 @@ export default class ProcesarLoteForm extends React.Component {
                                             marginLeft: 6
                                         },
                                         dateTouchBody: {
-                                            width: 330,
+                                            width: 275,
                                             margin: 5,
                                             padding: 3,
                                         },
                                         dateInput: {
                                             borderColor: 'grey',
                                             borderRadius: 5,
-                                            width: 330,
+                                            width: 275,
                                         },
                                         placeholderText: {
-                                            width: 330,
+                                            width: 275,
                                             padding: 50,
                                         },
                                     }}
@@ -284,12 +284,11 @@ export default class ProcesarLoteForm extends React.Component {
 
 const styles = StyleSheet.create({
     containerForm: {
-        justifyContent: 'center',
         alignItems: 'center',
         flex: 1,
         color: '#323232',
         width: '100%',
-        height: '100%'
+        paddingVertical: 10,
     },
     viewMaint: {
         display: 'flex',
