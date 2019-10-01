@@ -185,7 +185,7 @@ export default class MantClientesForm extends React.Component {
                                 </Select>
 
                                 <Text style={styles.labelItem}>Ruc</Text>
-                                <TextInput style={styles.input} placeholder='Ruc' value={this.state.ruc} onChangeText={(value) => this.setState({ ruc: value })} />
+                                <TextInput style={styles.input} maxLength={13} placeholder='Ruc' value={this.state.ruc} onChangeText={(value) => this.setState({ ruc: value })} />
                                 <Text style={styles.labelItem}>Nombres</Text>
                                 <TextInput style={styles.input} placeholder='Nombres' value={this.state.nombre} onChangeText={(value) => this.setState({ nombre: value })} />
                                 <Text style={styles.labelItem}>Apellidos</Text>
@@ -193,7 +193,7 @@ export default class MantClientesForm extends React.Component {
                                 <Text style={styles.labelItem}>Dirección</Text>
                                 <TextInput style={styles.input} placeholder='Dirección' value={this.state.direccion} onChangeText={(value) => this.setState({ direccion: value })} />
                                 <Text style={styles.labelItem}>Teléfono</Text>
-                                <TextInput style={styles.input} placeholder='Teléfono' value={this.state.telefono} onChangeText={(value) => this.setState({ telefono: value })} />
+                                 <TextInput style={styles.input} maxLength={10} placeholder='Teléfono' value={this.state.telefono} onChangeText={(value) => this.setState({ telefono: value })} />
 
 
 
