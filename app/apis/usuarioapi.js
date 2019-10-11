@@ -1,5 +1,5 @@
 //const url_base = 'http://localhost/CrServices/api/usr/';
-const url_base = 'http://35.222.84.162/CrServices/api/usr/';
+const url_base = 'http://35.245.199.128/CrServices/api/usr/';
 
 
 

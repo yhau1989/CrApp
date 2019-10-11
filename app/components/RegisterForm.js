@@ -28,10 +28,6 @@ export default class RegisterForm extends React.Component {
         if (emailError.length <= 0 || passwordError.length <= 0 || nombre.length <= 0 || apellido.length <= 0) {
             Alert.alert('Ingrese los datos para continuar');
         }
-        else if (!this._validaEmail(emailError))
-        {
-            Alert.alert('correo electrónico no autorizado');
-        }
         else {
             registro(nombre, apellido, emailError, passwordError).then((responseJson) => {
                 Alert.alert(responseJson.mensaje);

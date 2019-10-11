@@ -1,12 +1,12 @@
 //const url_base = 'http://localhost/CrServices/api/usr/';
-const url_base = 'http://35.222.84.162/CrServices/api/stk/';
+const url_base = 'http://35.245.199.128/CrServices/api/stk/';
 
 
 
 
 export async function getStocks() {
 
-    let myurl = 'http://35.222.84.162/CrServices/api/stk/stocklist.php';
+    let myurl = 'http://35.245.199.128/CrServices/api/stk/stocklist.php';
     //let myurl = 'https://facebook.github.io/react-native/movies.json';
     try {
         return await fetch(myurl, {
